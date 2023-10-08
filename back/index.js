@@ -7,7 +7,6 @@ const bot = new TelegramBot(process.env.TG_TOKEN || '', { polling: true });
 
 bot.on('message', async (msg) => {
   const chatId = msg.chat.id;
-  const text = msg.text;
 
   switch (msg.text) {
     case '/start':
@@ -16,8 +15,8 @@ bot.on('message', async (msg) => {
           inline_keyboard: [
             [
               {
-                text: 'Оформить доставку',
-                web_app: { url: '/' },
+                text: 'Открыть меню',
+                web_app: { url: 'https://ya.ru' }, //  process.env.APP_URL
               },
             ],
           ],

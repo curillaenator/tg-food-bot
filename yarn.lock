@@ -5242,6 +5242,7 @@ __metadata:
     sass: 1.69.0
     sass-loader: 13.3.2
     style-loader: 3.3.3
+    telegram-webapps-types: 1.0.5
     webpack: 5.88.2
     webpack-cli: 5.1.4
     webpack-dev-server: 4.15.1
@@ -9127,6 +9128,13 @@ __metadata:
     mkdirp: ^1.0.3
     yallist: ^4.0.0
   checksum: db4d9fe74a2082c3a5016630092c54c8375ff3b280186938cfd104f2e089c4fd9bad58688ef6be9cf186a889671bf355c7cda38f09bbf60604b281715ca57f5c
+  languageName: node
+  linkType: hard
+
+"telegram-webapps-types@npm:1.0.5":
+  version: 1.0.5
+  resolution: "telegram-webapps-types@npm:1.0.5"
+  checksum: cc9bc3ab47ec51b018b084939bd5e25682d8282335a35cbaf188551665330ce174578e216e22aee14f52a908107eaf889ed4a83a2edb8f76366a3a35b0912d3d
   languageName: node
   linkType: hard
 

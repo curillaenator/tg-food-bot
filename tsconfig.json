@@ -13,5 +13,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "disableSizeLimit": true
-  }
+  },
+  "include": ["@types"]
 }
