@@ -1,0 +1,9 @@
+{
+  "name": "tgbot",
+  "version": "1.0.0",
+  "description": "bot for tg",
+  "main": "index.ts",
+  "author": "curillaenator@gmail.com",
+  "license": "MIT",
+  "packageManager": "yarn@3.2.0"
+}
