@@ -8,6 +8,8 @@ import { getAnalytics } from 'firebase/analytics';
 
 import { FB_CONFIG } from './shared/firebase';
 
+import './index.scss';
+
 const app = initializeApp(FB_CONFIG);
 
 getAnalytics(app);

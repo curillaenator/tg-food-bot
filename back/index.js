@@ -16,7 +16,7 @@ bot.on('message', async (msg) => {
             [
               {
                 text: 'Открыть меню',
-                web_app: { url: 'https://ya.ru' }, //  process.env.APP_URL
+                web_app: { url: process.env.APP_URL || '' },
               },
             ],
           ],

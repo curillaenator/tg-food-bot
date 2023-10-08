@@ -1,10 +1,23 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 
-import './index.scss';
 import styles from './app.module.scss';
 
 export const App: FC = () => {
-  console.log(window.Telegram);
+  useEffect(() => {
+    window.Telegram.WebApp.ready();
+  }, []);
 
-  return <div>Hello!</div>;
+  return (
+    <div className={styles.container}>
+      <header className={styles.header}>
+        <h1>Food app</h1>
+      </header>
+
+      <main className={styles.main}>
+        <button type='button' onClick={() => window.Telegram.WebApp.close()}>
+          close
+        </button>
+      </main>
+    </div>
+  );
 };

@@ -4371,6 +4371,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"effector-react@npm:22.5.4":
+  version: 22.5.4
+  resolution: "effector-react@npm:22.5.4"
+  dependencies:
+    use-sync-external-store: ^1.0.0
+  peerDependencies:
+    effector: ^22.0.2
+    react: ">=16.8.0 <19.0.0"
+  checksum: e1e5b187daa7c86bf9ac476f1a04a5ab773be5f3462c6e20674c145ce1e0f1d9e936d7aff32b5df60ac269cf93ac1996904ee074db80581ca58b67858eee2b96
+  languageName: node
+  linkType: hard
+
+"effector@npm:22.8.7":
+  version: 22.8.7
+  resolution: "effector@npm:22.8.7"
+  checksum: 8a6f07091efd4b50143c1c95cc8d1e55b41e035a3efc19c04b13ab80c0a7aef465733c37fea090778868a5d1193c4667aea48fdc0914429bcb62e21da4bc5e27
+  languageName: node
+  linkType: hard
+
 "electron-to-chromium@npm:^1.4.535":
   version: 1.4.544
   resolution: "electron-to-chromium@npm:1.4.544"
@@ -5234,6 +5253,8 @@ __metadata:
     copy-webpack-plugin: 11.0.0
     css-loader: 6.8.1
     dotenv-webpack: 8.0.1
+    effector: 22.8.7
+    effector-react: 22.5.4
     firebase: 10.4.0
     html-webpack-plugin: ^5.5.3
     mini-css-extract-plugin: 2.7.6
@@ -9492,6 +9513,15 @@ __metadata:
   dependencies:
     punycode: ^2.1.0
   checksum: 7167432de6817fe8e9e0c9684f1d2de2bb688c94388f7569f7dbdb1587c9f4ca2a77962f134ec90be0cc4d004c939ff0d05acc9f34a0db39a3c797dada262633
+  languageName: node
+  linkType: hard
+
+"use-sync-external-store@npm:^1.0.0":
+  version: 1.2.0
+  resolution: "use-sync-external-store@npm:1.2.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 5c639e0f8da3521d605f59ce5be9e094ca772bd44a4ce7322b055a6f58eeed8dda3c94cabd90c7a41fb6fa852210092008afe48f7038792fd47501f33299116a
   languageName: node
   linkType: hard
 

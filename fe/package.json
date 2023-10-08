@@ -7,9 +7,12 @@
   "license": "MIT",
   "scripts": {
     "start": "npx webpack serve --open",
-    "build": "npx webpack --mode=production --no-devtool"
+    "build": "npx webpack --mode=production --no-devtool",
+    "deploy": "firebase deploy --only hosting"
   },
   "dependencies": {
+    "effector": "22.8.7",
+    "effector-react": "22.5.4",
     "firebase": "10.4.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
