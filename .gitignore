@@ -1,0 +1,6 @@
+.yarn/cache
+build
+node_modules
+
+# firebase
+/.firebase
