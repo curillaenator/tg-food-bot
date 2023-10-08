@@ -1,11 +1,9 @@
 .yarn/cache
-
+/fe/.yarn/cache
+/back/.yarn/cache
 node_modules
-
-/back/build
-
-/fe/build
-/fe/.firebase
+build
+.firebase
 
 .env
 .token

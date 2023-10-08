@@ -1,13 +1,18 @@
 {
   "name": "food-bot-9999",
   "version": "1.0.0",
-  "main": "index.js",
   "author": "Kirill <curillaenator@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "yarn start:be && yarn start:fe",
+    "build": "cd ./fe && yarn build",
+    "start:fe": "cd ./fe && yarn start",
+    "start:be": "cd ./back && yarn start",
+    "prepare": "npx husky install"
+  },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "6.7.4",
     "@typescript-eslint/parser": "6.7.4",
-    "dotenv": "16.3.1",
     "eslint": "8.51.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "9.0.0",

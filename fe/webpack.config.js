@@ -1,7 +1,7 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+// const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const Dotenv = require('dotenv-webpack');
 
@@ -18,12 +18,14 @@ module.exports = {
   },
 
   devServer: {
-    port: 6666,
+    port: 3000,
     historyApiFallback: true,
   },
 
   plugins: [
-    new HTMLWebpackPlugin({ template: './src/index.html' }),
+    new HTMLWebpackPlugin({
+      template: './src/index.html',
+    }),
 
     new MiniCssExtractPlugin({
       filename: '[name].[fullhash].css',
@@ -31,17 +33,17 @@ module.exports = {
 
     new CleanWebpackPlugin(),
 
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: path.resolve(__dirname, './src/public'),
-          to: '',
-          globOptions: {
-            ignore: ['*.DS_Store'],
-          },
-        },
-      ],
-    }),
+    // new CopyWebpackPlugin({
+    //   patterns: [
+    //     {
+    //       from: path.resolve(__dirname, './src/public'),
+    //       to: '',
+    //       globOptions: {
+    //         ignore: ['*.DS_Store'],
+    //       },
+    //     },
+    //   ],
+    // }),
 
     new Dotenv(),
   ],
@@ -79,12 +81,6 @@ module.exports = {
         test: /\.(js|jsx|ts|tsx)$/i,
         exclude: /node_modules/,
         use: ['babel-loader'],
-      },
-      {
-        test: /\.(m|c)?js$/i,
-        resolve: {
-          fullySpecified: false,
-        },
       },
     ],
   },
