@@ -1,6 +1,11 @@
 .yarn/cache
-build
+
 node_modules
 
-# firebase
-/.firebase
+/back/build
+
+/fe/build
+/fe/.firebase
+
+.env
+.token

@@ -2826,7 +2826,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"copy-webpack-plugin@npm:^11.0.0":
+"copy-webpack-plugin@npm:11.0.0":
   version: 11.0.0
   resolution: "copy-webpack-plugin@npm:11.0.0"
   dependencies:
@@ -3664,6 +3664,60 @@ __metadata:
   checksum: f14167fbe26a9d20f6fca8d998e8f1f41df72c8e81f9f2c9d61ed2bea058248f5e1cbd05e7f88c0e5087a6a0b822a1e5e2b446e879f3cfbe0b07ba2d7f80b026
   languageName: node
   linkType: hard
+
+"food-bot-9999@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "food-bot-9999@workspace:."
+  dependencies:
+    "@typescript-eslint/eslint-plugin": 6.7.4
+    "@typescript-eslint/parser": 6.7.4
+    dotenv: 16.3.1
+    eslint: 8.51.0
+    eslint-config-google: 0.14.0
+    eslint-config-prettier: 9.0.0
+    eslint-plugin-import: 2.28.1
+    eslint-plugin-prettier: 5.0.0
+    eslint-plugin-react: 7.33.2
+    eslint-plugin-react-hooks: 4.6.0
+    husky: 8.0.3
+    lint-staged: 14.0.1
+    prettier: 3.0.3
+    typescript: 5.2.2
+  languageName: unknown
+  linkType: soft
+
+"food-bot-backend@workspace:back":
+  version: 0.0.0-use.local
+  resolution: "food-bot-backend@workspace:back"
+  languageName: unknown
+  linkType: soft
+
+"food-bot-frontend@workspace:fe":
+  version: 0.0.0-use.local
+  resolution: "food-bot-frontend@workspace:fe"
+  dependencies:
+    "@babel/cli": 7.23.0
+    "@babel/core": 7.23.0
+    "@babel/preset-env": 7.22.20
+    "@babel/preset-react": 7.22.15
+    "@babel/preset-typescript": 7.23.0
+    "@types/react": 18.2.25
+    "@types/react-dom": 18.2.11
+    babel-loader: 9.1.3
+    babel-plugin-import: 1.13.8
+    clean-webpack-plugin: 4.0.0
+    copy-webpack-plugin: 11.0.0
+    css-loader: 6.8.1
+    mini-css-extract-plugin: 2.7.6
+    react: 18.2.0
+    react-dom: 18.2.0
+    sass: 1.69.0
+    sass-loader: 13.3.2
+    style-loader: 3.3.3
+    webpack: 5.88.2
+    webpack-cli: 5.1.4
+  languageName: unknown
+  linkType: soft
 
 "for-each@npm:^0.3.3":
   version: 0.3.3
@@ -6546,47 +6600,6 @@ __metadata:
   checksum: b6937a38c80c7f84d9c11dd75e49d5c44f71d95e810a3250bd1f1797fc7117c57698204adf676b71497acc205d769d65c16ae8fa10afad832ae1322630aef10a
   languageName: node
   linkType: hard
-
-"tgbot@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "tgbot@workspace:."
-  dependencies:
-    "@babel/cli": 7.23.0
-    "@babel/core": 7.23.0
-    "@babel/preset-env": 7.22.20
-    "@babel/preset-react": 7.22.15
-    "@babel/preset-typescript": 7.23.0
-    "@types/react": 18.2.25
-    "@types/react-dom": 18.2.11
-    "@typescript-eslint/eslint-plugin": 6.7.4
-    "@typescript-eslint/parser": 6.7.4
-    babel-loader: 9.1.3
-    babel-plugin-import: 1.13.8
-    clean-webpack-plugin: 4.0.0
-    copy-webpack-plugin: ^11.0.0
-    css-loader: 6.8.1
-    dotenv: 16.3.1
-    eslint: 8.51.0
-    eslint-config-google: 0.14.0
-    eslint-config-prettier: 9.0.0
-    eslint-plugin-import: 2.28.1
-    eslint-plugin-prettier: 5.0.0
-    eslint-plugin-react: 7.33.2
-    eslint-plugin-react-hooks: 4.6.0
-    husky: 8.0.3
-    lint-staged: 14.0.1
-    mini-css-extract-plugin: 2.7.6
-    prettier: 3.0.3
-    react: 18.2.0
-    react-dom: 18.2.0
-    sass: 1.69.0
-    sass-loader: 13.3.2
-    style-loader: 3.3.3
-    typescript: 5.2.2
-    webpack: 5.88.2
-    webpack-cli: 5.1.4
-  languageName: unknown
-  linkType: soft
 
 "titleize@npm:^3.0.0":
   version: 3.0.0
