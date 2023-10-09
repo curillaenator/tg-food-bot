@@ -4,9 +4,13 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px;
+    font-weight: 500;
   }
 
   .main {
-    padding: 0 24px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 0 16px;
   }
 }

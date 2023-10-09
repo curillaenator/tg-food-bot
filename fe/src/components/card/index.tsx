@@ -1,15 +1,22 @@
 import React, { FC } from 'react';
 
 import s from './styles.module.scss';
+import type { CardProps } from './interfaces';
 
-export const Card: FC = () => {
+export const Card: FC<CardProps> = (props) => {
+  const { id, title, description, imgPath, price, onSelect } = props;
+
   return (
-    <div className={s.card}>
-      <img src='' alt='' />
+    <button className={s.card} type='button' onClick={onSelect}>
+      <div className={s.image}>{!!imgPath ? <img src={imgPath} alt={title} /> : <span>no image</span>}</div>
 
-      <h3></h3>
+      <h3 className={s.title}>{title}</h3>
 
-      <span></span>
-    </div>
+      <span className={s.price}>{price}</span>
+
+      <span className={s.description}>{description}</span>
+    </button>
   );
 };
+
+export type { CardProps };
