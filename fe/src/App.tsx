@@ -11,8 +11,6 @@ export const App: FC = () => {
   const { tg, toggleCTA } = useTelegram();
   const { items } = useShop();
 
-  console.log(items);
-
   useEffect(() => {
     window.Telegram.WebApp.ready();
   }, []);

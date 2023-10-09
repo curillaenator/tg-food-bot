@@ -1,20 +1,27 @@
 .card {
+  --card-spacing: 10px;
+
   appearance: none;
 
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
+  gap: var(--card-spacing);
 
   cursor: pointer;
 
   border: none;
   outline: none;
-  padding: 8px;
+  padding: var(--card-spacing);
   background-color: var(--color-bg-secondary);
 
   color: var(--color-text-default);
   font-size: 14px;
   font-weight: 300;
+  text-align: left;
+
+  border-radius: 8px;
 
   transition: 80ms ease;
 
@@ -26,41 +33,95 @@
     background-color: var(--color-bg-accent);
   }
 
-  .image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+  .content {
     width: 100%;
-    aspect-ratio: 1 / 1;
-    background-color: var(--color-bg-default);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--card-spacing);
 
-    margin-bottom: 8px;
+    .image {
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-    & > img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      aspect-ratio: 1 / 1;
+      background-color: var(--color-bg-default);
+      border-radius: 4px;
+
+      margin-bottom: var(--card-spacing);
+
+      & > img {
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
+        object-fit: cover;
+      }
+
+      & > span {
+        font-size: 14px;
+        color: var(--color-text-secondary);
+      }
     }
 
-    & > span {
-      font-size: 14px;
+    .title {
+      width: 100%;
+      text-transform: uppercase;
+    }
+
+    .price {
+      width: 100%;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: var(--card-spacing);
+    }
+
+    .description {
+      width: 100%;
       color: var(--color-text-secondary);
     }
   }
 
-  .title {
-    margin-bottom: 8px;
-    text-transform: uppercase;
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--card-spacing);
+    width: 100%;
+    margin-top: var(--card-spacing);
+
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      font-size: 12px;
+      line-height: 20px;
+      color: var(--color-text-secondary);
+    }
+  }
+}
+
+.likeButton {
+  outline: none;
+  border: none;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 2px 4px;
+  border-radius: 6px;
+  background-color: rgba(236, 236, 236, 0.08);
+
+  color: var(--tg-theme-text-color);
+
+  & > svg {
+    color: var(--color-favorite);
   }
 
-  .price {
-    font-size: 18px;
-    font-weight: 600;
-  }
-
-  .description {
-    color: var(--color-text-secondary);
-    margin-top: 8px;
+  & > span {
+    padding-left: 2px;
   }
 }

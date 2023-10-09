@@ -5,5 +5,7 @@ export interface CardProps {
   description: string;
   price: string;
   type: string;
+  waitTime: string;
+  likes: number;
   onSelect: () => void;
 }
