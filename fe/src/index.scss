@@ -6,24 +6,22 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Inter';
-  background: var(--tg-theme-bg-color);
-  color: var(--tg-theme-text-color);
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  font-size: 14px;
+:root {
+  --color-bg-default: var(--tg-theme-bg-color, rgb(16, 16, 16));
+  --color-bg-secondary: var(--tg-theme-secondary-bg-color, rgb(26, 26, 26));
+  --color-bg-accent: var(--tg-theme-button-color, rgb(110, 38, 226));
+
+  --color-text-default: var(--tg-theme-text-color, rgb(236, 236, 236));
+  --color-text-secondary: var(--tg-theme-hint-color, rgb(133, 133, 133));
+  --color-text-accent: var(--tg-theme-link-color, rgb(110, 38, 226));
+  --color-text-on-accent: var(--tg-theme-button-color, rgb(255, 255, 255));
 }
 
-button {
-  outline: none;
-  border: none;
-  font-size: 14px;
-  background-color: var(--tg-theme-button-color);
-  color: var(--tg-theme-button-text-color);
-  padding: 8px;
-  line-height: 24px;
-
-  // &:active {
-  //   filter: brightness(1.1) contrast(1.1);
-  // }
+body {
+  font-family: 'Inter';
+  background: var(--color-bg-default);
+  color: var(--color-text-default);
+  font-size: 16px;
+  font-weight: 300;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
