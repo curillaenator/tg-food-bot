@@ -2,6 +2,7 @@
   --card-spacing: 10px;
 
   appearance: none;
+  position: relative;
 
   display: flex;
   flex-direction: column;
@@ -31,6 +32,43 @@
 
   &:active {
     background-color: var(--color-bg-accent);
+  }
+
+  &_active {
+    background-color: var(--color-bg-accent);
+  }
+
+  .counter {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px;
+    width: 100%;
+    border-radius: 8px;
+    // height: 48px;
+
+    background-color: rgba(236, 236, 236, 0.32);
+
+    & > button {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background-color: transparent;
+      border-radius: 50%;
+      color: var(--color-bg-accent);
+    }
+
+    & > span {
+      width: 100%;
+    }
   }
 
   .content {

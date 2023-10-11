@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 import { getStorage } from 'firebase/storage';
+import { getAnalytics } from 'firebase/analytics';
 
 export const FB_CONFIG = {
   apiKey: process.env.API_KEY,
@@ -13,6 +14,9 @@ export const FB_CONFIG = {
   measurementId: process.env.MEASUREMENT_ID,
 };
 
-export const app = initializeApp(FB_CONFIG);
-export const rtdb = getDatabase(app);
-export const strg = getStorage(app);
+export const firebaseApp = initializeApp(FB_CONFIG);
+
+getAnalytics(firebaseApp);
+
+export const rtdb = getDatabase(firebaseApp);
+export const strg = getStorage(firebaseApp);

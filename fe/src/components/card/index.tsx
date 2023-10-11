@@ -1,14 +1,15 @@
 import React, { FC } from 'react';
+import cn from 'classnames';
 import { ref, set } from 'firebase/database';
 
 import { strg, rtdb } from '../../shared/firebase';
-import { HeartIcon, ClockIcon } from '../icon';
+import { HeartIcon, ClockIcon, PlusIcon, MinusIcon } from '../icon';
 
 import s from './styles.module.scss';
 import type { CardProps } from './interfaces';
 
 export const Card: FC<CardProps> = (props) => {
-  const { id, title, description, imgPath, price, onSelect = () => {}, waitTime, likes } = props;
+  const { id, title, description, imgPath, price, onIncrease, onDecrease, waitTime, likes, qty } = props;
 
   const onLike = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     e.preventDefault();
@@ -18,13 +19,29 @@ export const Card: FC<CardProps> = (props) => {
   };
 
   return (
-    <button
-      className={s.card}
-      type='button'
-      onClick={() => {
-        onSelect();
-      }}
+    <div
+      className={cn(s.card, {
+        [s.card_active]: qty > 0,
+      })}
+      role='button'
     >
+      <div className={s.counter}>
+        <button
+          type='button'
+          onClick={() => {
+            if (qty > 0) onDecrease(id);
+          }}
+        >
+          <MinusIcon />
+        </button>
+
+        <span>{qty}</span>
+
+        <button type='button' onClick={() => onIncrease(id)}>
+          <PlusIcon />
+        </button>
+      </div>
+
       <div className={s.content}>
         <div className={s.image}>{!!imgPath ? <img src={imgPath} alt={title} /> : <span>no image</span>}</div>
 
@@ -48,7 +65,7 @@ export const Card: FC<CardProps> = (props) => {
           </span>
         )}
       </div>
-    </button>
+    </div>
   );
 };
 

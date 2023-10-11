@@ -7,5 +7,7 @@ export interface CardProps {
   type: string;
   waitTime: string;
   likes: number;
-  onSelect: () => void;
+  qty: number;
+  onIncrease: (itemId: string) => void;
+  onDecrease: (itemId: string) => void;
 }
