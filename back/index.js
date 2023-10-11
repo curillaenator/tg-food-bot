@@ -10,12 +10,12 @@ bot.on('message', async (msg) => {
 
   switch (msg.text) {
     case '/start':
-      await bot.sendMessage(chatId, 'Welcome to art bot', {
+      await bot.sendMessage(chatId, 'Have fun with', {
         reply_markup: {
           inline_keyboard: [
             [
               {
-                text: 'Открыть меню',
+                text: 'Pixpax',
                 web_app: { url: process.env.APP_URL || '' },
               },
             ],
