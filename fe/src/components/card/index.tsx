@@ -2,8 +2,9 @@ import React, { FC } from 'react';
 import cn from 'classnames';
 import { ref, set } from 'firebase/database';
 
+import { StarIcon, TimeIcon, SmallAddIcon, MinusIcon } from '@chakra-ui/icons';
+
 import { strg, rtdb } from '../../shared/firebase';
-import { HeartIcon, ClockIcon, PlusIcon, MinusIcon } from '../icon';
 
 import s from './styles.module.scss';
 import type { CardProps } from './interfaces';
@@ -32,13 +33,13 @@ export const Card: FC<CardProps> = (props) => {
             if (qty > 0) onDecrease(id);
           }}
         >
-          <MinusIcon />
+          <MinusIcon boxSize={8} />
         </button>
 
         <span>{qty}</span>
 
         <button type='button' onClick={() => onIncrease(id)}>
-          <PlusIcon />
+          <SmallAddIcon boxSize={12} />
         </button>
       </div>
 
@@ -54,14 +55,14 @@ export const Card: FC<CardProps> = (props) => {
 
       <div className={s.footer}>
         <div className={s.badge}>
-          <ClockIcon className={s.clock} />
+          <TimeIcon boxSize={6} className={s.clock} />
           <span>{waitTime}</span>
         </div>
 
         {!!likes && (
           <span role='button' className={s.likeButton} onClick={onLike}>
             <span>{likes}</span>
-            <HeartIcon className={s.likes} />
+            <StarIcon className={s.likes} boxSize={6} />
           </span>
         )}
       </div>

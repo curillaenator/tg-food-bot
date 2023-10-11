@@ -14,7 +14,7 @@ export const Header: FC<HeaderProps> = (props) => {
       <Spacer />
 
       <Button colorScheme='telegram' variant='ghost'>
-        <Icon as={SettingsIcon} />
+        <Icon as={SettingsIcon} boxSize={8} />
       </Button>
     </Flex>
   );
