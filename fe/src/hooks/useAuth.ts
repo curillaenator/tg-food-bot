@@ -1,21 +1,40 @@
 import { useEffect } from 'react';
-import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
+
+import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, OAuthProvider } from 'firebase/auth';
 
 import { auth } from '../shared/firebase';
 
-const provider = new GoogleAuthProvider();
+import { setUser } from '../store';
+
+const googleProvider = new GoogleAuthProvider();
+const appleProvider = new OAuthProvider('apple.com');
 
 export const useAuth = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log(user);
+      if (!!user) {
+        setUser({
+          id: user.uid,
+          name: user.displayName,
+          avatar: user.photoURL,
+          tel: user.phoneNumber,
+          email: user.email,
+          adress: '',
+        });
+      }
     });
 
     return () => unsubscribe();
   }, []);
 
   return {
-    authWithGoogle: () => signInWithPopup(auth, provider),
-    signOut: () => signOut(auth),
+    signOut: () =>
+      signOut(auth).then(() => {
+        setUser(null);
+      }),
+    authWith: {
+      google: () => signInWithPopup(auth, googleProvider),
+      apple: () => signInWithPopup(auth, appleProvider),
+    },
   };
 };
