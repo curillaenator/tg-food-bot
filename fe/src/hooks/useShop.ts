@@ -5,7 +5,7 @@ import { ref as storageRef, getDownloadURL } from 'firebase/storage';
 import { strg, rtdb } from '../shared/firebase';
 import { snapToMap, numberize } from '../utils';
 
-import type { CardProps } from '../components/card';
+import type { CardProps } from '../components/card/Card';
 
 const itemsRef = ref(rtdb, 'menu');
 

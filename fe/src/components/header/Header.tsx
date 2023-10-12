@@ -6,14 +6,14 @@ import type { HeaderProps } from './interfaces';
 
 export const Header: FC<HeaderProps> = (props) => {
   return (
-    <Flex p='2'>
-      <Heading fontSize='3xl' color='telegram.500' lineHeight='8'>
+    <Flex p='4'>
+      <Heading fontSize='3xl' lineHeight='8'>
         Pixpax
       </Heading>
 
       <Spacer />
 
-      <Button colorScheme='telegram' variant='ghost'>
+      <Button variant='ghost' px={0}>
         <Icon as={SettingsIcon} boxSize={8} />
       </Button>
     </Flex>

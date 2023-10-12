@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { Card } from '../../components/card';
+import { Card } from '../../components/card/Card';
 
 import { useShop } from '../../hooks/useShop';
 
