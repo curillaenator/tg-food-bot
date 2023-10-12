@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 import { getStorage } from 'firebase/storage';
 import { getAnalytics } from 'firebase/analytics';
+import { getAuth } from 'firebase/auth';
 
 export const FB_CONFIG = {
   apiKey: process.env.API_KEY,
@@ -16,7 +17,7 @@ export const FB_CONFIG = {
 
 export const firebaseApp = initializeApp(FB_CONFIG);
 
-getAnalytics(firebaseApp);
-
+export const auth = getAuth(firebaseApp);
 export const rtdb = getDatabase(firebaseApp);
 export const strg = getStorage(firebaseApp);
+getAnalytics(firebaseApp);

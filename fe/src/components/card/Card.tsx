@@ -1,26 +1,43 @@
 import React, { FC } from 'react';
-import { ref, set } from 'firebase/database';
+import cn from 'classnames';
+// import { ref, set } from 'firebase/database';
 
 import { Card as UICard, CardBody, Image, Center, Stack, Heading, Text, Spacer, Badge } from '@chakra-ui/react';
-import { StarIcon, TimeIcon, SmallAddIcon, MinusIcon } from '@chakra-ui/icons';
+import {
+  TimeIcon,
+  // StarIcon,
+  //   SmallAddIcon,
+  //    MinusIcon
+} from '@chakra-ui/icons';
 
-import { strg, rtdb } from '../../shared/firebase';
+// import { strg, rtdb } from '../../shared/firebase';
 
-// import s from './styles.module.scss';
+import s from './styles.module.scss';
 import type { CardProps } from './interfaces';
 
+const pricer = new Intl.NumberFormat('vi-IT', { style: 'currency', currency: 'VND' });
+
 export const Card: FC<CardProps> = (props) => {
-  const { id, title, description, imgPath, price, onIncrease, onDecrease, waitTime, likes, qty } = props;
+  const {
+    id,
+    title,
+    description,
+    imgPath,
+    price,
+    waitTime,
+    // likes,
+    //  qty
+  } = props;
 
-  const onLike = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-    e.preventDefault();
-    e.stopPropagation();
+  // const onLike = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
 
-    set(ref(rtdb, `menu/${id}/likes`), +likes + 1);
-  };
+  //   set(ref(rtdb, `menu/${id}/likes`), +likes + 1);
+  // };
 
   return (
-    <UICard p={2}>
+    <UICard id={id} p={2}>
       <CardBody p={0}>
         <Stack direction='column' h='100%' spacing={6}>
           <Center flexShrink={0}>
@@ -33,16 +50,20 @@ export const Card: FC<CardProps> = (props) => {
                 {title}
               </Heading>
 
-              <Text>{price}</Text>
+              <Text>{pricer.format(+price)}</Text>
 
-              <Text>{description}</Text>
+              <Text color='chakra-subtle-text' className={cn(s.clamped, s.clamped_3)}>
+                {description}
+              </Text>
             </Stack>
 
             <Stack direction='row'>
-              <Badge textTransform='lowercase'>
+              <Badge textTransform='lowercase' color='chakra-subtle-text'>
                 <TimeIcon />
                 {` ${waitTime}`}
               </Badge>
+
+              <Spacer />
             </Stack>
           </Stack>
         </Stack>

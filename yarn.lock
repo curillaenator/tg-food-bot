@@ -1753,7 +1753,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/icons@npm:^2.1.1":
+"@chakra-ui/icons@npm:2.1.1":
   version: 2.1.1
   resolution: "@chakra-ui/icons@npm:2.1.1"
   dependencies:
@@ -2271,7 +2271,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/react@npm:^2.8.1":
+"@chakra-ui/react@npm:2.8.1":
   version: 2.8.1
   resolution: "@chakra-ui/react@npm:2.8.1"
   dependencies:
@@ -2739,7 +2739,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/react@npm:^11.11.1":
+"@emotion/react@npm:11.11.1":
   version: 11.11.1
   resolution: "@emotion/react@npm:11.11.1"
   dependencies:
@@ -2780,7 +2780,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/styled@npm:^11.11.0":
+"@emotion/styled@npm:11.11.0":
   version: 11.11.0
   resolution: "@emotion/styled@npm:11.11.0"
   dependencies:
@@ -5883,6 +5883,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"effector-react@npm:^22.5.4":
+  version: 22.5.4
+  resolution: "effector-react@npm:22.5.4"
+  dependencies:
+    use-sync-external-store: ^1.0.0
+  peerDependencies:
+    effector: ^22.0.2
+    react: ">=16.8.0 <19.0.0"
+  checksum: e1e5b187daa7c86bf9ac476f1a04a5ab773be5f3462c6e20674c145ce1e0f1d9e936d7aff32b5df60ac269cf93ac1996904ee074db80581ca58b67858eee2b96
+  languageName: node
+  linkType: hard
+
+"effector@npm:^22.8.7":
+  version: 22.8.7
+  resolution: "effector@npm:22.8.7"
+  checksum: 8a6f07091efd4b50143c1c95cc8d1e55b41e035a3efc19c04b13ab80c0a7aef465733c37fea090778868a5d1193c4667aea48fdc0914429bcb62e21da4bc5e27
+  languageName: node
+  linkType: hard
+
 "electron-to-chromium@npm:^1.4.535":
   version: 1.4.544
   resolution: "electron-to-chromium@npm:1.4.544"
@@ -6721,78 +6740,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"food-bot-9999@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "food-bot-9999@workspace:."
-  dependencies:
-    "@typescript-eslint/eslint-plugin": 6.7.4
-    "@typescript-eslint/parser": 6.7.4
-    eslint: 8.51.0
-    eslint-config-google: 0.14.0
-    eslint-config-prettier: 9.0.0
-    eslint-plugin-import: 2.28.1
-    eslint-plugin-prettier: 5.0.0
-    eslint-plugin-react: 7.33.2
-    eslint-plugin-react-hooks: 4.6.0
-    husky: 8.0.3
-    lint-staged: 14.0.1
-    prettier: 3.0.3
-    typescript: 5.2.2
-  languageName: unknown
-  linkType: soft
-
-"food-bot-backend@workspace:back":
-  version: 0.0.0-use.local
-  resolution: "food-bot-backend@workspace:back"
-  dependencies:
-    "@types/node": 20.8.3
-    "@types/node-telegram-bot-api": 0.61.8
-    dotenv: 16.3.1
-    node-telegram-bot-api: 0.63.0
-    nodemon: 3.0.1
-  languageName: unknown
-  linkType: soft
-
-"food-bot-frontend@workspace:fe":
-  version: 0.0.0-use.local
-  resolution: "food-bot-frontend@workspace:fe"
-  dependencies:
-    "@babel/cli": 7.23.0
-    "@babel/core": 7.23.0
-    "@babel/preset-env": 7.22.20
-    "@babel/preset-react": 7.22.15
-    "@babel/preset-typescript": 7.23.0
-    "@chakra-ui/icons": ^2.1.1
-    "@chakra-ui/react": ^2.8.1
-    "@emotion/react": ^11.11.1
-    "@emotion/styled": ^11.11.0
-    "@types/dotenv-webpack": 7.0.5
-    "@types/react": 18.2.25
-    "@types/react-dom": 18.2.11
-    babel-loader: 9.1.3
-    babel-plugin-import: 1.13.8
-    classnames: 2.3.2
-    clean-webpack-plugin: 4.0.0
-    copy-webpack-plugin: 11.0.0
-    css-loader: 6.8.1
-    dotenv-webpack: 8.0.1
-    firebase: 10.4.0
-    framer-motion: ^10.16.4
-    html-webpack-plugin: ^5.5.3
-    mini-css-extract-plugin: 2.7.6
-    react: 18.2.0
-    react-dom: 18.2.0
-    react-router-dom: ^6.16.0
-    sass: 1.69.0
-    sass-loader: 13.3.2
-    style-loader: 3.3.3
-    telegram-webapps-types: 1.0.5
-    webpack: 5.88.2
-    webpack-cli: 5.1.4
-    webpack-dev-server: 4.15.1
-  languageName: unknown
-  linkType: soft
-
 "for-each@npm:^0.3.3":
   version: 0.3.3
   resolution: "for-each@npm:0.3.3"
@@ -6848,7 +6795,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^10.16.4":
+"framer-motion@npm:10.16.4":
   version: 10.16.4
   resolution: "framer-motion@npm:10.16.4"
   dependencies:
@@ -9395,6 +9342,80 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pixpax-backend@workspace:back":
+  version: 0.0.0-use.local
+  resolution: "pixpax-backend@workspace:back"
+  dependencies:
+    "@types/node": 20.8.3
+    "@types/node-telegram-bot-api": 0.61.8
+    dotenv: 16.3.1
+    node-telegram-bot-api: 0.63.0
+    nodemon: 3.0.1
+  languageName: unknown
+  linkType: soft
+
+"pixpax-frontend@workspace:fe":
+  version: 0.0.0-use.local
+  resolution: "pixpax-frontend@workspace:fe"
+  dependencies:
+    "@babel/cli": 7.23.0
+    "@babel/core": 7.23.0
+    "@babel/preset-env": 7.22.20
+    "@babel/preset-react": 7.22.15
+    "@babel/preset-typescript": 7.23.0
+    "@chakra-ui/icons": 2.1.1
+    "@chakra-ui/react": 2.8.1
+    "@emotion/react": 11.11.1
+    "@emotion/styled": 11.11.0
+    "@types/dotenv-webpack": 7.0.5
+    "@types/react": 18.2.25
+    "@types/react-dom": 18.2.11
+    babel-loader: 9.1.3
+    babel-plugin-import: 1.13.8
+    classnames: 2.3.2
+    clean-webpack-plugin: 4.0.0
+    copy-webpack-plugin: 11.0.0
+    css-loader: 6.8.1
+    dotenv-webpack: 8.0.1
+    effector: ^22.8.7
+    effector-react: ^22.5.4
+    firebase: 10.4.0
+    framer-motion: 10.16.4
+    html-webpack-plugin: ^5.5.3
+    mini-css-extract-plugin: 2.7.6
+    react: 18.2.0
+    react-dom: 18.2.0
+    react-router-dom: 6.16.0
+    sass: 1.69.0
+    sass-loader: 13.3.2
+    style-loader: 3.3.3
+    telegram-webapps-types: 1.0.5
+    webpack: 5.88.2
+    webpack-cli: 5.1.4
+    webpack-dev-server: 4.15.1
+  languageName: unknown
+  linkType: soft
+
+"pixpax-tg-bot@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "pixpax-tg-bot@workspace:."
+  dependencies:
+    "@typescript-eslint/eslint-plugin": 6.7.4
+    "@typescript-eslint/parser": 6.7.4
+    eslint: 8.51.0
+    eslint-config-google: 0.14.0
+    eslint-config-prettier: 9.0.0
+    eslint-plugin-import: 2.28.1
+    eslint-plugin-prettier: 5.0.0
+    eslint-plugin-react: 7.33.2
+    eslint-plugin-react-hooks: 4.6.0
+    husky: 8.0.3
+    lint-staged: 14.0.1
+    prettier: 3.0.3
+    typescript: 5.2.2
+  languageName: unknown
+  linkType: soft
+
 "pkg-dir@npm:^4.2.0":
   version: 4.2.0
   resolution: "pkg-dir@npm:4.2.0"
@@ -9752,7 +9773,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:^6.16.0":
+"react-router-dom@npm:6.16.0":
   version: 6.16.0
   resolution: "react-router-dom@npm:6.16.0"
   dependencies:
@@ -11330,6 +11351,15 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 925d1922f9853e516eaad526b6fed1be38008073067274f0ecc3f56b17bb8ab63480140dd7c271f94150027c996cea4efe83d3e3525e8f3eda22055f6a39220b
+  languageName: node
+  linkType: hard
+
+"use-sync-external-store@npm:^1.0.0":
+  version: 1.2.0
+  resolution: "use-sync-external-store@npm:1.2.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 5c639e0f8da3521d605f59ce5be9e094ca772bd44a4ce7322b055a6f58eeed8dda3c94cabd90c7a41fb6fa852210092008afe48f7038792fd47501f33299116a
   languageName: node
   linkType: hard
 

@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 
 import { Layout } from './layout';
-import { Settings, Showcase } from './pages';
+import { Main, Settings, Showcase } from './pages';
 
 import './index.scss';
 
@@ -20,10 +20,11 @@ const root = createRoot(appContainer);
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<Layout />}>
-      <Route index element={<Showcase />} />
+      <Route index element={<Main />} />
+      <Route path='showcase/:showcaseId' element={<Showcase />} />
       <Route path='settings' element={<Settings />} />
 
-      <Route path='*' element={<Showcase />} />
+      <Route path='*' element={<Main />} />
     </Route>,
   ),
 );
