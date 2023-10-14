@@ -14,6 +14,7 @@ import {
   Heading,
   Avatar,
   Stack,
+  Progress,
   AlertDialog,
   AlertDialogBody,
   AlertDialogFooter,
@@ -27,10 +28,27 @@ import { InfoOutlineIcon, EmailIcon, UnlockIcon } from '@chakra-ui/icons';
 import { $globalStore } from '../../store';
 import { useAuth } from '../../hooks/useAuth';
 
-export const Header: FC = () => {
+import { Profile } from '../profile';
+
+interface ErrorTextProps {
+  error: string;
+  resetPassword: () => void;
+}
+
+const ErrorText: FC<ErrorTextProps> = ({ error, resetPassword }) => (
+  <Stack w='100%' flexDirection='column' gap={4}>
+    <Text w='100%' textAlign='center' color='red.500'>
+      {error}
+    </Text>
+
+    {error.includes('email-already-in-use') && <Button onClick={() => resetPassword()}>Remind password</Button>}
+  </Stack>
+);
+
+export const UserSection: FC = () => {
   const { user } = useStore($globalStore);
 
-  const { firstTime, creds, onCredsChange, signOut, authAction, setFirstTime } = useAuth();
+  const { authLoading, firstTime, creds, onCredsChange, signOut, authAction, setFirstTime, resetPassword } = useAuth();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLButtonElement>(null);
@@ -51,7 +69,7 @@ export const Header: FC = () => {
             <InfoOutlineIcon boxSize={8} />
           </Button>
         ) : (
-          <Avatar size='md' src={user?.avatar} name={user?.name} onClick={onOpen} />
+          <Avatar cursor='pointer' size='md' src={user?.avatar} name={user?.name} onClick={onOpen} />
         )}
       </Flex>
 
@@ -59,12 +77,20 @@ export const Header: FC = () => {
         <AlertDialogOverlay>
           <AlertDialogContent p={4} display='flex' flexDirection='column' gap={4}>
             <AlertDialogHeader fontSize='3xl' fontWeight='bold' textAlign='center'>
-              {!!user?.id ? user.name || 'Pax' : 'Authenticate'}
+              <Stack flexDirection='row' alignItems='center' justifyContent='space-between'>
+                {!!user?.id && (
+                  <Button color='whiteAlpha.500' size='xs' variant='ghost' onClick={signOut}>
+                    Logout
+                  </Button>
+                )}
+
+                <Text>{!!user?.id ? 'Profile' : 'Sign in'}</Text>
+              </Stack>
             </AlertDialogHeader>
 
             <AlertDialogBody>
               {!!user?.id ? (
-                <div>jkdshvjk</div>
+                <Profile />
               ) : (
                 <Stack spacing={4}>
                   <InputGroup>
@@ -74,6 +100,7 @@ export const Header: FC = () => {
                     />
 
                     <Input
+                      isDisabled={authLoading}
                       autoComplete='off'
                       placeholder='Email'
                       type='email'
@@ -90,6 +117,7 @@ export const Header: FC = () => {
                     />
 
                     <Input
+                      isDisabled={authLoading}
                       autoComplete='off'
                       placeholder='Password'
                       type={showPass ? 'text' : 'password'}
@@ -99,19 +127,22 @@ export const Header: FC = () => {
                     />
 
                     <InputRightElement h='100%' display='flex' alignItems='center' width='4.5rem'>
-                      <Button size='sm' onClick={() => setShowPass((prev) => !prev)}>
+                      <Button isDisabled={authLoading} size='sm' onClick={() => setShowPass((prev) => !prev)}>
                         {showPass ? 'Hide' : 'Show'}
                       </Button>
                     </InputRightElement>
                   </InputGroup>
 
-                  {!!creds.error?.length && (
-                    <Text w='100%' textAlign='center' color='red.500'>
-                      {creds.error}
-                    </Text>
-                  )}
+                  {!!creds.error?.length && <ErrorText error={creds.error} resetPassword={resetPassword} />}
 
-                  <Checkbox mt={4} size='lg' checked={firstTime} onChange={() => setFirstTime((prev) => !prev)}>
+                  <Checkbox
+                    isDisabled={authLoading}
+                    colorScheme='telegram'
+                    mt={4}
+                    size='lg'
+                    checked={firstTime}
+                    onChange={() => setFirstTime((prev) => !prev)}
+                  >
                     I am first timer!
                   </Checkbox>
                 </Stack>
@@ -120,29 +151,37 @@ export const Header: FC = () => {
 
             <AlertDialogFooter justifyContent='center'>
               <ButtonGroup width='100%' isAttached size='lg' display='flex' justifyContent='center'>
-                <Button
-                  p={4}
-                  width='100%'
-                  variant='solid'
-                  h='fit-content'
-                  onClick={!!user?.id ? () => signOut() : () => authAction()}
-                >
-                  {!!user?.id ? 'Sign out' : firstTime ? 'Sign in' : 'Go!'}
-                </Button>
+                {!user?.id && (
+                  <Button
+                    p={4}
+                    width='100%'
+                    variant='solid'
+                    colorScheme='telegram'
+                    h='fit-content'
+                    isDisabled={authLoading}
+                    onClick={authAction}
+                  >
+                    {firstTime ? 'Sign in' : 'Go!'}
+                  </Button>
+                )}
 
                 <Button
                   p={4}
                   width='100%'
-                  variant='outline'
+                  variant={!!user?.id ? 'solid' : 'outline'}
+                  colorScheme={!!user?.id ? 'telegram' : undefined}
+                  color={!!user?.id ? undefined : 'chakra-subtle-text'}
                   h='fit-content'
-                  color='chakra-subtle-text'
                   ref={cancelRef}
+                  isDisabled={authLoading}
                   onClick={onClose}
                 >
-                  Close
+                  {!!user?.id ? 'Ok' : 'Close'}
                 </Button>
               </ButtonGroup>
             </AlertDialogFooter>
+
+            {authLoading && <Progress size='xs' isIndeterminate />}
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>

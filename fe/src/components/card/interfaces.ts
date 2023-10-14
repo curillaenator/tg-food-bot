@@ -1,13 +1,8 @@
-export interface CardProps {
-  id: string;
+import type { ShowcaseItem } from '../../store';
+
+export interface CardProps extends ShowcaseItem {
   imgPath: string;
-  title: string;
-  description: string;
-  price: string;
-  type: string;
-  waitTime: string;
   likes: number;
-  qty: number;
   onIncrease: (itemId: string) => void;
   onDecrease: (itemId: string) => void;
 }

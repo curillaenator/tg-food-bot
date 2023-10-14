@@ -1,17 +1,7 @@
 import React, { FC, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 
-// import {
-//   AlertDialog,
-//   AlertDialogBody,
-//   AlertDialogFooter,
-//   AlertDialogHeader,
-//   AlertDialogContent,
-//   AlertDialogOverlay,
-//   AlertDialogCloseButton,
-// } from '@chakra-ui/react';
-
-import { Header } from '../components/header';
+import { UserSection } from '../components/userSection';
 
 // import { useTelegram } from '../hooks/useTelegram';
 
@@ -26,7 +16,7 @@ export const Layout: FC = () => {
 
   return (
     <div className={s.layout}>
-      <Header />
+      <UserSection />
       <Outlet />
     </div>
   );

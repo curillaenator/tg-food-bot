@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { ref, onValue, off } from 'firebase/database';
 import { ref as storageRef, getDownloadURL } from 'firebase/storage';
 
 import { strg, rtdb } from '../shared/firebase';
-import { snapToMap, numberize } from '../utils';
+import { snapToMap } from '../utils';
 
-import type { CardProps } from '../components/card/Card';
+import type { CardProps } from '../components/card';
 
 const itemsRef = ref(rtdb, 'menu');
 
@@ -13,6 +13,7 @@ const getImageURL = (path: string) => getDownloadURL(storageRef(strg, `dishes/${
 
 export const useShop = () => {
   const [items, setItems] = useState<CardProps[]>([]);
+  // eslint-disable-next-line
   const [total, setTotal] = useState<number>(0);
 
   const onIncrease = (itemId: string) => {

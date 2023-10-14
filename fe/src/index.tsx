@@ -36,6 +36,7 @@ const theme = extendTheme(
       heading: 'Inter, sans-serif',
       mono: 'Menlo, monospace',
     },
+
     config: {
       initialColorMode: 'dark',
       useSystemColorMode: false,
