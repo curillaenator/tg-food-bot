@@ -4,4 +4,10 @@ declare global {
   interface Window {
     Telegram: TelegramWebApps.SDK;
   }
+
+  interface AppUserCreds {
+    email: string;
+    password: string;
+    error?: string;
+  }
 }

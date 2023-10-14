@@ -14,14 +14,11 @@ import { Outlet } from 'react-router-dom';
 import { Header } from '../components/header';
 
 // import { useTelegram } from '../hooks/useTelegram';
-import { useAuth } from '../hooks/useAuth';
 
 import s from './layout.module.scss';
 
 export const Layout: FC = () => {
   // const { tg, toggleCTA } = useTelegram();
-
-  const { authWith, signOut } = useAuth();
 
   useEffect(() => {
     window.Telegram.WebApp.ready();
@@ -29,7 +26,7 @@ export const Layout: FC = () => {
 
   return (
     <div className={s.layout}>
-      <Header authWith={authWith} signOut={signOut} />
+      <Header />
       <Outlet />
     </div>
   );

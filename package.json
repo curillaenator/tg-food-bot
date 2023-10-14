@@ -4,8 +4,6 @@
   "author": "Kirill <curillaenator@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "yarn start:be && yarn start:fe",
-    "build": "cd ./fe && yarn build",
     "start:fe": "cd ./fe && yarn start",
     "start:be": "cd ./back && yarn start",
     "prepare": "npx husky install"

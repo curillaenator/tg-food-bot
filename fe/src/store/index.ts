@@ -7,6 +7,7 @@ export type User = {
   email?: string;
   tel?: string;
   adress?: string;
+  isAdmin?: boolean;
 };
 
 export interface GlobalStore {
