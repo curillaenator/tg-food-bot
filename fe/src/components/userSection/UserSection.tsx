@@ -23,12 +23,14 @@ import {
   AlertDialogOverlay,
   useDisclosure,
 } from '@chakra-ui/react';
-import { InfoOutlineIcon, EmailIcon, UnlockIcon } from '@chakra-ui/icons';
+
+import { HamburgerIcon, EmailIcon, UnlockIcon } from '@chakra-ui/icons';
 
 import { $globalStore } from '../../store';
 import { useAuth } from '../../hooks/useAuth';
 
 import { Profile } from '../profile';
+import { BasketIcon } from './BasketIcon';
 
 interface ErrorTextProps {
   error: string;
@@ -46,7 +48,7 @@ const ErrorText: FC<ErrorTextProps> = ({ error, resetPassword }) => (
 );
 
 export const UserSection: FC = () => {
-  const { user } = useStore($globalStore);
+  const { user, basket } = useStore($globalStore);
 
   const { authLoading, firstTime, creds, onCredsChange, signOut, authAction, setFirstTime, resetPassword } = useAuth();
 
@@ -57,19 +59,33 @@ export const UserSection: FC = () => {
 
   return (
     <>
-      <Flex p='4'>
-        <Heading fontSize='3xl' lineHeight='8'>
+      <Flex p={4} alignItems='çenter'>
+        <Heading transform='translateY(-3px)' fontSize='4xl'>
           Pixpax
         </Heading>
 
         <Spacer />
 
         {!user?.id ? (
-          <Button variant='ghost' px={0} onClick={onOpen}>
-            <InfoOutlineIcon boxSize={8} />
+          <Button h='fit-content' variant='ghost' p={2} onClick={onOpen}>
+            <HamburgerIcon boxSize={8} />
           </Button>
         ) : (
-          <Avatar cursor='pointer' size='md' src={user?.avatar} name={user?.name} onClick={onOpen} />
+          <Stack flexDirection='row' gap={2}>
+            {!!basket.length && (
+              <Button
+                boxShadow='inset 0 0 0 2px var(--pixpax-colors-telegram-200)'
+                bg='var(--pixpax-colors-whiteAlpha-200)'
+                borderRadius='50%'
+                variant='ghost'
+                h='fit-content'
+                p={2}
+              >
+                <BasketIcon />
+              </Button>
+            )}
+            <Avatar cursor='pointer' size='md' src={user?.avatar} name={user?.name} onClick={onOpen} />
+          </Stack>
         )}
       </Flex>
 

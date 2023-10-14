@@ -60,7 +60,6 @@ module.exports = {
     rules: [
       {
         test: /\.(scss|css|sass)$/i,
-        exclude: /node_modules/,
         use: [
           MiniCssExtractPlugin.loader,
           {
@@ -81,6 +80,11 @@ module.exports = {
         test: /\.(js|jsx|ts|tsx)$/i,
         exclude: /node_modules/,
         use: ['babel-loader'],
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        exclude: /node_modules/,
+        type: 'asset/resource',
       },
     ],
   },

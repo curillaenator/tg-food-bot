@@ -5,7 +5,7 @@ import {
   ChakraProvider,
   ColorModeScript,
   extendTheme,
-  // withDefaultColorScheme,
+  withDefaultColorScheme,
   type ThemeConfig,
 } from '@chakra-ui/react';
 
@@ -43,7 +43,7 @@ const theme = extendTheme(
       cssVarPrefix: 'pixpax',
     },
   },
-  // withDefaultColorScheme(),
+  withDefaultColorScheme({ colorScheme: 'telegram' }),
 );
 
 if (!!localStorage.getItem('chakra-ui-color-mode')) {
