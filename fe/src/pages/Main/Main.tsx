@@ -15,7 +15,11 @@ export const Main: FC = () => {
     <Box as='main'>
       {loading && <Progress isIndeterminate size='xs' />}
 
-      <Accordion defaultIndex={[0, 1, 2, 3, 4, 5, 6, 7, 8]} allowMultiple>
+      <Accordion
+        // defaultIndex={[0, 1, 2, 3, 4, 5, 6, 7, 8]}
+        // allowMultiple
+        allowToggle
+      >
         {contentMap.map(([contentName, content]) => (
           <ShowcaseSection
             key={contentName}
