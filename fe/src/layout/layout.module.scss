@@ -1,4 +1,40 @@
+$backgrounds: (
+  'fire': (
+    'tint': linear-gradient(to bottom, rgba(0, 63, 94, 0.4), rgba(0, 63, 94, 0.1)),
+    'darken': linear-gradient(to bottom, rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.76)),
+    'base': no-repeat url('../assets/fire.jpg'),
+  ),
+  'luxary': (
+    'tint': linear-gradient(to bottom, rgba(0, 63, 94, 0.4), rgba(0, 63, 94, 0.1)),
+    'darken': linear-gradient(to bottom, rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.76)),
+    'base': no-repeat url('../assets/luxary.jpg'),
+  ),
+  'wowwy': (
+    'tint': linear-gradient(to bottom, rgba(0, 63, 94, 0.4), rgba(0, 63, 94, 0.1)),
+    'darken': linear-gradient(to bottom, rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.76)),
+    'base': no-repeat url('../assets/wowwy.jpg'),
+  ),
+  'playfull': (
+    'tint': linear-gradient(to bottom, rgba(0, 63, 94, 0.4), rgba(0, 63, 94, 0.1)),
+    'darken': linear-gradient(to bottom, rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.76)),
+    'base': no-repeat url('../assets/wowwy.jpg'),
+  ),
+);
+
+@each $bgName, $colorSet in $backgrounds {
+  .bg_#{$bgName} {
+    --layout-bg-tint: #{map-get($colorSet, 'tint')};
+    --layout-bg-darken: #{map-get($colorSet, 'darken')};
+    --layout-bg-base: #{map-get($colorSet, 'base')};
+  }
+}
+
 .layout {
   max-width: 1440px;
   margin: 0 auto;
+
+  background: var(--layout-bg-tint), var(--layout-bg-darken), var(--layout-bg-base);
+  background-attachment: fixed;
+  background-position: top;
+  background-size: cover;
 }

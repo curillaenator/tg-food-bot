@@ -59,7 +59,7 @@ export const UserSection: FC = () => {
 
   return (
     <>
-      <Flex p={4} alignItems='çenter'>
+      <Flex as='header' p={4} alignItems='çenter' bg='blackAlpha.400'>
         <Heading transform='translateY(-3px)' fontSize='4xl'>
           Pixpax
         </Heading>
@@ -84,7 +84,15 @@ export const UserSection: FC = () => {
                 <BasketIcon />
               </Button>
             )}
-            <Avatar cursor='pointer' size='md' src={user?.avatar} name={user?.name} onClick={onOpen} />
+            <Avatar
+              bg='telegram.200'
+              color='gray.800'
+              cursor='pointer'
+              size='md'
+              src={user?.avatar}
+              name={user?.name}
+              onClick={onOpen}
+            />
           </Stack>
         )}
       </Flex>

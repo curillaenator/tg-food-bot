@@ -4,8 +4,8 @@ export type ShowcaseItem = {
   id: string;
   title: string;
   description: string;
-  price: string;
   type: string;
+  price: string;
   waitTime: string;
   qty: number;
 };
@@ -27,21 +27,30 @@ export type User = {
   orders?: Order['id'];
 };
 
+export type Background = 'wowwy' | 'playfull' | 'fire' | 'luxary';
+
 export interface GlobalStore {
+  background: Background;
   user: User | null;
   basket: ShowcaseItem[];
 }
 
+export const setBackground = createEvent<Background>();
 export const setUser = createEvent<User | null>();
 export const updateUser = createEvent<Partial<User>>();
 export const setBasket = createEvent<ShowcaseItem>();
 
 export const $globalStore = createStore<GlobalStore>({
+  background: 'wowwy',
   user: null,
   basket: [],
 });
 
 $globalStore
+  .on(setBackground, (state, background) => ({
+    ...state,
+    background,
+  }))
   .on(setUser, (state, user) => ({
     ...state,
     user,

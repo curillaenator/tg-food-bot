@@ -1,5 +1,6 @@
 import React, { FC, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
+import cn from 'classnames';
 
 import { UserSection } from '../components/userSection';
 
@@ -15,7 +16,7 @@ export const Layout: FC = () => {
   }, []);
 
   return (
-    <div className={s.layout}>
+    <div className={cn(s.layout, s.bg_playfull)}>
       <UserSection />
       <Outlet />
     </div>
