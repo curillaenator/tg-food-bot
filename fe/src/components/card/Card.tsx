@@ -11,9 +11,9 @@ import type { CardProps } from './interfaces';
 const pricer = new Intl.NumberFormat('vi-IT', { style: 'currency', currency: 'VND' });
 
 export const Card: FC<CardProps> = (props) => {
-  const { to, ...rest } = props;
+  const { to, type, ...rest } = props;
 
-  if (!!to)
+  if (!!to && type !== 'item')
     return (
       <Link to={to}>
         <CardComponent {...rest} />

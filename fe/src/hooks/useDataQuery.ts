@@ -14,17 +14,19 @@ export const useDataQuery = () => {
   const { search } = useLocation();
 
   const [categories, setCategories] = useState<Record<string, Category[]>>({});
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (!!categoryId || !!serviceId || !!showcaseId) return;
 
     setCategories({});
+    setLoading(true);
 
     const usubscribeCategories = onValue(ref(rtdb, 'categories'), (snap) => {
       if (snap.exists()) {
         const data = snap.val() as Record<string, Record<string, Category>>;
 
-        Object.keys(data).forEach((key) => {
+        Object.keys(data).forEach(async (key) => {
           const promises = Object.entries(data[key]).map(async ([id, category]) => {
             const imgPath = await getDownloadURL(storageRef(strg, category.imgPath));
 
@@ -46,9 +48,11 @@ export const useDataQuery = () => {
             };
           });
 
-          Promise.all(promises).then((resolvedCategory) => {
+          await Promise.all(promises).then((resolvedCategory) => {
             setCategories((prev) => ({ ...prev, [key]: resolvedCategory }));
           });
+
+          setLoading(false);
         });
       }
     });
@@ -58,6 +62,9 @@ export const useDataQuery = () => {
 
   useEffect(() => {
     if (!categoryId) return;
+
+    setCategories({});
+    setLoading(true);
 
     const searchParams = new URLSearchParams(search);
     const { value } = searchParams.values().next();
@@ -99,15 +106,19 @@ export const useDataQuery = () => {
 
           const resolvedValue = await Promise.all(imagedItemsPromises);
 
-          return [k, resolvedValue]; // .then((res) => console.log(res));
+          return [k, resolvedValue];
         });
 
-        Promise.all(servicesToSetPromise).then((result) => setCategories(Object.fromEntries(result)));
+        Promise.all(servicesToSetPromise).then((result) => {
+          setCategories(Object.fromEntries(result));
+          setLoading(false);
+        });
       });
     });
   }, [search, categoryId, serviceId, showcaseId]);
 
   return {
+    loading,
     contentMap: Object.entries(categories),
   };
 };

@@ -18,6 +18,7 @@ export interface Category {
   description: string;
   imgPath: string;
   categories?: Category[];
+  type?: string;
 }
 
 export const ShowcaseSection: FC<Category> = (props) => {
