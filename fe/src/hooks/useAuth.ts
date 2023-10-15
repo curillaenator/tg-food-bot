@@ -15,7 +15,7 @@ import { setUser } from '../store';
 
 type ActionType = 'email' | 'password' | 'error';
 
-interface Action {
+export interface Action {
   type: ActionType;
   payload: string;
 }

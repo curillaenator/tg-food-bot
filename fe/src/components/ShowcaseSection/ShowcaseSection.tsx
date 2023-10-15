@@ -24,11 +24,11 @@ export interface Category {
 export const ShowcaseSection: FC<Category> = (props) => {
   const {
     // id,
+    // imgPath,
     title,
+    // type,
     categories,
   } = props;
-
-  // console.log(categories);
 
   return (
     <AccordionItem py={6}>

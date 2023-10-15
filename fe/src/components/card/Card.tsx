@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { Card as UICard, CardBody, Image, Center, Stack, Heading, Text, Spacer, Badge } from '@chakra-ui/react';
 import { TimeIcon } from '@chakra-ui/icons';
 
+import { setBasket } from '../../store';
+
 import s from './styles.module.scss';
 import type { CardProps } from './interfaces';
 
@@ -20,7 +22,7 @@ export const Card: FC<CardProps> = (props) => {
       </Link>
     );
 
-  return <CardComponent {...rest} />;
+  return <CardComponent {...rest} type={type} />;
 };
 
 const CardComponent: FC<CardProps> = (props) => {
@@ -30,17 +32,11 @@ const CardComponent: FC<CardProps> = (props) => {
     description,
     imgPath,
     price,
+    type,
     waitTime,
     // likes,
-    //  qty
+    qty,
   } = props;
-
-  // const onLike = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-  //   e.preventDefault();
-  //   e.stopPropagation();
-
-  //   set(ref(rtdb, `menu/${id}/likes`), +likes + 1);
-  // };
 
   return (
     <UICard
@@ -49,6 +45,10 @@ const CardComponent: FC<CardProps> = (props) => {
       bg='chakra-body-bg'
       borderRadius={8}
       boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-200)'
+      onClick={() => {
+        if (type !== 'item') return;
+        setBasket({ id, title, description, type, price, waitTime, qty });
+      }}
     >
       <CardBody p={0}>
         <Stack direction='column' h='100%' spacing={6}>

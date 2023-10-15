@@ -1,16 +1,12 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from 'effector-react';
 import {
   Flex,
   Spacer,
   Text,
   ButtonGroup,
-  Checkbox,
   Button,
-  InputGroup,
-  Input,
-  InputLeftAddon,
-  InputRightElement,
   Heading,
   Avatar,
   Stack,
@@ -24,45 +20,41 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import { HamburgerIcon, EmailIcon, UnlockIcon } from '@chakra-ui/icons';
+import { HamburgerIcon, ChevronLeftIcon } from '@chakra-ui/icons';
 
 import { $globalStore } from '../../store';
 import { useAuth } from '../../hooks/useAuth';
 
 import { Profile } from '../profile';
+import { SignForm } from '../signForm';
 import { BasketIcon } from './BasketIcon';
-
-interface ErrorTextProps {
-  error: string;
-  resetPassword: () => void;
-}
-
-const ErrorText: FC<ErrorTextProps> = ({ error, resetPassword }) => (
-  <Stack w='100%' flexDirection='column' gap={4}>
-    <Text w='100%' textAlign='center' color='red.500'>
-      {error}
-    </Text>
-
-    {error.includes('email-already-in-use') && <Button onClick={() => resetPassword()}>Remind password</Button>}
-  </Stack>
-);
 
 export const UserSection: FC = () => {
   const { user, basket } = useStore($globalStore);
 
-  const { authLoading, firstTime, creds, onCredsChange, signOut, authAction, setFirstTime, resetPassword } = useAuth();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLButtonElement>(null);
 
-  const [showPass, setShowPass] = useState<boolean>(false);
+  const { authLoading, firstTime, creds, onCredsChange, signOut, authAction, setFirstTime, resetPassword } = useAuth();
+
+  const isHomePage = pathname === '/';
 
   return (
     <>
       <Flex as='header' p={4} alignItems='çenter' bg='blackAlpha.400'>
-        <Heading transform='translateY(-3px)' fontSize='4xl'>
-          Pixpax
-        </Heading>
+        {isHomePage ? (
+          <Heading transform='translateY(-3px)' fontSize='4xl'>
+            Pixpax
+          </Heading>
+        ) : (
+          <Button h='fit-content' variant='ghost' p={2} onClick={() => navigate(-1)}>
+            <ChevronLeftIcon boxSize={8} />
+            <Text>Back</Text>
+          </Button>
+        )}
 
         <Spacer />
 
@@ -116,60 +108,14 @@ export const UserSection: FC = () => {
               {!!user?.id ? (
                 <Profile />
               ) : (
-                <Stack spacing={4}>
-                  <InputGroup>
-                    <InputLeftAddon
-                      h={12}
-                      children={<EmailIcon boxSize={4} />} // eslint-disable-line react/no-children-prop
-                    />
-
-                    <Input
-                      isDisabled={authLoading}
-                      autoComplete='off'
-                      placeholder='Email'
-                      type='email'
-                      size='lg'
-                      value={creds.email}
-                      onChange={(e) => onCredsChange({ type: 'email', payload: e.target.value })}
-                    />
-                  </InputGroup>
-
-                  <InputGroup>
-                    <InputLeftAddon
-                      h={12}
-                      children={<UnlockIcon boxSize={4} />} // eslint-disable-line react/no-children-prop
-                    />
-
-                    <Input
-                      isDisabled={authLoading}
-                      autoComplete='off'
-                      placeholder='Password'
-                      type={showPass ? 'text' : 'password'}
-                      size='lg'
-                      value={creds.password}
-                      onChange={(e) => onCredsChange({ type: 'password', payload: e.target.value })}
-                    />
-
-                    <InputRightElement h='100%' display='flex' alignItems='center' width='4.5rem'>
-                      <Button isDisabled={authLoading} size='sm' onClick={() => setShowPass((prev) => !prev)}>
-                        {showPass ? 'Hide' : 'Show'}
-                      </Button>
-                    </InputRightElement>
-                  </InputGroup>
-
-                  {!!creds.error?.length && <ErrorText error={creds.error} resetPassword={resetPassword} />}
-
-                  <Checkbox
-                    isDisabled={authLoading}
-                    colorScheme='telegram'
-                    mt={4}
-                    size='lg'
-                    checked={firstTime}
-                    onChange={() => setFirstTime((prev) => !prev)}
-                  >
-                    I am first timer!
-                  </Checkbox>
-                </Stack>
+                <SignForm
+                  authLoading={authLoading}
+                  firstTime={firstTime}
+                  creds={creds}
+                  onCredsChange={onCredsChange}
+                  resetPassword={resetPassword}
+                  setFirstTime={setFirstTime}
+                />
               )}
             </AlertDialogBody>
 
