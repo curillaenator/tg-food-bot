@@ -34,11 +34,14 @@ const CardComponent: FC<CardProps> = (props) => {
     price,
     type,
     waitTime,
+    // parent,
     // likes,
     qty,
   } = props;
 
   const { user } = useStore($globalStore);
+
+  // console.log(parent);
 
   return (
     <UICard

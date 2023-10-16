@@ -6,7 +6,8 @@ export type ShowcaseItem = {
   description: string;
   type: string;
   price: string;
-  waitTime: string;
+  parent?: string;
+  waitTime?: string;
   qty: number;
 };
 

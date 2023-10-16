@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from 'effector-react';
+
 import {
   Flex,
   Spacer,
@@ -19,9 +20,10 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  Stack,
 } from '@chakra-ui/react';
 
-import { HamburgerIcon, ChevronLeftIcon } from '@chakra-ui/icons';
+import { HamburgerIcon, ChevronLeftIcon, SmallAddIcon, CopyIcon, CalendarIcon } from '@chakra-ui/icons';
 
 import { $globalStore } from '../../store';
 import { useAuth } from '../../hooks/useAuth';
@@ -50,6 +52,7 @@ export const UserSection: FC = () => {
   const { authLoading, firstTime, creds, onCredsChange, signOut, authAction, setFirstTime, resetPassword } = useAuth();
 
   const isHomePage = pathname === '/';
+  const role = user?.role;
 
   return (
     <>
@@ -108,6 +111,7 @@ export const UserSection: FC = () => {
         //
         size='full'
         isOpen={isAuthOpen}
+        // isOpen={true}
         placement='right'
         onClose={onAuthClose}
         finalFocusRef={finalFocusRef}
@@ -132,18 +136,44 @@ export const UserSection: FC = () => {
           {authLoading && <Progress size='xs' isIndeterminate />}
 
           <DrawerBody p={4}>
-            {!!user?.id ? (
-              <Profile />
-            ) : (
-              <SignForm
-                authLoading={authLoading}
-                firstTime={firstTime}
-                creds={creds}
-                onCredsChange={onCredsChange}
-                resetPassword={resetPassword}
-                setFirstTime={setFirstTime}
-              />
-            )}
+            <Stack gap={4} justifyContent='space-between' h='full'>
+              {!!user?.id ? (
+                <Profile />
+              ) : (
+                <SignForm
+                  authLoading={authLoading}
+                  firstTime={firstTime}
+                  creds={creds}
+                  onCredsChange={onCredsChange}
+                  resetPassword={resetPassword}
+                  setFirstTime={setFirstTime}
+                />
+              )}
+
+              {(role === 'manager' || role === 'admin') && (
+                <ButtonGroup orientation='vertical' variant='outline' isAttached w='full'>
+                  <Button leftIcon={<CopyIcon boxSize={6} />} size='lg' w='full'>
+                    Заявки
+                  </Button>
+
+                  <Button
+                    leftIcon={<SmallAddIcon boxSize={8} />}
+                    size='lg'
+                    w='full'
+                    onClick={() => {
+                      navigate('/add');
+                      onAuthClose();
+                    }}
+                  >
+                    Добавить
+                  </Button>
+
+                  <Button leftIcon={<CalendarIcon boxSize={6} />} size='lg' w='full'>
+                    Отчеты
+                  </Button>
+                </ButtonGroup>
+              )}
+            </Stack>
           </DrawerBody>
 
           <DrawerFooter p={4}>
