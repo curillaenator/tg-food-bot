@@ -3,14 +3,17 @@ import { ref, child, get } from 'firebase/database';
 import { ref as storageRef, getDownloadURL } from 'firebase/storage';
 
 import { rtdb, strg } from '../../../shared/firebase';
+import { setBasketItemQty } from '../../../store';
 
 import type { BasketCardProps } from '../BasketCard';
 
 export const useBasketCard = (props: BasketCardProps) => {
-  const { id, price, updateTotalPrice } = props;
+  const { id, price, qty = 1, updateTotalPrice } = props;
 
   const [imgURL, setImgURL] = useState<string | undefined>(undefined);
-  const [qty, setQty] = useState<number>(1);
+
+  const incr = () => setBasketItemQty({ itemId: id, qty: qty + 1 });
+  const decr = () => setBasketItemQty({ itemId: id, qty: qty - 1 });
 
   useEffect(() => {
     get(child(ref(rtdb), `items/${id}`)).then(async (snap) => {
@@ -24,7 +27,7 @@ export const useBasketCard = (props: BasketCardProps) => {
   return {
     imgURL,
     qty,
-    incr: () => setQty((prev) => prev + 1),
-    decr: () => setQty((prev) => prev - 1),
+    incr,
+    decr,
   };
 };

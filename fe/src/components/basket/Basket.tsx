@@ -54,7 +54,14 @@ export const Basket: FC<BasketProps> = (props) => {
   const calcedTotalPrice = Object.values(totalPrice).reduce((acc, item) => acc + item, 0);
 
   return (
-    <Drawer size='full' isOpen={isBasketOpen} placement='right' onClose={onBasketClose} finalFocusRef={finalFocusRef}>
+    <Drawer
+      // ,,
+      size='full'
+      isOpen={isBasketOpen}
+      placement='right'
+      onClose={onBasketClose}
+      finalFocusRef={finalFocusRef}
+    >
       <DrawerOverlay />
 
       <DrawerContent className={s.basketBg}>

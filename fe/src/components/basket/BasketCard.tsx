@@ -13,15 +13,12 @@ import {
   CardBody,
   CardFooter,
 } from '@chakra-ui/react';
-import { AddIcon, MinusIcon } from '@chakra-ui/icons';
+import { AddIcon, MinusIcon, DeleteIcon } from '@chakra-ui/icons';
 
 import { useBasketCard } from './hooks/useBasketCard';
 import { VNpricer } from '../../utils';
 
-import {
-  // setBasket,
-  type ShowcaseItem,
-} from '../../store';
+import { removeBasketItem, type ShowcaseItem } from '../../store';
 
 export interface BasketCardProps extends Partial<ShowcaseItem> {
   imgPath: string;
@@ -30,7 +27,7 @@ export interface BasketCardProps extends Partial<ShowcaseItem> {
 
 export const BasketCard: FC<BasketCardProps> = (props) => {
   const {
-    // id,
+    id,
     title,
     // type,
     //  description,
@@ -43,7 +40,7 @@ export const BasketCard: FC<BasketCardProps> = (props) => {
     <Card bg='chakra-body-bg' borderRadius={8} boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-200)'>
       <CardBody p={2}>
         <Flex gap={2}>
-          <Center aspectRatio='1 / 1' w='50%'>
+          <Center aspectRatio='1 / 1' w='50%' position='relative'>
             <Image
               w='100%'
               h='100%'
@@ -54,6 +51,19 @@ export const BasketCard: FC<BasketCardProps> = (props) => {
               loading='lazy'
               fallback={<Text>No image</Text>}
             />
+
+            <Button
+              position='absolute'
+              colorScheme='red'
+              bottom={2}
+              left={2}
+              variant='outline'
+              h='fit-content'
+              p={2}
+              onClick={() => removeBasketItem(id)}
+            >
+              <DeleteIcon boxSize={6} />
+            </Button>
           </Center>
 
           <Stack w='50%' justifyContent='space-between'>

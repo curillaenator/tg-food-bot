@@ -40,7 +40,10 @@ export interface GlobalStore {
 export const setBackground = createEvent<Background>();
 export const setUser = createEvent<User | null>();
 export const updateUser = createEvent<Partial<User>>();
+
 export const setBasket = createEvent<ShowcaseItem>();
+export const removeBasketItem = createEvent<string>();
+export const setBasketItemQty = createEvent<{ itemId: string; qty: number }>();
 
 export const $globalStore = createStore<GlobalStore>({
   background: 'wowwy',
@@ -57,10 +60,34 @@ $globalStore
     ...state,
     user,
   }))
-  .on(setBasket, (state, basketItem) => ({
-    ...state,
-    basket: [...state.basket, basketItem],
-  }))
+  .on(removeBasketItem, (state, itemId) => {
+    const removeIndex = state.basket.findIndex((item) => item.id === itemId);
+    const updatedBasket = [...state.basket];
+    updatedBasket.splice(removeIndex, 1);
+
+    return { ...state, basket: updatedBasket };
+  })
+  .on(setBasketItemQty, (state, payload) => {
+    const { itemId, qty } = payload;
+
+    const itemToEdit = state.basket.findIndex((el) => el.id === itemId);
+    const updatedBasket = [...state.basket];
+    updatedBasket[itemToEdit].qty = qty;
+
+    return { ...state, basket: updatedBasket };
+  })
+  .on(setBasket, (state, basketItem) => {
+    const itemToEdit = state.basket.findIndex((el) => el.id === basketItem.id);
+
+    if (itemToEdit >= 0) {
+      const updatedBasket = [...state.basket];
+      updatedBasket[itemToEdit].qty = (updatedBasket[itemToEdit].qty || 1) + 1;
+
+      return { ...state, basket: updatedBasket };
+    }
+
+    return { ...state, basket: [...state.basket, basketItem] };
+  })
   .on(updateUser, (state, partialUser) => ({
     ...state,
     user: { ...state.user, ...partialUser },

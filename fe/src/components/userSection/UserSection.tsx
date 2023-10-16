@@ -4,19 +4,21 @@ import { useStore } from 'effector-react';
 import {
   Flex,
   Spacer,
-  Text,
+  // Text,
+  Heading,
   ButtonGroup,
   Button,
   Avatar,
-  Stack,
+  // Stack,
   Image,
   Progress,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay,
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
 } from '@chakra-ui/react';
 
 import { HamburgerIcon, ChevronLeftIcon } from '@chakra-ui/icons';
@@ -33,6 +35,8 @@ import { BasketIcon } from '../../assets/BasketIcon';
 
 import pixpaxLogo from '../../assets/logo/pixpaxLogo.png';
 
+import s from './styles.module.scss';
+
 export const UserSection: FC = () => {
   const { user, basket } = useStore($globalStore);
 
@@ -41,7 +45,7 @@ export const UserSection: FC = () => {
 
   const { isAuthOpen, isBasketOpen, onAuthOpen, onBasketOpen, onAuthClose, onBasketClose } = useOverlaysControl();
 
-  const cancelRef = React.useRef<HTMLButtonElement>(null);
+  const finalFocusRef = React.useRef<HTMLButtonElement>(null);
 
   const { authLoading, firstTime, creds, onCredsChange, signOut, authAction, setFirstTime, resetPassword } = useAuth();
 
@@ -100,72 +104,80 @@ export const UserSection: FC = () => {
         )}
       </Flex>
 
-      <AlertDialog leastDestructiveRef={cancelRef} isOpen={isAuthOpen} onClose={onAuthClose}>
-        <AlertDialogOverlay>
-          <AlertDialogContent p={4} display='flex' flexDirection='column' gap={4}>
-            <AlertDialogHeader fontSize='3xl' fontWeight='bold' textAlign='center'>
-              <Stack flexDirection='row' alignItems='center' justifyContent='space-between'>
-                {!!user?.id && (
-                  <Button color='whiteAlpha.500' size='xs' variant='ghost' onClick={signOut}>
-                    Logout
-                  </Button>
-                )}
+      <Drawer
+        //
+        size='full'
+        isOpen={isAuthOpen}
+        placement='right'
+        onClose={onAuthClose}
+        finalFocusRef={finalFocusRef}
+      >
+        <DrawerOverlay />
 
-                <Text>{!!user?.id ? 'Profile' : 'Sign in'}</Text>
-              </Stack>
-            </AlertDialogHeader>
+        <DrawerContent className={s.authBg}>
+          <DrawerCloseButton size='lg' h='fit-content' px={2} py={4} color='whiteAlpha.400' top={4} right={4} />
 
-            <AlertDialogBody>
-              {!!user?.id ? (
-                <Profile />
-              ) : (
-                <SignForm
-                  authLoading={authLoading}
-                  firstTime={firstTime}
-                  creds={creds}
-                  onCredsChange={onCredsChange}
-                  resetPassword={resetPassword}
-                  setFirstTime={setFirstTime}
-                />
+          <DrawerHeader p={4} bg='blackAlpha.300'>
+            <Flex gap={1} alignItems='center' h='48px'>
+              <Heading>{!!user?.id ? '' : 'Sign in'}</Heading>
+
+              {!!user?.id && (
+                <Button color='whiteAlpha.500' size='xs' variant='ghost' onClick={signOut}>
+                  Logout
+                </Button>
               )}
-            </AlertDialogBody>
+            </Flex>
+          </DrawerHeader>
 
-            <AlertDialogFooter justifyContent='center'>
-              <ButtonGroup width='100%' isAttached size='lg' display='flex' justifyContent='center'>
-                {!user?.id && (
-                  <Button
-                    p={4}
-                    width='100%'
-                    variant='solid'
-                    colorScheme='telegram'
-                    h='fit-content'
-                    isDisabled={authLoading}
-                    onClick={authAction}
-                  >
-                    {firstTime ? 'Sign in' : 'Go!'}
-                  </Button>
-                )}
+          {authLoading && <Progress size='xs' isIndeterminate />}
 
+          <DrawerBody p={4}>
+            {!!user?.id ? (
+              <Profile />
+            ) : (
+              <SignForm
+                authLoading={authLoading}
+                firstTime={firstTime}
+                creds={creds}
+                onCredsChange={onCredsChange}
+                resetPassword={resetPassword}
+                setFirstTime={setFirstTime}
+              />
+            )}
+          </DrawerBody>
+
+          <DrawerFooter p={4}>
+            <ButtonGroup isAttached w='full'>
+              {!user?.id && (
                 <Button
                   p={4}
                   width='100%'
-                  variant={!!user?.id ? 'solid' : 'outline'}
-                  colorScheme={!!user?.id ? 'telegram' : undefined}
-                  color={!!user?.id ? undefined : 'chakra-subtle-text'}
+                  variant='solid'
+                  colorScheme='telegram'
                   h='fit-content'
-                  ref={cancelRef}
                   isDisabled={authLoading}
-                  onClick={onAuthClose}
+                  onClick={authAction}
                 >
-                  {!!user?.id ? 'Ok' : 'Close'}
+                  {firstTime ? 'Sign in' : 'Go!'}
                 </Button>
-              </ButtonGroup>
-            </AlertDialogFooter>
+              )}
 
-            {authLoading && <Progress size='xs' isIndeterminate />}
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+              <Button
+                p={4}
+                width='100%'
+                variant={!!user?.id ? 'solid' : 'outline'}
+                colorScheme={!!user?.id ? 'telegram' : undefined}
+                color={!!user?.id ? undefined : 'chakra-subtle-text'}
+                h='fit-content'
+                isDisabled={authLoading}
+                onClick={onAuthClose}
+              >
+                {!!user?.id ? 'Ok' : 'Close'}
+              </Button>
+            </ButtonGroup>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
 
       <Basket isBasketOpen={isBasketOpen} onBasketClose={onBasketClose} />
     </>

@@ -1,11 +1,12 @@
 import React, { FC } from 'react';
+import { useStore } from 'effector-react';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
 
 import { Card as UICard, CardBody, Image, Center, Stack, Heading, Text, Spacer, Badge } from '@chakra-ui/react';
 import { TimeIcon } from '@chakra-ui/icons';
 
-import { setBasket } from '../../store';
+import { setBasket, $globalStore } from '../../store';
 import { VNpricer } from '../../utils';
 
 import s from './styles.module.scss';
@@ -37,6 +38,8 @@ const CardComponent: FC<CardProps> = (props) => {
     qty,
   } = props;
 
+  const { user } = useStore($globalStore);
+
   return (
     <UICard
       id={id}
@@ -44,8 +47,10 @@ const CardComponent: FC<CardProps> = (props) => {
       bg='chakra-body-bg'
       borderRadius={8}
       boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-200)'
+      transition='background-color 80ms ease'
+      _active={type === 'item' && { backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
       onClick={() => {
-        if (type !== 'item') return;
+        if (!user?.id || type !== 'item') return;
         setBasket({ id, title, description, type, price, waitTime, qty });
       }}
     >
