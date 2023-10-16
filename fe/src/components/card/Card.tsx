@@ -48,10 +48,11 @@ const CardComponent: FC<CardProps> = (props) => {
       id={id}
       p={2}
       bg='chakra-body-bg'
-      borderRadius={8}
-      boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-200)'
+      borderRadius={12}
+      boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-400)'
       transition='background-color 80ms ease'
-      _active={type === 'item' && { backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
+      // _active={type === 'item' && { backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
+      _active={{ backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
       onClick={() => {
         if (!user?.id || type !== 'item') return;
         setBasket({ id, title, description, type, price, waitTime, qty });
@@ -63,7 +64,7 @@ const CardComponent: FC<CardProps> = (props) => {
             <Image
               src={imgPath}
               alt={title}
-              borderRadius={4}
+              borderRadius={8}
               objectFit='cover'
               w='100%'
               aspectRatio='1 / 1'

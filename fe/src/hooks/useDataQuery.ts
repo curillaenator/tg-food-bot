@@ -14,6 +14,7 @@ export const useDataQuery = () => {
   const { search } = useLocation();
 
   const [categories, setCategories] = useState<Record<string, Category[]>>({});
+  const [services, setServices] = useState<Record<string, Category>>({});
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -88,8 +89,10 @@ export const useDataQuery = () => {
     Promise.all(servicePromises).then((services) => {
       const servicesCleared = services.filter((s) => !!s[1]) as [string, Category][];
 
-      const servicesWithItemsPromise = servicesCleared.map(async ([serviceName, serviceMenu]) => {
-        const serviseItemsPromises = Object.entries(serviceMenu.categories)
+      if (!!servicesCleared.length) setServices(Object.fromEntries(servicesCleared));
+
+      const servicesWithItemsPromise = servicesCleared.map(async ([serviceName, serviceItem]) => {
+        const serviseItemsPromises = Object.entries(serviceItem.categories)
           .filter(([itemId, isActiveItem]) => !!itemId && isActiveItem)
           .map(([itemId]) => {
             return get(child(ref(rtdb), `items/${itemId}`)).then((snap) => {
@@ -126,6 +129,7 @@ export const useDataQuery = () => {
 
   return {
     loading,
+    services,
     contentMap: Object.entries(categories),
   };
 };

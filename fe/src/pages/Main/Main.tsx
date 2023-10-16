@@ -7,20 +7,21 @@ import { useDataQuery } from '../../hooks/useDataQuery';
 import { ShowcaseSection } from '../../components/ShowcaseSection';
 
 export const Main: FC = () => {
-  const { loading, contentMap } = useDataQuery();
+  const { loading, services, contentMap } = useDataQuery();
 
   return (
     <Box as='main'>
       {loading && <Progress isIndeterminate size='xs' />}
 
       <Accordion allowToggle>
-        {contentMap.map(([contentName, content]) => (
+        {contentMap.map(([serviceName, content]) => (
           <ShowcaseSection
-            key={contentName}
-            id={contentName}
-            title={contentName}
-            description=''
-            imgPath=''
+            key={serviceName}
+            id={serviceName}
+            title={serviceName}
+            description={services[serviceName]?.description}
+            imgPath={services[serviceName]?.imgPath}
+            type={services[serviceName]?.type}
             categories={content}
           />
         ))}

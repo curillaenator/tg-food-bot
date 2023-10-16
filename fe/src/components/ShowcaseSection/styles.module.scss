@@ -1,0 +1,11 @@
+.clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  @each $clampTo in (1, 2, 3, 4) {
+    &_#{'' + $clampTo} {
+      -webkit-line-clamp: $clampTo;
+    }
+  }
+}

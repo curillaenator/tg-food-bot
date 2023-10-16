@@ -1,4 +1,4 @@
-import React, { FC, useState, useCallback } from 'react';
+import React, { FC, useState, useCallback, useEffect } from 'react';
 import { useStore } from 'effector-react';
 
 import {
@@ -52,6 +52,10 @@ export const Basket: FC<BasketProps> = (props) => {
   const finalFocusRef = React.useRef();
 
   const calcedTotalPrice = Object.values(totalPrice).reduce((acc, item) => acc + item, 0);
+
+  useEffect(() => {
+    if (basket.length < 1) setTotalPrice({});
+  }, [basket]);
 
   return (
     <Drawer

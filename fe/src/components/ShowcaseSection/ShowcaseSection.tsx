@@ -1,7 +1,14 @@
-import React, { FC } from 'react';
+import React, { FC, useState, useEffect } from 'react';
+import cn from 'classnames';
+import { ref, getDownloadURL } from 'firebase/storage';
+
+import { strg } from '../../shared/firebase';
 
 import {
   Box,
+  Stack,
+  Image,
+  Text,
   SimpleGrid,
   Heading,
   AccordionItem,
@@ -11,6 +18,8 @@ import {
 } from '@chakra-ui/react';
 
 import { Card } from '../card';
+
+import s from './styles.module.scss';
 
 export interface Category {
   id: string;
@@ -26,11 +35,19 @@ export interface Category {
 export const ShowcaseSection: FC<Category> = (props) => {
   const {
     // id,
-    // imgPath,
+    imgPath,
     title,
-    // type,
+    description,
+    type,
     categories,
   } = props;
+
+  const [serviceImgUrl, setServiceImgUrl] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (type !== 'service' || !imgPath) return;
+    getDownloadURL(ref(strg, imgPath)).then((url) => setServiceImgUrl(url));
+  }, [imgPath, type]);
 
   return (
     <AccordionItem py={6}>
@@ -54,7 +71,21 @@ export const ShowcaseSection: FC<Category> = (props) => {
         </AccordionButton>
       </Heading>
 
-      <AccordionPanel px={4} pt={6} pb={0}>
+      <AccordionPanel px={4} pt={4} pb={0}>
+        {type === 'service' && (
+          <Stack w='full' pb={4}>
+            <Image src={serviceImgUrl} alt={title} w='full' borderRadius={12} aspectRatio='3 / 1' objectFit='cover' />
+
+            <Text color='chakra-subtle-text' className={cn(s.clamped, s.clamped_3)}>
+              {description}
+            </Text>
+
+            <Heading mt={4} fontSize='2xl'>
+              Menu:
+            </Heading>
+          </Stack>
+        )}
+
         <SimpleGrid columns={2} spacing={2}>
           {categories
             ?.filter((c) => c.type === 'item' || !!c.categories)
