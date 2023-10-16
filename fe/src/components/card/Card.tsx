@@ -6,11 +6,10 @@ import { Card as UICard, CardBody, Image, Center, Stack, Heading, Text, Spacer, 
 import { TimeIcon } from '@chakra-ui/icons';
 
 import { setBasket } from '../../store';
+import { VNpricer } from '../../utils';
 
 import s from './styles.module.scss';
 import type { CardProps } from './interfaces';
-
-const pricer = new Intl.NumberFormat('vi-IT', { style: 'currency', currency: 'VND' });
 
 export const Card: FC<CardProps> = (props) => {
   const { to, type, ...rest } = props;
@@ -54,7 +53,7 @@ const CardComponent: FC<CardProps> = (props) => {
         <Stack direction='column' h='100%' spacing={6}>
           <Center flexShrink={0}>
             {imgPath ? (
-              <Image src={imgPath} borderRadius={4} aspectRatio='1 / 1' objectFit='cover' w='100%' />
+              <Image src={imgPath} alt={title} borderRadius={4} aspectRatio='1 / 1' objectFit='cover' w='100%' />
             ) : (
               'No image'
             )}
@@ -66,7 +65,7 @@ const CardComponent: FC<CardProps> = (props) => {
                 {title}
               </Heading>
 
-              {!!price && <Text>{pricer.format(+price)}</Text>}
+              {!!price && <Text>{VNpricer.format(+price)}</Text>}
 
               <Text color='chakra-subtle-text' className={cn(s.clamped, s.clamped_3)}>
                 {description}

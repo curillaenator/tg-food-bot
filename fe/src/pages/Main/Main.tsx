@@ -9,17 +9,11 @@ import { ShowcaseSection } from '../../components/ShowcaseSection';
 export const Main: FC = () => {
   const { loading, contentMap } = useDataQuery();
 
-  // console.table(contentMap);
-
   return (
     <Box as='main'>
       {loading && <Progress isIndeterminate size='xs' />}
 
-      <Accordion
-        // defaultIndex={[0, 1, 2, 3, 4, 5, 6, 7, 8]}
-        // allowMultiple
-        allowToggle
-      >
+      <Accordion allowToggle>
         {contentMap.map(([contentName, content]) => (
           <ShowcaseSection
             key={contentName}

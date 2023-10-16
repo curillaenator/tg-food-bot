@@ -11,7 +11,7 @@ import {
 
 import { rtdb, auth } from '../shared/firebase';
 
-import { setUser } from '../store';
+import { setUser, type User } from '../store';
 
 type ActionType = 'email' | 'password' | 'error';
 
@@ -80,20 +80,20 @@ export const useAuth = () => {
     setAuthLoading(true);
 
     createUserWithEmailAndPassword(auth, creds.email, creds.password)
-      .then(async (userCredential) => {
+      .then((userCredential) => {
         const { user } = userCredential;
 
-        const appUser = {
+        const appUser: User = {
           id: user.uid,
           name: user.displayName || '',
           avatar: user.photoURL || '',
           tel: user.phoneNumber || '',
           email: user.email || '',
           adress: '',
-          isAdmin: false,
+          role: 'pixpax',
         };
 
-        await set(ref(rtdb, `users/${user.uid}`), appUser);
+        set(ref(rtdb, `users/${user.uid}`), appUser);
 
         setUser(appUser);
         // setAuthLoading(false);

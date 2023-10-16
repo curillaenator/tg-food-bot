@@ -54,7 +54,9 @@ export const ShowcaseSection: FC<Category> = (props) => {
 
       <AccordionPanel px={4} pt={6} pb={0}>
         <SimpleGrid columns={2} spacing={2}>
-          {categories?.map((category) => <Card key={category.id} {...category} />)}
+          {categories
+            ?.filter((c) => c.type === 'item' || !!c.categories)
+            .map((category) => <Card key={category.id} {...category} />)}
         </SimpleGrid>
       </AccordionPanel>
     </AccordionItem>

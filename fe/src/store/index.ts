@@ -16,6 +16,8 @@ export type Order = {
   items: ShowcaseItem[];
 };
 
+export type Role = 'business' | 'manager' | 'employee' | 'admin' | 'pixpax';
+
 export type User = {
   id: string;
   name?: string;
@@ -23,7 +25,7 @@ export type User = {
   email?: string;
   tel?: string;
   adress?: string;
-  isAdmin?: boolean;
+  role?: Role;
   orders?: Order['id'];
 };
 

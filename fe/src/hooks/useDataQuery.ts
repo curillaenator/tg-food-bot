@@ -22,11 +22,13 @@ export const useDataQuery = () => {
     setCategories({});
     setLoading(true);
 
-    const usubscribeCategories = onValue(ref(rtdb, 'categories'), (snap) => {
+    const usubscribeCategories = onValue(ref(rtdb, 'categories'), async (snap) => {
       if (snap.exists()) {
         const data = snap.val() as Record<string, Record<string, Category>>;
 
-        Object.keys(data).forEach(async (key) => {
+        // const cache: Record<string, Category[]> = {};
+
+        const categoriesPromise = Object.keys(data).map((key) => {
           const promises = Object.entries(data[key]).map(async ([id, category]) => {
             const imgPath = await getDownloadURL(storageRef(strg, category.imgPath));
 
@@ -48,12 +50,17 @@ export const useDataQuery = () => {
             };
           });
 
-          await Promise.all(promises).then((resolvedCategory) => {
-            setCategories((prev) => ({ ...prev, [key]: resolvedCategory }));
+          return Promise.all(promises).then((resolvedCategory) => {
+            // setCategories((prev) => ({ ...prev, [key]: resolvedCategory }));
+            // cache[key] = resolvedCategory
+            return [key, resolvedCategory];
           });
-
-          setLoading(false);
         });
+
+        const resolvedCategories = await Promise.all(categoriesPromise);
+
+        setCategories(Object.fromEntries(resolvedCategories));
+        setLoading(false);
       }
     });
 

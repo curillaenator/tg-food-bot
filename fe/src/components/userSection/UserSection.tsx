@@ -7,9 +7,9 @@ import {
   Text,
   ButtonGroup,
   Button,
-  Heading,
   Avatar,
   Stack,
+  Image,
   Progress,
   AlertDialog,
   AlertDialogBody,
@@ -17,7 +17,6 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
-  useDisclosure,
 } from '@chakra-ui/react';
 
 import { HamburgerIcon, ChevronLeftIcon } from '@chakra-ui/icons';
@@ -25,9 +24,14 @@ import { HamburgerIcon, ChevronLeftIcon } from '@chakra-ui/icons';
 import { $globalStore } from '../../store';
 import { useAuth } from '../../hooks/useAuth';
 
+import { useOverlaysControl } from './hooks/useOverlaysControl';
+
 import { Profile } from '../profile';
+import { Basket } from '../basket';
 import { SignForm } from '../signForm';
-import { BasketIcon } from './BasketIcon';
+import { BasketIcon } from '../../assets/BasketIcon';
+
+import pixpaxLogo from '../../assets/logo/pixpaxLogo.png';
 
 export const UserSection: FC = () => {
   const { user, basket } = useStore($globalStore);
@@ -35,7 +39,8 @@ export const UserSection: FC = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isAuthOpen, isBasketOpen, onAuthOpen, onBasketOpen, onAuthClose, onBasketClose } = useOverlaysControl();
+
   const cancelRef = React.useRef<HTMLButtonElement>(null);
 
   const { authLoading, firstTime, creds, onCredsChange, signOut, authAction, setFirstTime, resetPassword } = useAuth();
@@ -46,34 +51,40 @@ export const UserSection: FC = () => {
     <>
       <Flex as='header' p={4} alignItems='çenter' bg='blackAlpha.400'>
         {isHomePage ? (
-          <Heading transform='translateY(-3px)' fontSize='4xl'>
-            Pixpax
-          </Heading>
+          <Image src={pixpaxLogo} p={2.5} h={12} objectFit='cover' />
         ) : (
-          <Button h='fit-content' variant='ghost' p={2} onClick={() => navigate(-1)}>
-            <ChevronLeftIcon boxSize={8} />
-            <Text>Back</Text>
+          <Button
+            leftIcon={<ChevronLeftIcon boxSize={8} />}
+            h='fit-content'
+            variant='ghost'
+            p={2}
+            onClick={() => navigate(-1)}
+          >
+            Back
           </Button>
         )}
 
         <Spacer />
 
         {!user?.id ? (
-          <Button h='fit-content' variant='ghost' p={2} onClick={onOpen}>
+          <Button h='fit-content' variant='ghost' p={2} onClick={onAuthOpen}>
             <HamburgerIcon boxSize={8} />
           </Button>
         ) : (
-          <Stack flexDirection='row' gap={2}>
+          <Flex gap={2}>
             {!!basket.length && (
               <Button
                 boxShadow='inset 0 0 0 2px var(--pixpax-colors-telegram-200)'
                 bg='var(--pixpax-colors-whiteAlpha-200)'
-                borderRadius='50%'
+                borderRadius='24px'
                 variant='ghost'
                 h='fit-content'
-                p={2}
+                py={2}
+                px={4}
+                onClick={onBasketOpen}
+                leftIcon={<BasketIcon />}
               >
-                <BasketIcon />
+                {basket.length}
               </Button>
             )}
             <Avatar
@@ -83,13 +94,13 @@ export const UserSection: FC = () => {
               size='md'
               src={user?.avatar}
               name={user?.name}
-              onClick={onOpen}
+              onClick={onAuthOpen}
             />
-          </Stack>
+          </Flex>
         )}
       </Flex>
 
-      <AlertDialog leastDestructiveRef={cancelRef} isOpen={isOpen} onClose={onClose}>
+      <AlertDialog leastDestructiveRef={cancelRef} isOpen={isAuthOpen} onClose={onAuthClose}>
         <AlertDialogOverlay>
           <AlertDialogContent p={4} display='flex' flexDirection='column' gap={4}>
             <AlertDialogHeader fontSize='3xl' fontWeight='bold' textAlign='center'>
@@ -144,7 +155,7 @@ export const UserSection: FC = () => {
                   h='fit-content'
                   ref={cancelRef}
                   isDisabled={authLoading}
-                  onClick={onClose}
+                  onClick={onAuthClose}
                 >
                   {!!user?.id ? 'Ok' : 'Close'}
                 </Button>
@@ -155,6 +166,8 @@ export const UserSection: FC = () => {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
+
+      <Basket isBasketOpen={isBasketOpen} onBasketClose={onBasketClose} />
     </>
   );
 };
