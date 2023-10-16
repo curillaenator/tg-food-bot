@@ -51,12 +51,17 @@ const CardComponent: FC<CardProps> = (props) => {
     >
       <CardBody p={0}>
         <Stack direction='column' h='100%' spacing={6}>
-          <Center flexShrink={0}>
-            {imgPath ? (
-              <Image src={imgPath} alt={title} borderRadius={4} aspectRatio='1 / 1' objectFit='cover' w='100%' />
-            ) : (
-              'No image'
-            )}
+          <Center flexShrink={0} aspectRatio='1 / 1' w='100%'>
+            <Image
+              src={imgPath}
+              alt={title}
+              borderRadius={4}
+              objectFit='cover'
+              w='100%'
+              aspectRatio='1 / 1'
+              fallback={<Text>No image</Text>}
+              loading='lazy'
+            />
           </Center>
 
           <Stack direction='column' spacing={6} h='100%' justifyContent='space-between'>

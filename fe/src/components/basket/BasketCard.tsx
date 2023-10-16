@@ -44,7 +44,16 @@ export const BasketCard: FC<BasketCardProps> = (props) => {
       <CardBody p={2}>
         <Flex gap={2}>
           <Center aspectRatio='1 / 1' w='50%'>
-            <Image w='100%' h='100%' borderRadius={4} objectFit='cover' src={imgURL} alt={title} />
+            <Image
+              w='100%'
+              h='100%'
+              borderRadius={4}
+              objectFit='cover'
+              src={imgURL}
+              alt={title}
+              loading='lazy'
+              fallback={<Text>No image</Text>}
+            />
           </Center>
 
           <Stack w='50%' justifyContent='space-between'>
