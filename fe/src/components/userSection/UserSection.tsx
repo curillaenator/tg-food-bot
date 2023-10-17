@@ -57,7 +57,18 @@ export const UserSection: FC = () => {
 
   return (
     <>
-      <Flex as='header' p={4} alignItems='çenter' bg='blackAlpha.400'>
+      <Flex
+        as='header'
+        p={4}
+        borderBottom='1px solid var(--pixpax-colors-whiteAlpha-400)'
+        alignItems='çenter'
+        bg='var(--color-bg-cutom)'
+        position='sticky'
+        top={0}
+        borderRadius='0 0 16px 16px'
+        zIndex={100}
+        mb={6}
+      >
         {isHomePage ? (
           <Image src={pixpaxLogo} p={2.5} h={12} objectFit='cover' />
         ) : (

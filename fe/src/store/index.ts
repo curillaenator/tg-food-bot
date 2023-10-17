@@ -46,6 +46,7 @@ export const updateUser = createEvent<Partial<User>>();
 
 export const setEditor = createEvent<boolean>();
 
+export const resetBasket = createEvent();
 export const setBasket = createEvent<ShowcaseItem>();
 export const removeBasketItem = createEvent<string>();
 export const setBasketItemQty = createEvent<{ itemId: string; qty: number }>();
@@ -69,6 +70,10 @@ $globalStore
   .on(setUser, (state, user) => ({
     ...state,
     user,
+  }))
+  .on(resetBasket, (state) => ({
+    ...state,
+    basket: [],
   }))
   .on(removeBasketItem, (state, itemId) => {
     const removeIndex = state.basket.findIndex((item) => item.id === itemId);

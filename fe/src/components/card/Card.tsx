@@ -57,7 +57,7 @@ const CardComponent: FC<CardProps> = (props) => {
       id={id}
       h='full'
       p={2}
-      bg='chakra-body-bg'
+      bg='var(--color-bg-cutom)'
       borderRadius={12}
       boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-400)'
       transition='background-color 80ms ease'
@@ -65,7 +65,7 @@ const CardComponent: FC<CardProps> = (props) => {
       onClick={() => {
         if (!user?.id || type !== 'item') return;
 
-        setBasket({ id, title, description, type, price, waitTime, qty });
+        setBasket({ id, title, description, type, price, waitTime, qty: qty === undefined ? 1 : qty });
       }}
     >
       <CardBody p={0}>

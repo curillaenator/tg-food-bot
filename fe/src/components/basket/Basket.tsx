@@ -25,6 +25,7 @@ import { $globalStore } from '../../store';
 import { BasketCard } from './BasketCard';
 import { BasketIcon } from '../../assets/BasketIcon';
 
+import { useOrder } from './hooks/useOrder';
 import { VNpricer } from '../../utils';
 import { DELIVERY_PRICE } from '../../shared/constants';
 
@@ -45,8 +46,10 @@ export const Basket: FC<BasketProps> = (props) => {
   const [totalPriceAcc, setTotalPriceAcc] = useState<Record<string, number>>({});
   const calcedTotalPrice = Object.values(totalPriceAcc).reduce((acc, item) => acc + item, 0);
 
+  const { onPlaceOrder } = useOrder(onBasketClose);
+
   useEffect(() => {
-    const effectiveTotal = Object.fromEntries(basket.map(({ id, price, qty }) => [id, +price * (qty || 1)]));
+    const effectiveTotal = Object.fromEntries(basket.map(({ id, price, qty }) => [id, +price * qty]));
     setTotalPriceAcc(effectiveTotal);
   }, [basket]);
 
@@ -85,7 +88,7 @@ export const Basket: FC<BasketProps> = (props) => {
 
               <Flex justifyContent='space-between'>
                 <Text>Доставка</Text>
-                <Text>{VNpricer.format(DELIVERY_PRICE)}</Text>
+                <Text>{VNpricer.format(calcedTotalPrice ? DELIVERY_PRICE : 0)}</Text>
               </Flex>
             </StatHelpText>
 
@@ -103,10 +106,10 @@ export const Basket: FC<BasketProps> = (props) => {
             isDisabled={!calcedTotalPrice}
             ref={initialFocusRef}
             size='lg'
-            p={4}
+            p={2}
             h='fit-content'
             variant='solid'
-            onClick={onBasketClose}
+            onClick={onPlaceOrder}
             fontSize='3xl'
             mt={8}
             w='100%'

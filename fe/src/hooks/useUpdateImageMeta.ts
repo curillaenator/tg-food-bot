@@ -1,11 +1,6 @@
 import { useEffect } from 'react';
 
-import {
-  ref,
-  listAll,
-  // getMetadata,
-  // updateMetadata
-} from 'firebase/storage';
+import { ref, listAll, getMetadata, updateMetadata } from 'firebase/storage';
 
 import { strg } from '../shared/firebase';
 
@@ -14,16 +9,14 @@ import { debounced } from '../utils';
 const update = () => {
   console.log('DEBOUNCED: update meta fires');
 
-  listAll(ref(strg, 'dishes')).then((res) => {
-    res.items.forEach((itemRef) => {
-      console.log(itemRef);
+  listAll(ref(strg, 'categories')).then((res) => {
+    res.items.forEach(async (itemRef) => {
+      await updateMetadata(itemRef, {
+        cacheControl: 'public,max-age=7200',
+        contentType: 'image/jpeg',
+      });
 
-      // getMetadata(itemRef).then((meta) => console.log(meta));
-
-      // updateMetadata(itemRef, {
-      //   cacheControl: 'public,max-age=7200',
-      //   contentType: 'image/jpeg',
-      // });
+      getMetadata(itemRef).then((meta) => console.log(meta));
     });
   });
 };

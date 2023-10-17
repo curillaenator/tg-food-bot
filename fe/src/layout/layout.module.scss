@@ -19,6 +19,11 @@ $backgrounds: (
     'darken': linear-gradient(to bottom, rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.76)),
     'base': no-repeat url('../assets/playfull.jpg'),
   ),
+  'cats': (
+    'tint': linear-gradient(to bottom, rgba(0, 63, 94, 0.4), rgba(0, 63, 94, 0.1)),
+    'darken': linear-gradient(to bottom, rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.76)),
+    'base': no-repeat url('../assets/cats.jpg'),
+  ),
 );
 
 @each $bgName, $colorSet in $backgrounds {

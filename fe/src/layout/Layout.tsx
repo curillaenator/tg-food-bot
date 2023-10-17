@@ -18,7 +18,7 @@ export const Layout: FC = () => {
   }, []);
 
   return (
-    <div className={cn(s.layout, s.bg_wowwy)}>
+    <div className={cn(s.layout, s.bg_cats)}>
       <UserSection />
       <Outlet />
     </div>
