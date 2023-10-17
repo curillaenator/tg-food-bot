@@ -92,7 +92,7 @@ export const ItemForm: FC = () => {
             placeholder='Minimum 5 chars'
             {...register(inputId, {
               required: 'Required',
-              minLength: { value: 5, message: 'Minimum length should be 5' },
+              minLength: { value: 4, message: 'Minimum length should be 4' },
             })}
           />
 

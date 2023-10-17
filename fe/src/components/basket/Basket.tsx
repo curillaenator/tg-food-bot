@@ -10,7 +10,7 @@ import {
   Text,
   Drawer,
   DrawerBody,
-  DrawerFooter,
+  // DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
@@ -98,23 +98,22 @@ export const Basket: FC<BasketProps> = (props) => {
               </Flex>
             </StatNumber>
           </Stat>
-        </DrawerBody>
 
-        <DrawerFooter p={4}>
           <Button
             isDisabled={!calcedTotalPrice}
             ref={initialFocusRef}
             size='lg'
-            p={8}
+            p={4}
             h='fit-content'
             variant='solid'
             onClick={onBasketClose}
             fontSize='3xl'
+            mt={8}
             w='100%'
           >
             Отправить
           </Button>
-        </DrawerFooter>
+        </DrawerBody>
       </DrawerContent>
     </Drawer>
   );

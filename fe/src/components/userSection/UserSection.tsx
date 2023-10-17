@@ -15,7 +15,7 @@ import {
   Progress,
   Drawer,
   DrawerBody,
-  DrawerFooter,
+  // DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
@@ -136,7 +136,7 @@ export const UserSection: FC = () => {
           {authLoading && <Progress size='xs' isIndeterminate />}
 
           <DrawerBody p={4}>
-            <Stack gap={4} justifyContent='space-between' h='full'>
+            <Stack gap={6}>
               {!!user?.id ? (
                 <Profile />
               ) : (
@@ -173,39 +173,41 @@ export const UserSection: FC = () => {
                   </Button>
                 </ButtonGroup>
               )}
-            </Stack>
-          </DrawerBody>
 
-          <DrawerFooter p={4}>
-            <ButtonGroup isAttached w='full'>
-              {!user?.id && (
+              <ButtonGroup isAttached w='full'>
+                {!user?.id && (
+                  <Button
+                    p={4}
+                    width='100%'
+                    variant='solid'
+                    colorScheme='telegram'
+                    h='fit-content'
+                    isDisabled={authLoading}
+                    onClick={authAction}
+                  >
+                    {firstTime ? 'Sign in' : 'Go!'}
+                  </Button>
+                )}
+
                 <Button
                   p={4}
                   width='100%'
-                  variant='solid'
-                  colorScheme='telegram'
+                  variant={!!user?.id ? 'solid' : 'outline'}
+                  colorScheme={!!user?.id ? 'telegram' : undefined}
+                  color={!!user?.id ? undefined : 'chakra-subtle-text'}
                   h='fit-content'
                   isDisabled={authLoading}
-                  onClick={authAction}
+                  onClick={onAuthClose}
                 >
-                  {firstTime ? 'Sign in' : 'Go!'}
+                  {!!user?.id ? 'Ok' : 'Close'}
                 </Button>
-              )}
+              </ButtonGroup>
+            </Stack>
+          </DrawerBody>
 
-              <Button
-                p={4}
-                width='100%'
-                variant={!!user?.id ? 'solid' : 'outline'}
-                colorScheme={!!user?.id ? 'telegram' : undefined}
-                color={!!user?.id ? undefined : 'chakra-subtle-text'}
-                h='fit-content'
-                isDisabled={authLoading}
-                onClick={onAuthClose}
-              >
-                {!!user?.id ? 'Ok' : 'Close'}
-              </Button>
-            </ButtonGroup>
-          </DrawerFooter>
+          {/* <DrawerFooter p={4}>
+            
+          </DrawerFooter> */}
         </DrawerContent>
       </Drawer>
 
