@@ -5119,7 +5119,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chakra-react-select@npm:^4.7.4":
+"chakra-react-select@npm:4.7.4":
   version: 4.7.4
   resolution: "chakra-react-select@npm:4.7.4"
   dependencies:
@@ -9453,7 +9453,7 @@ __metadata:
     "@types/react-dom": 18.2.11
     babel-loader: 9.1.3
     babel-plugin-import: 1.13.8
-    chakra-react-select: ^4.7.4
+    chakra-react-select: 4.7.4
     classnames: 2.3.2
     clean-webpack-plugin: 4.0.0
     copy-webpack-plugin: 11.0.0
@@ -9467,12 +9467,12 @@ __metadata:
     mini-css-extract-plugin: 2.7.6
     react: 18.2.0
     react-dom: 18.2.0
-    react-hook-form: ^7.47.0
+    react-hook-form: 7.47.0
+    react-image-file-resizer: 0.4.8
     react-router-dom: 6.16.0
     sass: 1.69.0
     sass-loader: 13.3.2
     style-loader: 3.3.3
-    swiper: 10.3.1
     telegram-webapps-types: 1.0.5
     webpack: 5.88.2
     webpack-cli: 5.1.4
@@ -9815,12 +9815,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.47.0":
+"react-hook-form@npm:7.47.0":
   version: 7.47.0
   resolution: "react-hook-form@npm:7.47.0"
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18
   checksum: dec192fec9c54e436f9e47008635dd7849b6b119ed477a9b0cd491367a0b2ced3427cd937febfb245e1cb7578c863917181d903eff4519c2787bf713ec7d3426
+  languageName: node
+  linkType: hard
+
+"react-image-file-resizer@npm:0.4.8":
+  version: 0.4.8
+  resolution: "react-image-file-resizer@npm:0.4.8"
+  checksum: b8f169bc816dd3c10910868e1049ec356e3cd063a87a0eaaf9801c96560fbf21b71019054da91c757ee85ed1ef7b1987821636c81f4f8eae1f8fe3be088ae2ea
   languageName: node
   linkType: hard
 
@@ -11032,13 +11039,6 @@ __metadata:
   version: 1.0.0
   resolution: "supports-preserve-symlinks-flag@npm:1.0.0"
   checksum: 53b1e247e68e05db7b3808b99b892bd36fb096e6fba213a06da7fab22045e97597db425c724f2bbd6c99a3c295e1e73f3e4de78592289f38431049e1277ca0ae
-  languageName: node
-  linkType: hard
-
-"swiper@npm:10.3.1":
-  version: 10.3.1
-  resolution: "swiper@npm:10.3.1"
-  checksum: 9a785930ca0ab0683d7e5e116c25a38e1f8818d6f9e93848125bdf3e1874e12a6c3b9f4e9c54668e4accc2440a6f031de98cfc01a1b0068c77f8de4115034e4d
   languageName: node
   linkType: hard
 

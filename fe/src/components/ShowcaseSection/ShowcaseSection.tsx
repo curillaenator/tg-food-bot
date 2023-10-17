@@ -74,7 +74,9 @@ export const ShowcaseSection: FC<Category> = (props) => {
       <AccordionPanel px={4} pt={4} pb={0}>
         {type === 'service' && (
           <Stack w='full' pb={4}>
-            <Image src={serviceImgUrl} alt={title} w='full' borderRadius={12} aspectRatio='3 / 1' objectFit='cover' />
+            {!!serviceImgUrl && (
+              <Image src={serviceImgUrl} alt={title} w='full' borderRadius={12} aspectRatio='3 / 1' objectFit='cover' />
+            )}
 
             <Text color='chakra-subtle-text' className={cn(s.clamped, s.clamped_3)}>
               {description}

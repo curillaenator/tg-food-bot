@@ -20,10 +20,10 @@ const update = () => {
 
       // getMetadata(itemRef).then((meta) => console.log(meta));
 
-      //   updateMetadata(itemRef, {
-      //     cacheControl: 'public,max-age=7200',
-      //     contentType: 'image/jpeg',
-      //   });
+      // updateMetadata(itemRef, {
+      //   cacheControl: 'public,max-age=7200',
+      //   contentType: 'image/jpeg',
+      // });
     });
   });
 };

@@ -1,10 +1,13 @@
-import React, { FC } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { useStore } from 'effector-react';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
+import { ref as storageRef, getDownloadURL } from 'firebase/storage';
 
 import { Card as UICard, CardBody, Image, Center, Stack, Heading, Text, Spacer, Badge } from '@chakra-ui/react';
 import { TimeIcon } from '@chakra-ui/icons';
+
+import { strg } from '../../shared/firebase';
 
 import { setBasket, $globalStore } from '../../store';
 import { VNpricer } from '../../utils';
@@ -41,7 +44,11 @@ const CardComponent: FC<CardProps> = (props) => {
 
   const { user } = useStore($globalStore);
 
-  // console.log(parent);
+  const [imageURL, setImageURL] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    getDownloadURL(storageRef(strg, imgPath)).then((url) => setImageURL(url));
+  }, [imgPath]);
 
   return (
     <UICard
@@ -62,7 +69,7 @@ const CardComponent: FC<CardProps> = (props) => {
         <Stack direction='column' h='100%' spacing={6}>
           <Center flexShrink={0} aspectRatio='1 / 1' w='100%'>
             <Image
-              src={imgPath}
+              src={imageURL}
               alt={title}
               borderRadius={8}
               objectFit='cover'

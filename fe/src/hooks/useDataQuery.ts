@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { ref, onValue, get, child } from 'firebase/database';
-import { ref as storageRef, getDownloadURL } from 'firebase/storage';
 
-import { rtdb, strg } from '../shared/firebase';
+import { rtdb } from '../shared/firebase';
 
 import type { Category } from '../components/ShowcaseSection';
 
@@ -23,16 +22,12 @@ export const useDataQuery = () => {
     setCategories({});
     setLoading(true);
 
-    const usubscribeCategories = onValue(ref(rtdb, 'categories'), async (snap) => {
+    const usubscribeCategories = onValue(ref(rtdb, 'categories'), (snap) => {
       if (snap.exists()) {
         const data = snap.val() as Record<string, Record<string, Category>>;
 
-        // const cache: Record<string, Category[]> = {};
-
-        const categoriesPromise = Object.keys(data).map((key) => {
-          const promises = Object.entries(data[key]).map(async ([id, category]) => {
-            const imgPath = await getDownloadURL(storageRef(strg, category.imgPath));
-
+        const linkedCategories = Object.keys(data).map((key) => {
+          const categories = Object.entries(data[key]).map(([id, category]) => {
             let queryString = !!category.categories ? '?categories=' : '';
 
             if (!!category.categories) {
@@ -47,20 +42,13 @@ export const useDataQuery = () => {
               id,
               ...category,
               to: `category/${id}${queryString}`,
-              imgPath,
             };
           });
 
-          return Promise.all(promises).then((resolvedCategory) => {
-            // setCategories((prev) => ({ ...prev, [key]: resolvedCategory }));
-            // cache[key] = resolvedCategory
-            return [key, resolvedCategory];
-          });
+          return [key, categories];
         });
 
-        const resolvedCategories = await Promise.all(categoriesPromise);
-
-        setCategories(Object.fromEntries(resolvedCategories));
+        setCategories(Object.fromEntries(linkedCategories));
         setLoading(false);
       }
     });
@@ -92,37 +80,27 @@ export const useDataQuery = () => {
       if (!!servicesCleared.length) setServices(Object.fromEntries(servicesCleared));
 
       const servicesWithItemsPromise = servicesCleared.map(async ([serviceName, serviceItem]) => {
-        const serviseItemsPromises = Object.entries(serviceItem.categories)
-          .filter(([itemId, isActiveItem]) => !!itemId && isActiveItem)
-          .map(([itemId]) => {
-            return get(child(ref(rtdb), `items/${itemId}`)).then((snap) => {
-              if (snap.exists()) return { id: itemId, ...snap.val() } as Category;
-            });
-          });
+        if (!serviceItem.categories) return [];
 
-        return Promise.all(serviseItemsPromises).then((serviceItems) => [serviceName, { categories: serviceItems }]);
+        const itemsPromises = Object.entries(serviceItem.categories)
+          .filter(([itemId, isActiveItem]) => !!itemId && isActiveItem)
+          .map(([itemId]) =>
+            get(child(ref(rtdb), `items/${itemId}`)).then((snap) => {
+              if (snap.exists()) return { id: itemId, ...snap.val() } as Category;
+            }),
+          );
+
+        return Promise.all(itemsPromises).then((serviceItems) => [serviceName, { categories: serviceItems }]);
       });
 
-      Promise.all(servicesWithItemsPromise).then((res) => {
-        const servicesWithItems = Object.fromEntries(res) as Category[];
+      Promise.all(servicesWithItemsPromise).then((withCategoriesMap) => {
+        console.log(withCategoriesMap);
 
-        const servicesToSetPromise = services.map(async ([k]) => {
-          const imagedItemsPromises = (servicesWithItems[k].categories as Category[]).map(async (item) => {
-            return {
-              ...item,
-              imgPath: await getDownloadURL(storageRef(strg, item.imgPath)),
-            };
-          });
+        const servicesWithItems = Object.fromEntries(withCategoriesMap) as Record<string, Partial<Category>>;
+        const servicesToSet = services.map(([k]) => [k, (servicesWithItems[k]?.categories || []) as Category[]]);
 
-          const resolvedValue = await Promise.all(imagedItemsPromises);
-
-          return [k, resolvedValue];
-        });
-
-        Promise.all(servicesToSetPromise).then((result) => {
-          setCategories(Object.fromEntries(result));
-          setLoading(false);
-        });
+        setCategories(Object.fromEntries(servicesToSet));
+        setLoading(false);
       });
     });
   }, [search, categoryId, serviceId, showcaseId]);

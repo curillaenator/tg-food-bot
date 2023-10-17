@@ -9,6 +9,8 @@ import { ShowcaseSection } from '../../components/ShowcaseSection';
 export const Main: FC = () => {
   const { loading, services, contentMap } = useDataQuery();
 
+  // console.log(contentMap);
+
   return (
     <Box as='main'>
       {loading && <Progress isIndeterminate size='xs' />}
@@ -18,11 +20,11 @@ export const Main: FC = () => {
           <ShowcaseSection
             key={serviceName}
             id={serviceName}
-            title={serviceName}
+            title={services[serviceName]?.title || serviceName}
             description={services[serviceName]?.description}
             imgPath={services[serviceName]?.imgPath}
             type={services[serviceName]?.type}
-            categories={content}
+            categories={content || []}
           />
         ))}
       </Accordion>
