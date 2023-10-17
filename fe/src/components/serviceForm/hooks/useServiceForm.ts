@@ -63,6 +63,7 @@ export const useServiceForm = () => {
         [`services/${serviceId}`]: {
           title: data.serviceTitle,
           description: data.serviceDescription,
+          parent: `${data.serviceCategory}/${data.serviceSubcategory}`,
           adress: data.serviceAddres,
           imgPath: `services/${renamedFile.name}`,
           type: 'service',

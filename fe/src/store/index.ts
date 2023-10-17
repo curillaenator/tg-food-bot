@@ -36,11 +36,15 @@ export interface GlobalStore {
   background: Background;
   user: User | null;
   basket: ShowcaseItem[];
+  isEditor: boolean;
 }
 
 export const setBackground = createEvent<Background>();
+
 export const setUser = createEvent<User | null>();
 export const updateUser = createEvent<Partial<User>>();
+
+export const setEditor = createEvent<boolean>();
 
 export const setBasket = createEvent<ShowcaseItem>();
 export const removeBasketItem = createEvent<string>();
@@ -50,9 +54,14 @@ export const $globalStore = createStore<GlobalStore>({
   background: 'wowwy',
   user: null,
   basket: [],
+  isEditor: false,
 });
 
 $globalStore
+  .on(setEditor, (state, isEditor) => ({
+    ...state,
+    isEditor,
+  }))
   .on(setBackground, (state, background) => ({
     ...state,
     background,

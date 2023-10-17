@@ -16,7 +16,7 @@ const ErrorText: FC<ErrorTextProps> = ({ error, resetPassword }) => (
       {error}
     </Text>
 
-    {error.includes('email-already-in-use') && <Button onClick={() => resetPassword()}>Remind password</Button>}
+    {error.includes('email-already-in-use') && <Button onClick={() => resetPassword()}>Восстановить пасс</Button>}
   </Stack>
 );
 

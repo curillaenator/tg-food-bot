@@ -2,12 +2,14 @@ import React, { FC, useState, useEffect } from 'react';
 import { useStore } from 'effector-react';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
-import { ref as storageRef, getDownloadURL } from 'firebase/storage';
+import { ref, update } from 'firebase/database';
+import { ref as storageRef, getDownloadURL, deleteObject } from 'firebase/storage';
 
-import { Card as UICard, CardBody, Image, Center, Stack, Heading, Text, Spacer, Badge } from '@chakra-ui/react';
-import { TimeIcon } from '@chakra-ui/icons';
+import { Card as UICard, CardBody, Button, Image, Center, Stack, Heading, Text, Spacer, Badge } from '@chakra-ui/react';
 
-import { strg } from '../../shared/firebase';
+import { TimeIcon, DeleteIcon } from '@chakra-ui/icons';
+
+import { strg, rtdb } from '../../shared/firebase';
 
 import { setBasket, $globalStore } from '../../store';
 import { VNpricer } from '../../utils';
@@ -37,12 +39,12 @@ const CardComponent: FC<CardProps> = (props) => {
     price,
     type,
     waitTime,
-    // parent,
+    parent,
     // likes,
     qty,
   } = props;
 
-  const { user } = useStore($globalStore);
+  const { user, isEditor } = useStore($globalStore);
 
   const [imageURL, setImageURL] = useState<string | undefined>(undefined);
 
@@ -59,10 +61,10 @@ const CardComponent: FC<CardProps> = (props) => {
       borderRadius={12}
       boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-400)'
       transition='background-color 80ms ease'
-      // _active={type === 'item' && { backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
       _active={{ backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
       onClick={() => {
         if (!user?.id || type !== 'item') return;
+
         setBasket({ id, title, description, type, price, waitTime, qty });
       }}
     >
@@ -105,6 +107,33 @@ const CardComponent: FC<CardProps> = (props) => {
               </Stack>
             )}
           </Stack>
+
+          {isEditor && type === 'item' && (
+            <Stack>
+              <Button
+                leftIcon={<DeleteIcon boxSize={4} />}
+                colorScheme='red'
+                size='sm'
+                p={2}
+                variant='outline'
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+
+                  if (confirm('Точно удалить товар из базы?')) {
+                    deleteObject(storageRef(strg, `items/${id}`));
+
+                    update(ref(rtdb), {
+                      [`services/${parent}/categories/${id}`]: null,
+                      [`items/${id}`]: null,
+                    });
+                  }
+                }}
+              >
+                Удалить
+              </Button>
+            </Stack>
+          )}
         </Stack>
       </CardBody>
     </UICard>

@@ -69,6 +69,7 @@ export const useItemForm = () => {
           description: data.itemDescription,
           price: data.itemPrice,
           imgPath: `items/${renamedFile.name}`,
+          parent: data.itemService,
           type: 'item',
           waitTime: data.itemWaitTime,
         },

@@ -21,11 +21,12 @@ import {
   DrawerContent,
   DrawerCloseButton,
   Stack,
+  Checkbox,
 } from '@chakra-ui/react';
 
 import { HamburgerIcon, ChevronLeftIcon, SmallAddIcon, CopyIcon, CalendarIcon } from '@chakra-ui/icons';
 
-import { $globalStore } from '../../store';
+import { $globalStore, setEditor } from '../../store';
 import { useAuth } from '../../hooks/useAuth';
 
 import { useOverlaysControl } from './hooks/useOverlaysControl';
@@ -40,7 +41,7 @@ import pixpaxLogo from '../../assets/logo/pixpaxLogo.png';
 import s from './styles.module.scss';
 
 export const UserSection: FC = () => {
-  const { user, basket } = useStore($globalStore);
+  const { user, basket, isEditor } = useStore($globalStore);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -67,7 +68,7 @@ export const UserSection: FC = () => {
             p={2}
             onClick={() => navigate(-1)}
           >
-            Back
+            Назад
           </Button>
         )}
 
@@ -107,15 +108,7 @@ export const UserSection: FC = () => {
         )}
       </Flex>
 
-      <Drawer
-        //
-        size='full'
-        isOpen={isAuthOpen}
-        // isOpen={true}
-        placement='right'
-        onClose={onAuthClose}
-        finalFocusRef={finalFocusRef}
-      >
+      <Drawer size='full' isOpen={isAuthOpen} placement='right' onClose={onAuthClose} finalFocusRef={finalFocusRef}>
         <DrawerOverlay />
 
         <DrawerContent className={s.authBg}>
@@ -123,11 +116,11 @@ export const UserSection: FC = () => {
 
           <DrawerHeader p={4} bg='blackAlpha.300'>
             <Flex gap={1} alignItems='center' h='48px'>
-              <Heading>{!!user?.id ? '' : 'Sign in'}</Heading>
+              <Heading>{!!user?.id ? '' : 'Войти'}</Heading>
 
               {!!user?.id && (
                 <Button color='whiteAlpha.500' size='xs' variant='ghost' onClick={signOut}>
-                  Logout
+                  Выйти
                 </Button>
               )}
             </Flex>
@@ -150,28 +143,41 @@ export const UserSection: FC = () => {
                 />
               )}
 
-              {(role === 'manager' || role === 'admin') && (
-                <ButtonGroup orientation='vertical' variant='outline' isAttached w='full'>
-                  <Button leftIcon={<CopyIcon boxSize={6} />} size='lg' w='full'>
-                    Заявки
-                  </Button>
+              {user?.id && (role === 'manager' || role === 'admin') && (
+                <Stack w='full' gap={4}>
+                  <Stack w='full' gap={2}>
+                    <Checkbox
+                      size='lg'
+                      defaultChecked={isEditor}
+                      checked={isEditor}
+                      onChange={(e) => setEditor(e.target.checked)}
+                    >
+                      Включить editMode
+                    </Checkbox>
+                  </Stack>
 
-                  <Button
-                    leftIcon={<SmallAddIcon boxSize={8} />}
-                    size='lg'
-                    w='full'
-                    onClick={() => {
-                      navigate('/add');
-                      onAuthClose();
-                    }}
-                  >
-                    Добавить
-                  </Button>
+                  <ButtonGroup orientation='vertical' variant='outline' isAttached w='full'>
+                    <Button leftIcon={<CopyIcon boxSize={6} />} size='lg' w='full'>
+                      Заявки
+                    </Button>
 
-                  <Button leftIcon={<CalendarIcon boxSize={6} />} size='lg' w='full'>
-                    Отчеты
-                  </Button>
-                </ButtonGroup>
+                    <Button
+                      leftIcon={<SmallAddIcon boxSize={8} />}
+                      size='lg'
+                      w='full'
+                      onClick={() => {
+                        navigate('/add');
+                        onAuthClose();
+                      }}
+                    >
+                      Добавить
+                    </Button>
+
+                    <Button leftIcon={<CalendarIcon boxSize={6} />} size='lg' w='full'>
+                      Отчеты
+                    </Button>
+                  </ButtonGroup>
+                </Stack>
               )}
 
               <ButtonGroup isAttached w='full'>
@@ -185,7 +191,7 @@ export const UserSection: FC = () => {
                     isDisabled={authLoading}
                     onClick={authAction}
                   >
-                    {firstTime ? 'Sign in' : 'Go!'}
+                    {firstTime ? 'Зарегистрироваться' : 'Go!'}
                   </Button>
                 )}
 
@@ -199,7 +205,7 @@ export const UserSection: FC = () => {
                   isDisabled={authLoading}
                   onClick={onAuthClose}
                 >
-                  {!!user?.id ? 'Ok' : 'Close'}
+                  {!!user?.id ? 'Ok' : 'Закрыть'}
                 </Button>
               </ButtonGroup>
             </Stack>
