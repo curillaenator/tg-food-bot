@@ -53,6 +53,7 @@ const CardComponent: FC<CardProps> = (props) => {
   return (
     <UICard
       id={id}
+      h='full'
       p={2}
       bg='chakra-body-bg'
       borderRadius={12}

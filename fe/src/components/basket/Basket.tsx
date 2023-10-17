@@ -1,4 +1,4 @@
-import React, { FC, useState, useCallback, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { useStore } from 'effector-react';
 
 import {
@@ -18,8 +18,6 @@ import {
   Stat,
   StatNumber,
   StatHelpText,
-  // StatArrow,
-  // StatGroup,
 } from '@chakra-ui/react';
 
 import { $globalStore } from '../../store';
@@ -27,11 +25,10 @@ import { $globalStore } from '../../store';
 import { BasketCard } from './BasketCard';
 import { BasketIcon } from '../../assets/BasketIcon';
 
-import s from './styles.module.scss';
-
-// import { BASKET_MOCK } from './mock';
 import { VNpricer } from '../../utils';
 import { DELIVERY_PRICE } from '../../shared/constants';
+
+import s from './styles.module.scss';
 
 interface BasketProps {
   isBasketOpen: boolean;
@@ -42,30 +39,19 @@ export const Basket: FC<BasketProps> = (props) => {
   const { isBasketOpen, onBasketClose } = props;
   const { basket } = useStore($globalStore);
 
-  const [totalPrice, setTotalPrice] = useState<Record<string, number>>({});
-  const updateTotalPrice = useCallback(
-    (key: string, acc: number) => setTotalPrice((prev) => ({ ...prev, [key]: acc })),
-    [],
-  );
-
   const initialFocusRef = React.useRef();
   const finalFocusRef = React.useRef();
 
-  const calcedTotalPrice = Object.values(totalPrice).reduce((acc, item) => acc + item, 0);
+  const [totalPriceAcc, setTotalPriceAcc] = useState<Record<string, number>>({});
+  const calcedTotalPrice = Object.values(totalPriceAcc).reduce((acc, item) => acc + item, 0);
 
   useEffect(() => {
-    if (basket.length < 1) setTotalPrice({});
+    const effectiveTotal = Object.fromEntries(basket.map(({ id, price, qty }) => [id, +price * (qty || 1)]));
+    setTotalPriceAcc(effectiveTotal);
   }, [basket]);
 
   return (
-    <Drawer
-      // ,,
-      size='full'
-      isOpen={isBasketOpen}
-      placement='right'
-      onClose={onBasketClose}
-      finalFocusRef={finalFocusRef}
-    >
+    <Drawer size='full' isOpen={isBasketOpen} placement='right' onClose={onBasketClose} finalFocusRef={finalFocusRef}>
       <DrawerOverlay />
 
       <DrawerContent className={s.basketBg}>
@@ -78,7 +64,7 @@ export const Basket: FC<BasketProps> = (props) => {
             </Box>
 
             <Heading fontSize='2xl' lineHeight='48px' color='yellow.400'>
-              Is it right?
+              Ваш заказ
             </Heading>
           </Flex>
         </DrawerHeader>
@@ -86,32 +72,26 @@ export const Basket: FC<BasketProps> = (props) => {
         <DrawerBody p={4}>
           <Stack gap={4}>
             {basket.map((basketItem) => (
-              <BasketCard
-                key={basketItem.id}
-                // types ))
-                imgPath=''
-                {...basketItem}
-                updateTotalPrice={updateTotalPrice}
-              />
+              <BasketCard key={basketItem.id} imgPath='' {...basketItem} />
             ))}
           </Stack>
 
           <Stat w='full' pt={8}>
             <StatHelpText>
               <Flex justifyContent='space-between'>
-                <Text>Subtotal</Text>
+                <Text>Заказ</Text>
                 <Text>{VNpricer.format(calcedTotalPrice)}</Text>
               </Flex>
 
               <Flex justifyContent='space-between'>
-                <Text>Delivery</Text>
+                <Text>Доставка</Text>
                 <Text>{VNpricer.format(DELIVERY_PRICE)}</Text>
               </Flex>
             </StatHelpText>
 
             <StatNumber>
               <Flex justifyContent='space-between'>
-                <Text>Total</Text>
+                <Text>Итог</Text>
                 <Text>
                   {calcedTotalPrice > 0 ? VNpricer.format(calcedTotalPrice + DELIVERY_PRICE) : VNpricer.format(0)}
                 </Text>
@@ -132,7 +112,7 @@ export const Basket: FC<BasketProps> = (props) => {
             fontSize='3xl'
             w='100%'
           >
-            Yes
+            Отправить
           </Button>
         </DrawerFooter>
       </DrawerContent>

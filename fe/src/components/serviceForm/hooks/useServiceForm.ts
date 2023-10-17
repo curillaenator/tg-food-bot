@@ -84,7 +84,7 @@ export const useServiceForm = () => {
 
       setImgSrcFromFile(undefined);
 
-      console.log(data);
+      console.table(data);
     },
     [reset, categories, subcategories],
   );

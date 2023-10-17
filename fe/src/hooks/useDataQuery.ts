@@ -94,8 +94,6 @@ export const useDataQuery = () => {
       });
 
       Promise.all(servicesWithItemsPromise).then((withCategoriesMap) => {
-        console.log(withCategoriesMap);
-
         const servicesWithItems = Object.fromEntries(withCategoriesMap) as Record<string, Partial<Category>>;
         const servicesToSet = services.map(([k]) => [k, (servicesWithItems[k]?.categories || []) as Category[]]);
 

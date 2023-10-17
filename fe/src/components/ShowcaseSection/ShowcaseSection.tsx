@@ -49,6 +49,8 @@ export const ShowcaseSection: FC<Category> = (props) => {
     getDownloadURL(ref(strg, imgPath)).then((url) => setServiceImgUrl(url));
   }, [imgPath, type]);
 
+  const menu = categories?.filter((c) => c.type === 'item' || !!c.categories) || [];
+
   return (
     <AccordionItem py={6}>
       <Heading as='h2' mx={4}>
@@ -74,24 +76,24 @@ export const ShowcaseSection: FC<Category> = (props) => {
       <AccordionPanel px={4} pt={4} pb={0}>
         {type === 'service' && (
           <Stack w='full' pb={4}>
-            {!!serviceImgUrl && (
-              <Image src={serviceImgUrl} alt={title} w='full' borderRadius={12} aspectRatio='3 / 1' objectFit='cover' />
-            )}
+            <Image src={serviceImgUrl} alt={title} w='full' borderRadius={12} aspectRatio='3 / 1' objectFit='cover' />
 
             <Text color='chakra-subtle-text' className={cn(s.clamped, s.clamped_3)}>
               {description}
             </Text>
 
-            <Heading mt={4} fontSize='2xl'>
-              Menu:
-            </Heading>
+            {!!menu.length && (
+              <Heading mt={4} fontSize='2xl'>
+                Menu:
+              </Heading>
+            )}
           </Stack>
         )}
 
         <SimpleGrid columns={2} spacing={2}>
-          {categories
-            ?.filter((c) => c.type === 'item' || !!c.categories)
-            .map((category) => <Card key={category.id} {...category} />)}
+          {menu.map((category) => (
+            <Card key={category.id} {...category} />
+          ))}
         </SimpleGrid>
       </AccordionPanel>
     </AccordionItem>
