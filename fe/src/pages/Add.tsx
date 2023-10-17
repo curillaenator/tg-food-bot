@@ -7,6 +7,7 @@ import { Box, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 // import { $globalStore } from '../store';
 
 import { ServiceForm } from '../components/serviceForm';
+import { ItemForm } from '../components/itemForm';
 
 export const Add: FC = () => {
   // const { user } = useStore($globalStore);
@@ -33,7 +34,7 @@ export const Add: FC = () => {
           </TabPanel>
 
           <TabPanel>
-            <p>two!</p>
+            <ItemForm />
           </TabPanel>
         </TabPanels>
       </Tabs>

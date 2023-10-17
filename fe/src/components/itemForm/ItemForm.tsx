@@ -17,42 +17,38 @@ import {
 
 import { LinkIcon, PlusSquareIcon } from '@chakra-ui/icons';
 
-import { useServiceForm } from './hooks/useServiceForm';
-
-import { validateFiles } from './utils';
-
 import { FileUploader } from '../fileUploader';
 
-import type { ServiceFormValuesType } from './interfaces';
+import { useItemForm } from './hooks/useItemForm';
+import { validateFiles } from './validateFiles';
+import type { ItemFormValuesType } from './interfaces';
 import s from './styles.module.scss';
 
-const TEXT_INPUTS: (keyof ServiceFormValuesType)[] = ['serviceTitle', 'serviceDescription', 'serviceAddres'];
+const TEXT_INPUTS: (keyof ItemFormValuesType)[] = ['itemTitle', 'itemDescription', 'itemPrice', 'itemWaitTime'];
 
-export const ServiceForm: FC = () => {
+export const ItemForm: FC = () => {
   const {
     loading,
     pickedImage = undefined,
-    categories,
-    subcategories,
+    services,
     control,
     errors,
     handleSubmit,
     register,
     onSubmit,
-    handleCurrentCategory,
-  } = useServiceForm();
+  } = useItemForm();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={s.form}>
       <Flex gap={2} justifyContent='space-between' alignItems='center' mb={8}>
-        <Heading fontSize='2xl'>Create service</Heading>
+        <Heading fontSize='2xl'>Create item</Heading>
 
         {loading && <Spinner />}
       </Flex>
 
       <Controller
         control={control}
-        name='serviceCategory'
+        name='itemService'
         rules={{ required: 'Please select at least one category' }}
         render={(renderProps) => {
           const {
@@ -64,48 +60,9 @@ export const ServiceForm: FC = () => {
 
           return (
             <FormControl isRequired isDisabled={loading}>
-              <FormLabel>Category</FormLabel>
+              <FormLabel>Select service</FormLabel>
 
               <Select
-                size='lg'
-                isMulti={false}
-                name={name}
-                ref={ref}
-                onChange={(e) => {
-                  onChange(e);
-                  handleCurrentCategory(e);
-                }}
-                onBlur={onBlur}
-                value={value}
-                options={categories}
-                placeholder='Categories'
-                closeMenuOnSelect={true}
-              />
-
-              <FormErrorMessage>{error && error.message}</FormErrorMessage>
-            </FormControl>
-          );
-        }}
-      />
-
-      <Controller
-        control={control}
-        name='serviceSubcategory'
-        rules={{ required: 'Please select at least one subcategory' }}
-        render={(renderProps) => {
-          const {
-            field,
-            fieldState: { error },
-          } = renderProps;
-
-          const { onChange, onBlur, value, name, ref } = field;
-
-          return (
-            <FormControl isRequired isDisabled={loading || !subcategories.length}>
-              <FormLabel>Subcategory</FormLabel>
-
-              <Select
-                // isDisabled={!categories.length}
                 size='lg'
                 isMulti={false}
                 name={name}
@@ -113,7 +70,7 @@ export const ServiceForm: FC = () => {
                 onChange={onChange}
                 onBlur={onBlur}
                 value={value}
-                options={subcategories}
+                options={services}
                 placeholder='Categories'
                 closeMenuOnSelect={true}
               />
@@ -126,7 +83,7 @@ export const ServiceForm: FC = () => {
 
       {TEXT_INPUTS.map((inputId) => (
         <FormControl key={inputId} isInvalid={!!errors[inputId]} isRequired isDisabled={loading}>
-          <FormLabel htmlFor={inputId}>{inputId.replace('service', '')}</FormLabel>
+          <FormLabel htmlFor={inputId}>{inputId.replace('item', '')}</FormLabel>
 
           <Input
             size='lg'
@@ -143,13 +100,13 @@ export const ServiceForm: FC = () => {
         </FormControl>
       ))}
 
-      <FormControl isInvalid={!!errors.serviceImage} isRequired isDisabled={loading}>
+      <FormControl isInvalid={!!errors.itemImage} isRequired isDisabled={loading}>
         <FormLabel>Image</FormLabel>
 
         <FileUploader
           // multiple
           accept={'image/*'}
-          register={register('serviceImage', { validate: validateFiles })}
+          register={register('itemImage', { validate: validateFiles })}
         >
           <Button
             variant='outline'

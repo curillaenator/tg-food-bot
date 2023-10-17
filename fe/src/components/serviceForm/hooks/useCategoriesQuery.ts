@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
-import type { Options } from 'chakra-react-select';
 import { ref, child, get } from 'firebase/database';
+import type { Options } from 'chakra-react-select';
 
 import { rtdb } from '../../../shared/firebase';
 

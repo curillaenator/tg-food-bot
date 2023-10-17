@@ -1,12 +1,12 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useForm, useFormState } from 'react-hook-form';
-import Resizer from 'react-image-file-resizer';
 
 import { ref, child, push, update } from 'firebase/database';
 import { ref as storageRef, uploadBytes } from 'firebase/storage';
 
 import { useCategoriesQuery } from './useCategoriesQuery';
 import { rtdb, strg } from '../../../shared/firebase';
+import { resizeFile } from '../../../utils';
 
 import type { ServiceFormValuesType } from '../interfaces';
 
@@ -23,11 +23,6 @@ const INITIAL_SERVICE_FORM: ServiceFormValuesType = {
   serviceCategory: { label: '', value: '' },
   serviceSubcategory: { label: '', value: '' },
 };
-
-const resizeFile = (file): Promise<File> =>
-  new Promise((resolve) => {
-    Resizer.imageFileResizer(file, 768, 768, 'JPEG', 80, 0, (resized) => resolve(resized as File), 'file');
-  });
 
 export const useServiceForm = () => {
   const { loading, categories, subcategories, handleCurrentCategory } = useCategoriesQuery();
