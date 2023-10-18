@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import { Box, Stack, SimpleGrid, Heading, Radio, RadioGroup, Divider } from '@chakra-ui/react';
 
 import { Application } from '../components/application';
@@ -11,28 +11,31 @@ import type { Application as ApplicationType } from '../shared/interfaces';
 type FilterFnType = (el: ApplicationType) => boolean;
 
 export const Dashboard: FC = () => {
-  const { orders, onAplicationPick, pickIsDisabled, employeeId } = useDashboard();
+  const { orders, pickIsDisabled, employeeId, onAplicationPick } = useDashboard();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!employeeId) navigate('/');
+  }, [employeeId, navigate]);
 
   const [dash, setDash] = useState<string>('all');
   const [filterFn, setFilterFn] = useState<FilterFnType>(() => (el: ApplicationType) => !el?.executor);
 
-  useEffect(() => {
-    if (dash == 'mine') {
-      setFilterFn(() => {
-        return (el: ApplicationType) => el?.executor === employeeId;
-      });
-    }
-
-    if (dash === 'all') {
-      setFilterFn(() => {
-        return (el: ApplicationType) => !el?.executor;
-      });
-    }
-  }, [dash, employeeId]);
+  const filters = {
+    all: () => (el: ApplicationType) => !el?.executor,
+    mine: () => (el: ApplicationType) => el?.executor === employeeId,
+  };
 
   return (
     <Box as='main' px={4} pb={4}>
-      <RadioGroup onChange={(e) => setDash(e)} value={dash} mb={4}>
+      <RadioGroup
+        value={dash}
+        mb={4}
+        onChange={(e) => {
+          setDash(e);
+          setFilterFn(filters[e]);
+        }}
+      >
         <Stack direction='row' w='full' gap={8}>
           <Radio value='all'>Все</Radio>
           <Radio value='mine'>Мои</Radio>

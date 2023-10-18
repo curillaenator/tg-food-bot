@@ -1,14 +1,12 @@
 import React, { FC } from 'react';
-// import { useNavigate } from 'react-router-dom';
 
 import { Card, Flex, CardBody, Stack, Text, Button, Progress, Divider } from '@chakra-ui/react';
 
 import { useApplication } from './hooks/useApplication';
-import { useDetailes } from './hooks/useDetailes';
+import { useDetailes as useDetails } from './hooks/useDetailes';
 
 import { EMERGENCY_ASSOC } from './constants';
 import { DELIVERY_PRICE } from '../../shared/constants';
-import type { ShowcaseItem } from '../../store';
 import type { Application as ApllicationType } from '../../shared/interfaces';
 
 import { VNpricer } from '../../utils';
@@ -20,17 +18,27 @@ type ApplicationProps = ApllicationType & {
 };
 
 export const Application: FC<ApplicationProps> = (props) => {
-  // const navigate = useNavigate();
-
   const { onAplicationPick, pickIsDisabled, status, currentUserId, content } = props;
 
-  const { executorName, executorId, customerName, customeAdress, placed, emergency } = useApplication(props);
+  const {
+    customerName = 'загружаю...',
+    customeAdress = 'загружаю...',
+    customeTel = 'загружаю...',
+    executorName,
+    executorId,
+    placed,
+    emergency,
+  } = useApplication(props);
 
-  const { loading: detailesLoading, detailes, totalApplicationPrice } = useDetailes(currentUserId, executorId, content);
+  const {
+    loading: detailsLoading,
+    details,
+    totalApplicationPrice,
+  } = useDetails({ currentUserId, executorId, content });
 
   const isUnpicked = currentUserId !== executorId;
 
-  if (detailesLoading) return <Progress w='full' size='sm' isIndeterminate />;
+  if (detailsLoading) return <Progress w='full' size='sm' isIndeterminate />;
 
   return (
     <Card
@@ -98,7 +106,7 @@ export const Application: FC<ApplicationProps> = (props) => {
           </Stack>
         )}
 
-        {!!detailes && !isUnpicked && (
+        {details.length && !isUnpicked && (
           <Stack gap={4} h='full' justifyContent='space-between'>
             <Flex w='full' gap={4} justifyContent='space-between'>
               <Stack gap={0}>
@@ -130,28 +138,35 @@ export const Application: FC<ApplicationProps> = (props) => {
                 </Text>
               </Stack>
 
+              <Stack gap={0}>
+                <Text fontSize='sm' color='chakra-subtle-text'>
+                  Телефон:
+                </Text>
+                <Text fontSize='sm' fontWeight='bold'>
+                  {customeTel}
+                </Text>
+              </Stack>
+
               <Stack>
                 <Text fontSize='sm' color='chakra-subtle-text'>
                   Состав заказа:
                 </Text>
 
-                {Object.keys(detailes).map((serviceId) => {
-                  const orderedFromService = detailes[serviceId].order as unknown as ShowcaseItem[];
-
+                {details.map((serviceId) => {
                   return (
                     <Card
-                      key={serviceId}
+                      key={serviceId.id}
                       p={2}
                       bg='chakra-body-bg'
                       borderRadius={8}
                       boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-200)'
                     >
                       <CardBody p={0}>
-                        <Text fontWeight='bold'>{detailes[serviceId]?.title}</Text>
+                        <Text fontWeight='bold'>{serviceId?.title}</Text>
 
                         <Divider />
 
-                        {orderedFromService.map((item) => (
+                        {serviceId.order.map((item) => (
                           <Flex fontSize='sm' key={item.id} w='full' justifyContent='space-between'>
                             <Text flexShrink={0} color='chakra-subtle-text'>
                               {item.title}
@@ -171,12 +186,7 @@ export const Application: FC<ApplicationProps> = (props) => {
                         <Divider />
 
                         <Text fontSize='sm' w='full' textAlign='right' fontWeight='bold'>
-                          {VNpricer.format(
-                            (detailes[serviceId].order as unknown as ShowcaseItem[]).reduce(
-                              (acc, item) => acc + +item.price * +item.qty,
-                              0,
-                            ),
-                          )}
+                          {VNpricer.format(+serviceId.totalServicePrice)}
                         </Text>
                       </CardBody>
                     </Card>

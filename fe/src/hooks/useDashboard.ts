@@ -33,8 +33,6 @@ export const useDashboard = () => {
         (snap) => (snap.exists() ? snap.val() : {}) as Record<string, boolean>,
       );
 
-      console.log(previouslyPickedApplications);
-
       update(ref(rtdb), {
         [`orders/${application.id}`]: updatedApplication,
         [`users/${employeeId}/pickedApplications`]: { ...previouslyPickedApplications, [application.id]: true },

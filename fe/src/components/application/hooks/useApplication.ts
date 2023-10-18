@@ -8,15 +8,7 @@ import type { Application, User } from '../../../shared/interfaces';
 import { getRelativeTime } from '../utils';
 
 export const useApplication = (props: Application) => {
-  const {
-    // id,
-    customer,
-    // content,
-    placed,
-    executor,
-    // expectedTime,
-    //  status,
-  } = props;
+  const { customer, placed, executor } = props;
 
   const [customerUser, setCustomerUser] = useState<Partial<User> | null>(null);
   const [executorUser, setExecutorUser] = useState<Partial<User> | null>(null);
@@ -55,6 +47,7 @@ export const useApplication = (props: Application) => {
   return {
     customerName: customerUser?.name,
     customeAdress: customerUser?.adress,
+    customeTel: customerUser?.tel,
     executorName: executorUser?.name,
     executorId: executorUser?.id,
     placed: getRelativeTime(placed),

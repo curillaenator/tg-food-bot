@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import {
   // Flex,
   // Spacer,
-  // Text,
+  Text,
   // ButtonGroup,
   // Checkbox,
   // Button,
@@ -38,6 +38,9 @@ export const Profile: FC = () => {
 
   return (
     <Stack w='100%' flexDirection='column' gap={4}>
+      <Text fontSize='sm' color='chakra-subtle-text'>
+        Как вас зовут?
+      </Text>
       <InputGroup>
         <InputLeftAddon
           h={12}
@@ -45,13 +48,18 @@ export const Profile: FC = () => {
         />
         <Input
           autoComplete='off'
-          placeholder='My name'
+          placeholder='коротко и ясно'
           type='text'
           size='lg'
           value={name}
           onChange={(e) => updateUser({ name: e.target.value })}
         />
       </InputGroup>
+
+      <Text fontSize='sm' color='chakra-subtle-text'>
+        Укажите свой адрес доставки. Наши курьеры связываются с вами при заказе чтобы его уточнить, но чем точнее
+        укажите - тем быстрее все привезем!
+      </Text>
 
       <InputGroup>
         <InputLeftAddon
@@ -60,7 +68,7 @@ export const Profile: FC = () => {
         />
         <Input
           autoComplete='off'
-          placeholder='My delivery adress'
+          placeholder='Адресс доставки'
           type='text'
           size='lg'
           value={adress}
@@ -68,13 +76,9 @@ export const Profile: FC = () => {
         />
       </InputGroup>
 
-      {/* <InputGroup>
-        <InputLeftAddon
-          h={12}
-          children={<AtSignIcon boxSize={4} />} // eslint-disable-line react/no-children-prop
-        />
-        <Input autoComplete='off' placeholder='t.me/...' type='text' size='lg' value={''} onChange={(e) => {}} />
-      </InputGroup> */}
+      <Text fontSize='sm' color='chakra-subtle-text'>
+        Укажите любой удобный вам контакт, чтобы наши курьеры смогли связаться с вами
+      </Text>
 
       <InputGroup>
         <InputLeftAddon
@@ -83,8 +87,8 @@ export const Profile: FC = () => {
         />
         <Input
           autoComplete='off'
-          placeholder='My phone'
-          type='number'
+          placeholder='+84... или +7().... или t.me/...'
+          type='text'
           size='lg'
           value={tel}
           onChange={(e) => updateUser({ tel: e.target.value })}

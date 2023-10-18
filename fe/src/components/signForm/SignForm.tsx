@@ -36,6 +36,14 @@ export const SignForm: FC<SignFormProps> = (props) => {
 
   return (
     <Stack spacing={4}>
+      <Text fontSize='sm' color='chakra-subtle-text'>
+        Привет!
+      </Text>
+
+      <Text fontSize='sm' color='chakra-subtle-text'>
+        Пожалуйста, авторизируйся для возможности оформиить заказ!
+      </Text>
+
       <InputGroup>
         <InputLeftAddon
           h={12}
@@ -86,7 +94,7 @@ export const SignForm: FC<SignFormProps> = (props) => {
         checked={firstTime}
         onChange={() => setFirstTime((prev) => !prev)}
       >
-        I am first timer!
+        Я новый пользователь
       </Checkbox>
     </Stack>
   );
