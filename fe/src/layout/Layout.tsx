@@ -15,6 +15,7 @@ export const Layout: FC = () => {
 
   useEffect(() => {
     window.Telegram.WebApp.ready();
+    window.Telegram.WebApp.expand();
   }, []);
 
   return (

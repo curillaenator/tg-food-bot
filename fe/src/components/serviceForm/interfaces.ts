@@ -6,6 +6,7 @@ export interface CustomOption {
 export interface ServiceFormValuesType {
   serviceTitle: string;
   serviceAddres: string;
+  serviceWaitTime: string;
   serviceDescription: string;
   serviceImage: FileList;
   serviceCategory: CustomOption;

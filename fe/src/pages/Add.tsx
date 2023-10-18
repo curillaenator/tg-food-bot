@@ -24,8 +24,8 @@ export const Add: FC = () => {
     <Box as='main' h='full'>
       <Tabs isFitted variant='enclosed'>
         <TabList mb='1em'>
-          <Tab>Service</Tab>
-          <Tab>Item</Tab>
+          <Tab>Новый сервис</Tab>
+          <Tab>Новый товар</Tab>
         </TabList>
 
         <TabPanels>

@@ -168,7 +168,15 @@ export const UserSection: FC = () => {
                   </Stack>
 
                   <ButtonGroup orientation='vertical' variant='outline' isAttached w='full'>
-                    <Button leftIcon={<CopyIcon boxSize={6} />} size='lg' w='full'>
+                    <Button
+                      leftIcon={<CopyIcon boxSize={6} />}
+                      size='lg'
+                      w='full'
+                      onClick={() => {
+                        navigate('/orders');
+                        onAuthClose();
+                      }}
+                    >
                       Заявки
                     </Button>
 

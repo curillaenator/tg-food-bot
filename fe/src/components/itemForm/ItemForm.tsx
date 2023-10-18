@@ -24,7 +24,13 @@ import { validateFiles } from './validateFiles';
 import type { ItemFormValuesType } from './interfaces';
 import s from './styles.module.scss';
 
-const TEXT_INPUTS: (keyof ItemFormValuesType)[] = ['itemTitle', 'itemDescription', 'itemPrice', 'itemWaitTime'];
+const TEXT_INPUTS: (keyof ItemFormValuesType)[] = ['itemTitle', 'itemDescription', 'itemPrice'];
+
+const TEXT_INPUTS_TITLES = {
+  itemTitle: 'Название',
+  itemDescription: 'Описание',
+  itemPrice: 'Цена из меню сервиса (ВАЖНО!!!)',
+};
 
 export const ItemForm: FC = () => {
   const {
@@ -41,7 +47,7 @@ export const ItemForm: FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={s.form}>
       <Flex gap={2} justifyContent='space-between' alignItems='center' mb={8}>
-        <Heading fontSize='2xl'>Create item</Heading>
+        <Heading fontSize='2xl'>Новый товар</Heading>
 
         {loading && <Spinner />}
       </Flex>
@@ -60,7 +66,7 @@ export const ItemForm: FC = () => {
 
           return (
             <FormControl isRequired isDisabled={loading}>
-              <FormLabel>Select service</FormLabel>
+              <FormLabel>Выбрать сервис</FormLabel>
 
               <Select
                 size='lg'
@@ -81,27 +87,8 @@ export const ItemForm: FC = () => {
         }}
       />
 
-      {TEXT_INPUTS.map((inputId) => (
-        <FormControl key={inputId} isInvalid={!!errors[inputId]} isRequired isDisabled={loading}>
-          <FormLabel htmlFor={inputId}>{inputId.replace('item', '')}</FormLabel>
-
-          <Input
-            size='lg'
-            autoComplete='off'
-            id={inputId}
-            placeholder='Minimum 5 chars'
-            {...register(inputId, {
-              required: 'Required',
-              minLength: { value: 4, message: 'Minimum length should be 4' },
-            })}
-          />
-
-          <FormErrorMessage>{errors[inputId] && errors[inputId].message}</FormErrorMessage>
-        </FormControl>
-      ))}
-
       <FormControl isInvalid={!!errors.itemImage} isRequired isDisabled={loading}>
-        <FormLabel>Image</FormLabel>
+        <FormLabel>Обложка</FormLabel>
 
         <FileUploader
           // multiple
@@ -125,9 +112,28 @@ export const ItemForm: FC = () => {
 
       {pickedImage && <Image w='full' aspectRatio='3 / 1' objectFit='cover' borderRadius={12} src={pickedImage} />}
 
+      {TEXT_INPUTS.map((inputId) => (
+        <FormControl key={inputId} isInvalid={!!errors[inputId]} isRequired isDisabled={loading}>
+          <FormLabel htmlFor={inputId}>{TEXT_INPUTS_TITLES[inputId]}</FormLabel>
+
+          <Input
+            size='lg'
+            type={inputId === 'itemPrice' ? 'number' : 'text'}
+            autoComplete='off'
+            id={inputId}
+            placeholder='Minimum 5 chars'
+            {...register(inputId, {
+              required: 'Required',
+              minLength: { value: 4, message: 'Minimum length should be 4' },
+            })}
+          />
+
+          <FormErrorMessage>{errors[inputId] && errors[inputId].message}</FormErrorMessage>
+        </FormControl>
+      ))}
+
       <Box mt={8} pb={0} w='full'>
         <Button
-          // isDisabled={loading}
           leftIcon={<PlusSquareIcon boxSize={6} />}
           size='lg'
           w='full'
@@ -136,7 +142,7 @@ export const ItemForm: FC = () => {
           isLoading={loading}
           type='submit'
         >
-          Save
+          Добавить в базу
         </Button>
       </Box>
     </form>

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { ref, update } from 'firebase/database';
 import { ref as storageRef, getDownloadURL, deleteObject } from 'firebase/storage';
 
-import { Card as UICard, CardBody, Button, Image, Center, Stack, Heading, Text, Spacer, Badge } from '@chakra-ui/react';
+import { Card as UICard, CardBody, Button, Image, Center, Stack, Heading, Text, Badge } from '@chakra-ui/react';
 
 import { TimeIcon, DeleteIcon } from '@chakra-ui/icons';
 
@@ -65,7 +65,16 @@ const CardComponent: FC<CardProps> = (props) => {
       onClick={() => {
         if (!user?.id || type !== 'item') return;
 
-        setBasket({ id, title, description, type, price, waitTime, qty: qty === undefined ? 1 : qty });
+        setBasket({
+          id,
+          parent,
+          title,
+          description,
+          type,
+          price,
+          waitTime,
+          qty: qty === undefined ? 1 : qty,
+        });
       }}
     >
       <CardBody p={0}>
@@ -102,8 +111,6 @@ const CardComponent: FC<CardProps> = (props) => {
                   <TimeIcon />
                   {` ${waitTime}`}
                 </Badge>
-
-                <Spacer />
               </Stack>
             )}
           </Stack>

@@ -1,5 +1,4 @@
-export * from './Main/Main';
-export * from './Settings/Settings';
-export * from './Showcase/Showcase';
+export * from './Main';
 export * from './Add';
+export * from './Dashboard';
 export * from './Category';

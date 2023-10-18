@@ -84,7 +84,7 @@ export const Profile: FC = () => {
         <Input
           autoComplete='off'
           placeholder='My phone'
-          type='text'
+          type='number'
           size='lg'
           value={tel}
           onChange={(e) => updateUser({ tel: e.target.value })}

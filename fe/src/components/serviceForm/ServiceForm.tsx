@@ -26,7 +26,19 @@ import { FileUploader } from '../fileUploader';
 import type { ServiceFormValuesType } from './interfaces';
 import s from './styles.module.scss';
 
-const TEXT_INPUTS: (keyof ServiceFormValuesType)[] = ['serviceTitle', 'serviceDescription', 'serviceAddres'];
+const TEXT_INPUTS: (keyof ServiceFormValuesType)[] = [
+  'serviceTitle',
+  'serviceDescription',
+  'serviceAddres',
+  'serviceWaitTime',
+];
+
+const TEXT_INPUTS_TITLES = {
+  serviceTitle: 'Название ',
+  serviceDescription: 'Описание',
+  serviceAddres: 'Адрес сервиса',
+  serviceWaitTime: 'Время ожидания доставки ~',
+};
 
 export const ServiceForm: FC = () => {
   const {
@@ -45,7 +57,7 @@ export const ServiceForm: FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={s.form}>
       <Flex gap={2} justifyContent='space-between' alignItems='center' mb={8}>
-        <Heading fontSize='2xl'>Create service</Heading>
+        <Heading fontSize='2xl'>Новый сервис</Heading>
 
         {loading && <Spinner />}
       </Flex>
@@ -64,7 +76,7 @@ export const ServiceForm: FC = () => {
 
           return (
             <FormControl isRequired isDisabled={loading}>
-              <FormLabel>Category</FormLabel>
+              <FormLabel>Категория</FormLabel>
 
               <Select
                 size='lg'
@@ -102,7 +114,7 @@ export const ServiceForm: FC = () => {
 
           return (
             <FormControl isRequired isDisabled={loading || !subcategories.length}>
-              <FormLabel>Subcategory</FormLabel>
+              <FormLabel>Подкатегория</FormLabel>
 
               <Select
                 // isDisabled={!categories.length}
@@ -124,27 +136,8 @@ export const ServiceForm: FC = () => {
         }}
       />
 
-      {TEXT_INPUTS.map((inputId) => (
-        <FormControl key={inputId} isInvalid={!!errors[inputId]} isRequired isDisabled={loading}>
-          <FormLabel htmlFor={inputId}>{inputId.replace('service', '')}</FormLabel>
-
-          <Input
-            size='lg'
-            autoComplete='off'
-            id={inputId}
-            placeholder='Minimum 5 chars'
-            {...register(inputId, {
-              required: 'Required',
-              minLength: { value: 5, message: 'Minimum length should be 5' },
-            })}
-          />
-
-          <FormErrorMessage>{errors[inputId] && errors[inputId].message}</FormErrorMessage>
-        </FormControl>
-      ))}
-
       <FormControl isInvalid={!!errors.serviceImage} isRequired isDisabled={loading}>
-        <FormLabel>Image</FormLabel>
+        <FormLabel>Обложка</FormLabel>
 
         <FileUploader
           // multiple
@@ -168,9 +161,33 @@ export const ServiceForm: FC = () => {
 
       {pickedImage && <Image w='full' aspectRatio='3 / 1' objectFit='cover' borderRadius={12} src={pickedImage} />}
 
+      {TEXT_INPUTS.map((inputId) => {
+        const isRequired = inputId !== 'serviceWaitTime';
+
+        const requiredRegisterOptions = {
+          required: 'Required',
+          minLength: { value: 5, message: 'Minimum length should be 5' },
+        };
+
+        return (
+          <FormControl key={inputId} isInvalid={!!errors[inputId]} isRequired={isRequired} isDisabled={loading}>
+            <FormLabel htmlFor={inputId}>{TEXT_INPUTS_TITLES[inputId]}</FormLabel>
+
+            <Input
+              size='lg'
+              autoComplete='off'
+              id={inputId}
+              placeholder={isRequired ? 'Минимум 5 букв' : ''}
+              {...register(inputId, isRequired && requiredRegisterOptions)}
+            />
+
+            <FormErrorMessage>{errors[inputId] && errors[inputId].message}</FormErrorMessage>
+          </FormControl>
+        );
+      })}
+
       <Box mt={8} pb={0} w='full'>
         <Button
-          // isDisabled={loading}
           leftIcon={<PlusSquareIcon boxSize={6} />}
           size='lg'
           w='full'
@@ -179,7 +196,7 @@ export const ServiceForm: FC = () => {
           isLoading={loading}
           type='submit'
         >
-          Save
+          Добавить в базу
         </Button>
       </Box>
     </form>

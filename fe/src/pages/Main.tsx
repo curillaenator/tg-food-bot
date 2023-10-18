@@ -2,9 +2,9 @@ import React, { FC } from 'react';
 
 import { Box, Accordion, Progress } from '@chakra-ui/react';
 
-import { useDataQuery } from '../../hooks/useDataQuery';
+import { useDataQuery } from '../hooks/useDataQuery';
 
-import { ShowcaseSection } from '../../components/ShowcaseSection';
+import { ShowcaseSection } from '../components/ShowcaseSection';
 
 export const Main: FC = () => {
   const { loading, services, contentMap } = useDataQuery();

@@ -27,7 +27,7 @@ export type User = {
   tel?: string;
   adress?: string;
   role?: Role;
-  orders?: Order['id'];
+  // orders?: Order['id'];
 };
 
 export type Background = 'wowwy' | 'playfull' | 'fire' | 'luxary';
