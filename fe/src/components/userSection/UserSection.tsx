@@ -24,7 +24,7 @@ import {
   Checkbox,
 } from '@chakra-ui/react';
 
-import { HamburgerIcon, ChevronLeftIcon, SmallAddIcon, CopyIcon, CalendarIcon } from '@chakra-ui/icons';
+import { HamburgerIcon, ChevronLeftIcon, SmallAddIcon, CopyIcon, CalendarIcon, AttachmentIcon } from '@chakra-ui/icons';
 
 import { $globalStore, setEditor } from '../../store';
 import { useAuth } from '../../hooks/useAuth';
@@ -197,6 +197,22 @@ export const UserSection: FC = () => {
                     </Button>
                   </ButtonGroup>
                 </Stack>
+              )}
+
+              {user?.ownerOf && (
+                <ButtonGroup>
+                  <Button
+                    leftIcon={<AttachmentIcon boxSize={6} />}
+                    size='lg'
+                    w='full'
+                    onClick={() => {
+                      navigate('service');
+                      onAuthClose();
+                    }}
+                  >
+                    Мои сервисы
+                  </Button>
+                </ButtonGroup>
               )}
 
               <ButtonGroup isAttached w='full'>

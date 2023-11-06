@@ -40,7 +40,7 @@ export interface Category {
 
 export const ShowcaseSection: FC<Category> = (props) => {
   const { id, imgPath, parent, title, description, type, categories } = props;
-  const { isEditor } = useStore($globalStore);
+  const { isEditor, user } = useStore($globalStore);
 
   const [serviceImgUrl, setServiceImgUrl] = useState<string | undefined>(undefined);
 
@@ -98,7 +98,7 @@ export const ShowcaseSection: FC<Category> = (props) => {
           }}
         >
           <Flex gap={2} flex={1} alignItems='center'>
-            {isEditor && type === 'service' && (
+            {isEditor && (user?.role === 'admin' || user?.role === 'manager') && type === 'service' && (
               <DeleteIcon role='button' color='red' boxSize={6} onClick={removeService} />
             )}
 

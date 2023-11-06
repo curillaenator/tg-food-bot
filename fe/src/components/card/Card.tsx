@@ -1,13 +1,26 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useCallback, ChangeEvent } from 'react';
 import { useStore } from 'effector-react';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
-import { ref, update } from 'firebase/database';
+import { ref, update, set } from 'firebase/database';
 import { ref as storageRef, getDownloadURL, deleteObject } from 'firebase/storage';
 
-import { Card as UICard, CardBody, Button, Image, Center, Stack, Heading, Text, Badge } from '@chakra-ui/react';
+import {
+  Card as UICard,
+  CardBody,
+  Button,
+  Image,
+  Center,
+  Stack,
+  Heading,
+  Text,
+  // Badge,
+  Input,
+  InputGroup,
+  Textarea,
+} from '@chakra-ui/react';
 
-import { TimeIcon, DeleteIcon } from '@chakra-ui/icons';
+import { DeleteIcon } from '@chakra-ui/icons';
 
 import { strg, rtdb } from '../../shared/firebase';
 
@@ -52,6 +65,13 @@ const CardComponent: FC<CardProps> = (props) => {
     getDownloadURL(storageRef(strg, imgPath)).then((url) => setImageURL(url));
   }, [imgPath]);
 
+  const onEditValue = useCallback(
+    (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>, field: 'title' | 'description' | 'price') => {
+      set(ref(rtdb, `items/${id}/${field}`), e.target.value);
+    },
+    [id],
+  );
+
   return (
     <UICard
       id={id}
@@ -63,7 +83,7 @@ const CardComponent: FC<CardProps> = (props) => {
       transition='background-color 80ms ease'
       _active={{ backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
       onClick={() => {
-        if (!user?.id || type !== 'item') return;
+        if (!user?.id || type !== 'item' || isEditor) return;
 
         setBasket({
           id,
@@ -93,26 +113,47 @@ const CardComponent: FC<CardProps> = (props) => {
           </Center>
 
           <Stack direction='column' spacing={6} h='100%' justifyContent='space-between'>
-            <Stack direction='column' spacing={4}>
-              <Heading size='md' textTransform='uppercase'>
-                {title}
-              </Heading>
+            {!isEditor && (
+              <Stack direction='column' spacing={4}>
+                <Heading size='md' textTransform='uppercase'>
+                  {title}
+                </Heading>
 
-              {!!price && <Text>{VNpricer.format(+price)}</Text>}
+                {!!price && <Text>{VNpricer.format(+price)}</Text>}
 
-              <Text color='chakra-subtle-text' className={cn(s.clamped, s.clamped_3)}>
-                {description}
-              </Text>
-            </Stack>
+                <Text color='chakra-subtle-text' className={cn(s.clamped, s.clamped_3)}>
+                  {description}
+                </Text>
+              </Stack>
+            )}
 
-            {!!waitTime && (
+            {isEditor && (
+              <InputGroup size='sm' flexDirection='column' gap='4px'>
+                <Input placeholder='Title' defaultValue={title} onChange={(e) => onEditValue(e, 'title')} />
+                <Input
+                  placeholder='Price'
+                  type='number'
+                  defaultValue={price}
+                  onChange={(e) => onEditValue(e, 'price')}
+                />
+                <Textarea
+                  placeholder='Description'
+                  defaultValue={description}
+                  onChange={(e) => onEditValue(e, 'description')}
+                  resize='none'
+                  rows={5}
+                />
+              </InputGroup>
+            )}
+
+            {/* {!!waitTime && (
               <Stack direction='row'>
                 <Badge textTransform='lowercase' color='chakra-subtle-text'>
                   <TimeIcon />
-                  {` ${waitTime}`}
+                  {`${waitTime}`}
                 </Badge>
               </Stack>
-            )}
+            )} */}
           </Stack>
 
           {isEditor && type === 'item' && (

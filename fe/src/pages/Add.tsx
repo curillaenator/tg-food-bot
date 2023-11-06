@@ -1,24 +1,24 @@
-import React, { FC } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { useStore } from 'effector-react';
+import React, { FC, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useStore } from 'effector-react';
 
 import { Box, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 
-// import { $globalStore } from '../store';
+import { $globalStore } from '../store';
 
 import { ServiceForm } from '../components/serviceForm';
 import { ItemForm } from '../components/itemForm';
 
 export const Add: FC = () => {
-  // const { user } = useStore($globalStore);
-  // const navigate = useNavigate();
+  const { user } = useStore($globalStore);
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const pageIsAvalable = !!user?.id && (user.role === 'admin' || user.role === 'manager');
-  //   if (pageIsAvalable) return;
+  useEffect(() => {
+    const pageIsAvalable = !!user?.id && (user.role === 'admin' || user.role === 'manager');
+    if (pageIsAvalable) return;
 
-  //   navigate('/');
-  // }, [user, navigate]);
+    navigate('/');
+  }, [user, navigate]);
 
   return (
     <Box as='main' h='full'>
