@@ -16,6 +16,8 @@ export const useDashboard = () => {
   const { user: employeeUser } = useStore($globalStore);
   const { pickedApplications } = useStore($aplicationsStore);
 
+  console.log(pickedApplications);
+
   const onAplicationPick = useCallback(
     async (application: Application) => {
       const employeeId = employeeUser?.id;

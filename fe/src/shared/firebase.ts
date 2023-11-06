@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 import { getStorage } from 'firebase/storage';
+import { getFirestore } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
 import { getAuth } from 'firebase/auth';
 
@@ -19,5 +20,6 @@ export const firebaseApp = initializeApp(FB_CONFIG);
 
 export const auth = getAuth(firebaseApp);
 export const rtdb = getDatabase(firebaseApp);
+export const firedb = getFirestore(firebaseApp);
 export const strg = getStorage(firebaseApp);
 getAnalytics(firebaseApp);

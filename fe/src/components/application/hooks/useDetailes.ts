@@ -3,27 +3,20 @@ import { useEffect, useState } from 'react';
 import { ref, child, get } from 'firebase/database';
 import { rtdb } from '../../../shared/firebase';
 
+import type { UseDetailesProps, FullShowcaseItem } from '../interfaces';
 import type { ShowcaseItem } from '../../../store';
-
-type FullShowcaseItem = ShowcaseItem & { id: string; totalServicePrice: string; order: ShowcaseItem[] };
-type ContentIndexes = Record<string, Record<string, number>>;
-
-interface UseDetailesProps {
-  currentUserId: string;
-  executorId: string;
-  content: ContentIndexes;
-}
 
 export const useDetailes = (props: UseDetailesProps) => {
   const { content, currentUserId, executorId } = props;
 
   const [details, setDetails] = useState<FullShowcaseItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (currentUserId !== executorId) return;
-
-    setLoading(true);
+    if (currentUserId !== executorId) {
+      setLoading(false);
+      return;
+    }
 
     const detailesPromises = Object.entries(content).map(async ([serviceId, qtyByItemId]) => {
       const orderItemsPromises = Object.entries(qtyByItemId).map(([itemId, qty]) =>

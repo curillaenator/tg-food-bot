@@ -3,6 +3,7 @@ import { ref, child, get } from 'firebase/database';
 
 import { rtdb } from '../../../shared/firebase';
 
+import type { EmergencyStatus } from '../interfaces';
 import type { Application, User } from '../../../shared/interfaces';
 
 import { getRelativeTime } from '../utils';
@@ -12,7 +13,7 @@ export const useApplication = (props: Application) => {
 
   const [customerUser, setCustomerUser] = useState<Partial<User> | null>(null);
   const [executorUser, setExecutorUser] = useState<Partial<User> | null>(null);
-  const [emergency, setEmergency] = useState<'fire' | 'warn' | 'ok'>(null);
+  const [emergency, setEmergency] = useState<EmergencyStatus>(null);
 
   useEffect(() => {
     get(child(ref(rtdb), `users/${customer}`)).then((snap) => {
