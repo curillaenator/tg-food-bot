@@ -1,18 +1,17 @@
-import React, { FC, useState, useEffect, useCallback } from 'react';
+import React, { FC } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useStore } from 'effector-react';
 import cn from 'classnames';
-import { ref as storageRef, getDownloadURL, deleteObject } from 'firebase/storage';
-import { ref, update, get, child } from 'firebase/database';
-
-import { strg, rtdb } from '../../shared/firebase';
 
 import {
+  Center,
   Flex,
   Stack,
   Image,
   Text,
   SimpleGrid,
   Heading,
+  Button,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
@@ -20,64 +19,21 @@ import {
 } from '@chakra-ui/react';
 
 import { DeleteIcon } from '@chakra-ui/icons';
-
-import { $globalStore } from '../../store';
-
 import { Card } from '../card';
 
+import { useShowcase } from './hooks/useShowcase';
+import { $globalStore } from '../../store';
+
+import type { Category } from './interfaces';
 import s from './styles.module.scss';
 
-export interface Category {
-  id: string;
-  title: string;
-  description: string;
-  imgPath: string;
-  type?: string;
-  parent?: string;
-  adress?: string;
-  categories?: Category[];
-}
-
 export const ShowcaseSection: FC<Category> = (props) => {
-  const { id, imgPath, parent, title, description, type, categories } = props;
+  const { parent, title, description, type, categories } = props;
+  const { pathname } = useLocation();
+
   const { isEditor, user } = useStore($globalStore);
 
-  const [serviceImgUrl, setServiceImgUrl] = useState<string | undefined>(undefined);
-
-  const removeService = useCallback(
-    (e: React.MouseEvent<SVGElement, MouseEvent>) => {
-      e.stopPropagation();
-      e.preventDefault();
-
-      if (confirm('Точно удалить сервис?')) {
-        get(child(ref(rtdb), `services/${id}`)).then((snap) => {
-          if (snap.exists()) {
-            const linkedItems = Object.keys((snap.val() as Category).categories || {});
-            const rtdbUpd = Object.fromEntries(linkedItems.map((itemId) => [`items/${itemId}`, null]));
-
-            linkedItems.forEach((itemId) => deleteObject(storageRef(strg, `items/${itemId}`)));
-            console.log('items images deleted');
-
-            deleteObject(storageRef(strg, imgPath));
-            console.log('service image deleted');
-
-            update(ref(rtdb), {
-              ...rtdbUpd,
-              [`categories/${parent}/categories/${id}`]: null,
-              [`services/${id}`]: null,
-            });
-            console.log('related records deleted');
-          }
-        });
-      }
-    },
-    [id, parent, imgPath],
-  );
-
-  useEffect(() => {
-    if (type !== 'service' || !imgPath) return;
-    getDownloadURL(storageRef(strg, imgPath)).then((url) => setServiceImgUrl(url));
-  }, [imgPath, type]);
+  const { serviceImgUrl, removeService } = useShowcase(props);
 
   const menu = categories?.filter((c) => c.type === 'item' || !!c.categories) || [];
 
@@ -132,6 +88,14 @@ export const ShowcaseSection: FC<Category> = (props) => {
           {menu.map((category) => (
             <Card key={category.id} {...category} />
           ))}
+
+          {parent && pathname === '/service' && (
+            <Center>
+              <Button size='lg' variant='solid' w='full'>
+                Добавить
+              </Button>
+            </Center>
+          )}
         </SimpleGrid>
       </AccordionPanel>
     </AccordionItem>

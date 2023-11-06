@@ -34,9 +34,9 @@ import s from './styles.module.scss';
 const onEditValue = (
   e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
   field: 'title' | 'description' | 'price',
-  itemsId: string,
+  itemId: string,
 ) => {
-  set(ref(rtdb, `items/${itemsId}/${field}`), e.target.value);
+  set(ref(rtdb, `items/${itemId}/${field}`), e.target.value);
 };
 
 const onImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
