@@ -21,10 +21,11 @@ export const useAccomplish = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const accomplish = useCallback(async (options: AccomplishOptions) => {
-    const { id, ...rest } = options;
+    if (!confirm('Точно?')) return;
 
     setLoading(true);
 
+    const { id, ...rest } = options;
     const today = new Date();
 
     await setDoc(doc(firedb, 'orders', String(today.getFullYear()), String(today.getMonth()), id), {
