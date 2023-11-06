@@ -123,26 +123,28 @@ const CardComponent: FC<CardProps> = (props) => {
             w='100%'
             onClick={(e) => {
               if (type === 'item' && isEditor) {
-                setLoading(true);
                 (e.currentTarget.firstChild as HTMLInputElement).click();
               }
             }}
           >
-            <input
-              id={`card-image-picker-${id}`}
-              data-itemid={id}
-              style={{ position: 'absolute', top: 0, left: 0, zIndex: '-100', opacity: 0 }}
-              type='file'
-              multiple={false}
-              onChange={(e) =>
-                onImageChange(e).then(() =>
-                  getDownloadURL(storageRef(strg, imgPath)).then((url) => {
-                    setImageURL(url);
-                    setLoading(false);
-                  }),
-                )
-              }
-            />
+            {isEditor && type === 'item' && (
+              <input
+                id={`card-image-picker-${id}`}
+                data-itemid={id}
+                style={{ position: 'absolute', top: 0, left: 0, zIndex: '-100', opacity: 0 }}
+                type='file'
+                multiple={false}
+                onChange={(e) => {
+                  setLoading(true);
+
+                  onImageChange(e).then(() =>
+                    getDownloadURL(storageRef(strg, imgPath))
+                      .then((url) => setImageURL(url))
+                      .finally(() => setLoading(false)),
+                  );
+                }}
+              />
+            )}
 
             <Image
               src={imageURL}
