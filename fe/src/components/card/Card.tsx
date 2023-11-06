@@ -80,11 +80,15 @@ const CardComponent: FC<CardProps> = (props) => {
   const { user, isEditor } = useStore($globalStore);
 
   const [imageURL, setImageURL] = useState<string | undefined>(undefined);
-
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    getDownloadURL(storageRef(strg, imgPath)).then((url) => setImageURL(url));
+    if (!imgPath) return;
+    setLoading(true);
+    getDownloadURL(storageRef(strg, imgPath)).then((url) => {
+      setImageURL(url);
+      setLoading(false);
+    });
   }, [imgPath]);
 
   return (
