@@ -113,7 +113,7 @@ const CardComponent: FC<CardProps> = (props) => {
           </Center>
 
           <Stack direction='column' spacing={6} h='100%' justifyContent='space-between'>
-            {!isEditor && (
+            {(!isEditor || type !== 'item') && (
               <Stack direction='column' spacing={4}>
                 <Heading size='md' textTransform='uppercase'>
                   {title}
@@ -127,15 +127,17 @@ const CardComponent: FC<CardProps> = (props) => {
               </Stack>
             )}
 
-            {isEditor && (
+            {isEditor && type === 'item' && (
               <InputGroup size='sm' flexDirection='column' gap='4px'>
                 <Input placeholder='Title' defaultValue={title} onChange={(e) => onEditValue(e, 'title')} />
+
                 <Input
                   placeholder='Price'
                   type='number'
                   defaultValue={price}
                   onChange={(e) => onEditValue(e, 'price')}
                 />
+
                 <Textarea
                   placeholder='Description'
                   defaultValue={description}
