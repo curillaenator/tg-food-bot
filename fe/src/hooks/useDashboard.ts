@@ -62,6 +62,8 @@ export const useDashboard = () => {
         Promise.all(employeeAplicationsPromises).then((resolvedApplications) => {
           setPickedApplications(resolvedApplications);
         });
+      } else {
+        setPickedApplications([]);
       }
     });
 
