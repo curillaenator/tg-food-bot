@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useReducer } from 'react';
 import { ref, set, child, get } from 'firebase/database';
+import { doc, setDoc } from 'firebase/firestore';
 
 import {
   createUserWithEmailAndPassword,
@@ -9,7 +10,7 @@ import {
   sendPasswordResetEmail,
 } from 'firebase/auth';
 
-import { rtdb, auth } from '../shared/firebase';
+import { rtdb, auth, firedb } from '../shared/firebase';
 
 import { setUser, type User } from '../store';
 
@@ -80,7 +81,7 @@ export const useAuth = () => {
     setAuthLoading(true);
 
     createUserWithEmailAndPassword(auth, creds.email, creds.password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         const { user } = userCredential;
 
         const appUser: User = {
@@ -93,7 +94,8 @@ export const useAuth = () => {
           role: 'pixpax',
         };
 
-        set(ref(rtdb, `users/${user.uid}`), appUser);
+        await setDoc(doc(firedb, 'users', user.uid), appUser);
+        await set(ref(rtdb, `users/${user.uid}`), appUser);
 
         setUser(appUser);
         // setAuthLoading(false);
