@@ -1,9 +1,9 @@
-import React, { FC, useState, useEffect, useCallback, ChangeEvent } from 'react';
+import React, { FC, useState, useEffect, ChangeEvent } from 'react';
 import { useStore } from 'effector-react';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
 import { ref, update, set } from 'firebase/database';
-import { ref as storageRef, getDownloadURL, deleteObject } from 'firebase/storage';
+import { ref as storageRef, getDownloadURL, deleteObject, uploadBytes } from 'firebase/storage';
 
 import {
   Card as UICard,
@@ -14,10 +14,10 @@ import {
   Stack,
   Heading,
   Text,
-  // Badge,
   Input,
   InputGroup,
   Textarea,
+  Progress,
 } from '@chakra-ui/react';
 
 import { DeleteIcon } from '@chakra-ui/icons';
@@ -25,10 +25,30 @@ import { DeleteIcon } from '@chakra-ui/icons';
 import { strg, rtdb } from '../../shared/firebase';
 
 import { setBasket, $globalStore } from '../../store';
-import { VNpricer } from '../../utils';
+import { debounced, resizeFile, VNpricer } from '../../utils';
 
-import s from './styles.module.scss';
+import { IMAGE_META } from './constants';
 import type { CardProps } from './interfaces';
+import s from './styles.module.scss';
+
+const onEditValue = (
+  e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
+  field: 'title' | 'description' | 'price',
+  itemsId: string,
+) => {
+  set(ref(rtdb, `items/${itemsId}/${field}`), e.target.value);
+};
+
+const onImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
+  const itemId = e.currentTarget.dataset.itemid;
+
+  const resizedFile = await resizeFile(e.target.files[0]);
+  const renamedFile = new File([resizedFile], itemId);
+
+  await uploadBytes(storageRef(strg, `items/${itemId}`), renamedFile, IMAGE_META);
+};
+
+const onEditValueDebounced = debounced(onEditValue, 1500);
 
 export const Card: FC<CardProps> = (props) => {
   const { to, type, ...rest } = props;
@@ -61,16 +81,11 @@ const CardComponent: FC<CardProps> = (props) => {
 
   const [imageURL, setImageURL] = useState<string | undefined>(undefined);
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   useEffect(() => {
     getDownloadURL(storageRef(strg, imgPath)).then((url) => setImageURL(url));
   }, [imgPath]);
-
-  const onEditValue = useCallback(
-    (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>, field: 'title' | 'description' | 'price') => {
-      set(ref(rtdb, `items/${id}/${field}`), e.target.value);
-    },
-    [id],
-  );
 
   return (
     <UICard
@@ -97,9 +112,38 @@ const CardComponent: FC<CardProps> = (props) => {
         });
       }}
     >
+      {loading && <Progress isIndeterminate size='xs' mb={2} />}
+
       <CardBody p={0}>
         <Stack direction='column' h='100%' spacing={6}>
-          <Center flexShrink={0} aspectRatio='1 / 1' w='100%'>
+          <Center
+            position='relative'
+            flexShrink={0}
+            aspectRatio='1 / 1'
+            w='100%'
+            onClick={(e) => {
+              if (type === 'item' && isEditor) {
+                setLoading(true);
+                (e.currentTarget.firstChild as HTMLInputElement).click();
+              }
+            }}
+          >
+            <input
+              id={`card-image-picker-${id}`}
+              data-itemid={id}
+              style={{ position: 'absolute', top: 0, left: 0, zIndex: '-100', opacity: 0 }}
+              type='file'
+              multiple={false}
+              onChange={(e) =>
+                onImageChange(e).then(() =>
+                  getDownloadURL(storageRef(strg, imgPath)).then((url) => {
+                    setImageURL(url);
+                    setLoading(false);
+                  }),
+                )
+              }
+            />
+
             <Image
               src={imageURL}
               alt={title}
@@ -129,33 +173,29 @@ const CardComponent: FC<CardProps> = (props) => {
 
             {isEditor && type === 'item' && (
               <InputGroup size='sm' flexDirection='column' gap='4px'>
-                <Input placeholder='Title' defaultValue={title} onChange={(e) => onEditValue(e, 'title')} />
+                <Input
+                  placeholder='Title'
+                  type='text'
+                  defaultValue={title}
+                  onChange={(e) => onEditValueDebounced(e, 'title', id)}
+                />
 
                 <Input
                   placeholder='Price'
                   type='number'
                   defaultValue={price}
-                  onChange={(e) => onEditValue(e, 'price')}
+                  onChange={(e) => onEditValueDebounced(e, 'price', id)}
                 />
 
                 <Textarea
                   placeholder='Description'
                   defaultValue={description}
-                  onChange={(e) => onEditValue(e, 'description')}
+                  onChange={(e) => onEditValueDebounced(e, 'description', id)}
                   resize='none'
                   rows={5}
                 />
               </InputGroup>
             )}
-
-            {/* {!!waitTime && (
-              <Stack direction='row'>
-                <Badge textTransform='lowercase' color='chakra-subtle-text'>
-                  <TimeIcon />
-                  {`${waitTime}`}
-                </Badge>
-              </Stack>
-            )} */}
           </Stack>
 
           {isEditor && type === 'item' && (
