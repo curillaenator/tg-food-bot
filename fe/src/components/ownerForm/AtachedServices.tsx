@@ -47,7 +47,7 @@ export const AttachedServices: FC<AttachedServiceProps> = (props) => {
     const attached = allServices.filter((service) => Object.keys(selectedUser.ownerOf).includes(service.id));
 
     setValue('servicesOwned', attached);
-  }, [allServices, selectedUser, setValue]);
+  }, [selectedUser, setValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!attachedServices.length) return null;
 
