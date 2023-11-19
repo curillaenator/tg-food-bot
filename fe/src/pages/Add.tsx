@@ -8,6 +8,7 @@ import { $globalStore } from '../store';
 
 import { ServiceForm } from '../components/serviceForm';
 import { ItemForm } from '../components/itemForm';
+import { OwnerForm } from '../components/ownerForm';
 
 export const Add: FC = () => {
   const { user } = useStore($globalStore);
@@ -22,10 +23,11 @@ export const Add: FC = () => {
 
   return (
     <Box as='main' h='full'>
-      <Tabs isFitted variant='enclosed'>
+      <Tabs isFitted variant='enclosed' defaultIndex={2}>
         <TabList mb='1em'>
-          <Tab>Новый сервис</Tab>
-          <Tab>Новый товар</Tab>
+          <Tab>Сервис</Tab>
+          <Tab>Товар</Tab>
+          <Tab>Владелец</Tab>
         </TabList>
 
         <TabPanels>
@@ -35,6 +37,10 @@ export const Add: FC = () => {
 
           <TabPanel>
             <ItemForm />
+          </TabPanel>
+
+          <TabPanel>
+            <OwnerForm />
           </TabPanel>
         </TabPanels>
       </Tabs>

@@ -29,7 +29,7 @@ export type User = {
   adress?: string;
   role?: Role;
   pickedApplications?: Application[];
-  ownerOf?: string[];
+  ownerOf?: Record<string, boolean>;
 };
 
 export type Background = 'wowwy' | 'playfull' | 'fire' | 'luxary';

@@ -53,7 +53,7 @@ export const ServicePage: FC = () => {
 
   useEffect(() => {
     const servicesWithItemsPromise = services.map(async (service) => {
-      if (!service.categories) return [];
+      if (!service.categories) return service;
 
       const itemsPromises = Object.entries(service.categories)
         .filter(([itemId, isActive]) => !!itemId && isActive)
@@ -67,12 +67,13 @@ export const ServicePage: FC = () => {
     });
 
     Promise.all(servicesWithItemsPromise).then((services) => {
-      // @ts-expect-error types
       setServicesFull(services);
 
       setLoading(false);
     });
   }, [services]);
+
+  console.log(servicesFull);
 
   useEffect(() => {
     setEditor(true);

@@ -20,5 +20,6 @@ export type User = {
   tel?: string;
   adress?: string;
   role?: Role;
+  ownerOf?: Record<string, boolean>;
   // orders?: Order['id'];
 };

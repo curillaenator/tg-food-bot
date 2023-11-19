@@ -103,7 +103,7 @@ export const UserSection: FC = () => {
                 onClick={onBasketOpen}
                 leftIcon={<BasketIcon />}
               >
-                {basket.length}
+                {basket.reduce((cnt, item) => cnt + item.qty, 0)}
               </Button>
             )}
             <Avatar
