@@ -77,9 +77,9 @@ export const UserSection: FC = () => {
             h='fit-content'
             variant='ghost'
             p={2}
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/')}
           >
-            Назад
+            Главная
           </Button>
         )}
 

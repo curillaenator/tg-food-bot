@@ -5,5 +5,4 @@ export interface CardProps extends Partial<ShowcaseItem> {
   to?: string;
   likes?: number;
   onMenuItemRemove?: (serviceId: string, itemId: string) => void;
-  // onClick?: (itemId: ShowcaseItem) => void;
 }

@@ -3,11 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useStore } from 'effector-react';
 
 import { ref, get, child, push, update } from 'firebase/database';
-import { ref as storageRef, deleteObject } from 'firebase/storage';
 
 import { Box, Progress, Accordion } from '@chakra-ui/react';
 
-import { rtdb, strg } from '../shared/firebase';
+import { rtdb } from '../shared/firebase';
 import { $globalStore, setEditor } from '../store';
 
 import { ShowcaseSection } from '../components/ShowcaseSection';
@@ -69,14 +68,7 @@ export const ServicePage: FC = () => {
   );
 
   const onMenuItemRemove = useCallback(
-    async (serviceId: string, itemId: string) => {
-      await update(ref(rtdb), {
-        [`services/${serviceId}/categories/${itemId}`]: null,
-        [`items/${itemId}`]: null,
-      });
-
-      await deleteObject(storageRef(strg, `items/${itemId}`)).catch((err) => console.table(err));
-
+    (serviceId: string, itemId: string) => {
       const serviceIndex = servicesFull.findIndex((srvc) => srvc.id === serviceId);
 
       const targetService = { ...servicesFull[serviceIndex] };
@@ -146,6 +138,7 @@ export const ServicePage: FC = () => {
     });
   }, [services]);
 
+  // enables editorMode when pathname is /service, i.e. this page
   useEffect(() => {
     setEditor(true);
 

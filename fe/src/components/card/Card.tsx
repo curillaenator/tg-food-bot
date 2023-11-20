@@ -2,8 +2,8 @@ import React, { FC, useState, useEffect, ChangeEvent } from 'react';
 import { useStore } from 'effector-react';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
-import { ref, set } from 'firebase/database';
-import { ref as storageRef, getDownloadURL, uploadBytes } from 'firebase/storage';
+import { ref, set, update } from 'firebase/database';
+import { ref as storageRef, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
 
 import {
   Card as UICard,
@@ -77,13 +77,24 @@ const CardComponent: FC<CardProps> = (props) => {
     parent,
     // likes,
     qty,
-    onMenuItemRemove,
+    onMenuItemRemove = () => {},
   } = props;
 
   const { user, isEditor } = useStore($globalStore);
 
   const [imageURL, setImageURL] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const removeCard = async (serviceId: string, itemId: string) => {
+    await update(ref(rtdb), {
+      [`services/${serviceId}/categories/${itemId}`]: null,
+      [`items/${itemId}`]: null,
+    });
+
+    if (imageURL) await deleteObject(storageRef(strg, `items/${itemId}`)).catch((err) => console.table(err));
+
+    onMenuItemRemove(serviceId, itemId);
+  };
 
   useEffect(() => {
     if (!imgPath) return;
@@ -222,7 +233,7 @@ const CardComponent: FC<CardProps> = (props) => {
                   e.preventDefault();
 
                   if (confirm('Точно удалить товар из базы?')) {
-                    onMenuItemRemove(parent, id);
+                    removeCard(parent, id);
                   }
                 }}
               >

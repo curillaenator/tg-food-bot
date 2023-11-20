@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useEffect, useState, useCallback } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { ref, onValue, get, child } from 'firebase/database';
 
 import { rtdb } from '../shared/firebase';
@@ -9,15 +9,32 @@ import type { Category } from '../shared/interfaces';
 type ParamName = 'categoryId' | 'serviceId' | 'showcaseId';
 
 export const useDataQuery = () => {
-  const { categoryId, serviceId, showcaseId } = useParams<Record<ParamName, string>>();
-  const { search } = useLocation();
+  const { categoryId, serviceId } = useParams<Record<ParamName, string>>();
+  const { pathname, search } = useLocation();
+  const navigate = useNavigate();
+
+  const [lastRemovedId, setLastRemovedId] = useState<string | null>(null);
+
+  const onRemoveItem = useCallback((itemId: string) => setLastRemovedId(itemId), []);
+
+  const onRemoveService = useCallback(
+    (itemId: string) => {
+      const searchParams = new URLSearchParams(search);
+      const { value } = searchParams.values().next();
+
+      const requiredServises = JSON.stringify((JSON.parse(value) as string[]).filter((id) => id !== itemId));
+
+      navigate(`${pathname}?categories=${requiredServises}`);
+    },
+    [search, pathname, navigate],
+  );
 
   const [categories, setCategories] = useState<Record<string, Category[]>>({});
   const [services, setServices] = useState<Record<string, Category>>({});
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!!categoryId || !!serviceId || !!showcaseId) return;
+    if (!!categoryId || !!serviceId) return;
 
     setCategories({});
     setLoading(true);
@@ -54,7 +71,7 @@ export const useDataQuery = () => {
     });
 
     return () => usubscribeCategories();
-  }, [categoryId, serviceId, showcaseId]);
+  }, [categoryId, serviceId, lastRemovedId]);
 
   useEffect(() => {
     if (!categoryId) return;
@@ -101,11 +118,13 @@ export const useDataQuery = () => {
         setLoading(false);
       });
     });
-  }, [search, categoryId, serviceId, showcaseId]);
+  }, [search, categoryId, serviceId, lastRemovedId]);
 
   return {
     loading,
     services,
     contentMap: Object.entries(categories),
+    onRemoveItem,
+    onRemoveService,
   };
 };

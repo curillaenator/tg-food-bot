@@ -9,7 +9,7 @@ import type { ShowcaseSectionProps } from '../interfaces';
 import type { Category } from '../../../shared/interfaces';
 
 export const useShowcase = (props: ShowcaseSectionProps) => {
-  const { id, imgPath, type, parent } = props;
+  const { id, imgPath, type, parent, onRemoveService } = props;
 
   const [serviceImgUrl, setServiceImgUrl] = useState<string | undefined>(undefined);
 
@@ -41,11 +41,13 @@ export const useShowcase = (props: ShowcaseSectionProps) => {
               [`services/${id}`]: null,
             });
             console.log('related records deleted');
+
+            onRemoveService(id);
           }
         });
       }
     },
-    [id, parent, imgPath],
+    [id, parent, imgPath, onRemoveService],
   );
 
   // const addItem = useCallback(() => {}, [])

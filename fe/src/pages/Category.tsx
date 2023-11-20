@@ -7,7 +7,7 @@ import { useDataQuery } from '../hooks/useDataQuery';
 import { ShowcaseSection } from '../components/ShowcaseSection';
 
 export const Category: FC = () => {
-  const { loading, services, contentMap } = useDataQuery();
+  const { loading, services, contentMap, onRemoveItem, onRemoveService } = useDataQuery();
 
   return (
     <Box as='main'>
@@ -24,6 +24,8 @@ export const Category: FC = () => {
             imgPath={services[serviceName]?.imgPath}
             type={services[serviceName]?.type}
             categories={content || []}
+            onMenuItemRemove={(serviceId, itemId) => onRemoveItem(`${serviceId}/${itemId}`)}
+            onRemoveService={onRemoveService}
           />
         ))}
       </Accordion>
