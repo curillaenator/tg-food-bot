@@ -18,17 +18,17 @@ import {
   AccordionIcon,
 } from '@chakra-ui/react';
 
-import { DeleteIcon } from '@chakra-ui/icons';
+import { DeleteIcon, PlusSquareIcon } from '@chakra-ui/icons';
 import { Card } from '../card';
 
 import { useShowcase } from './hooks/useShowcase';
 import { $globalStore } from '../../store';
 
-import type { Category } from './interfaces';
+import type { ShowcaseSectionProps } from './interfaces';
 import s from './styles.module.scss';
 
-export const ShowcaseSection: FC<Category> = (props) => {
-  const { parent, title, description, type, categories } = props;
+export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
+  const { id, parent, title, description, type, categories, onMenuAdd, onMenuItemRemove } = props;
   const { pathname } = useLocation();
 
   const { isEditor, user } = useStore($globalStore);
@@ -86,12 +86,12 @@ export const ShowcaseSection: FC<Category> = (props) => {
 
         <SimpleGrid columns={2} spacing={2}>
           {menu.map((category) => (
-            <Card key={category.id} {...category} />
+            <Card key={category.id} {...category} onMenuItemRemove={onMenuItemRemove} />
           ))}
 
-          {parent && pathname === '/service' && (
+          {parent && !!onMenuAdd && pathname === '/service' && (
             <Center>
-              <Button size='lg' variant='solid' w='full'>
+              <Button size='lg' variant='solid' w='full' onClick={() => onMenuAdd(id)} rightIcon={<PlusSquareIcon />}>
                 Добавить
               </Button>
             </Center>

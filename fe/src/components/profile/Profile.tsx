@@ -1,40 +1,15 @@
 import React, { FC } from 'react';
 
-import {
-  // Flex,
-  // Spacer,
-  Text,
-  // ButtonGroup,
-  // Checkbox,
-  // Button,
-  InputGroup,
-  Input,
-  InputLeftAddon,
-  // InputLeftElement,
-  // InputRightElement,
-  // Heading,
-  Stack,
-} from '@chakra-ui/react';
+import { Text, InputGroup, Input, InputLeftAddon, Stack } from '@chakra-ui/react';
 
-import {
-  StarIcon,
-  // AtSignIcon,
-  PhoneIcon,
-  EditIcon,
-} from '@chakra-ui/icons';
+import { StarIcon, PhoneIcon, EditIcon } from '@chakra-ui/icons';
 
 import { updateUser } from '../../store';
 
 import { useProfile } from '../../hooks/useProfile';
 
 export const Profile: FC = () => {
-  const {
-    // id,
-    name = '',
-    adress = '',
-    //  avatar,
-    tel = '',
-  } = useProfile();
+  const { name = '', adress = '', tel = '' } = useProfile();
 
   return (
     <Stack w='100%' flexDirection='column' gap={4}>

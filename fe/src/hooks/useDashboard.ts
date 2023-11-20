@@ -13,12 +13,12 @@ import { LIMIT_PER_EMPLOYEE_APLICATIONS } from '../shared/constants';
 export const useDashboard = () => {
   const [orders, setOrders] = useState<Application[]>([]);
 
-  const { user: employeeUser } = useStore($globalStore);
+  const { user: currentUser } = useStore($globalStore);
   const { pickedApplications } = useStore($aplicationsStore);
 
   const onAplicationPick = useCallback(
     async (application: Application) => {
-      const employeeId = employeeUser?.id;
+      const employeeId = currentUser?.id;
 
       const updatedApplication: Application = {
         customer: application.customer,
@@ -38,14 +38,14 @@ export const useDashboard = () => {
         [`users/${employeeId}/pickedApplications`]: { ...previouslyPickedApplications, [application.id]: true },
       });
     },
-    [employeeUser],
+    [currentUser],
   );
 
   // следит за принятыми заказами сотрудником
   useEffect(() => {
-    if (!employeeUser?.id) return;
+    if (!currentUser?.id) return;
 
-    const employeePickedApplsUnsub = onValue(ref(rtdb, `users/${employeeUser.id}/pickedApplications`), (snap) => {
+    const employeePickedApplsUnsub = onValue(ref(rtdb, `users/${currentUser.id}/pickedApplications`), (snap) => {
       if (snap.exists()) {
         const keyOfEmployeeAplications: string[] = [];
 
@@ -66,7 +66,7 @@ export const useDashboard = () => {
     });
 
     return () => employeePickedApplsUnsub();
-  }, [employeeUser?.id]);
+  }, [currentUser?.id]);
 
   // следит за заказами в базе
   useEffect(() => {
@@ -87,7 +87,7 @@ export const useDashboard = () => {
   }, []);
 
   return {
-    employeeId: employeeUser?.id,
+    currentUser,
     orders,
     onAplicationPick,
     pickIsDisabled: pickedApplications.length >= LIMIT_PER_EMPLOYEE_APLICATIONS,

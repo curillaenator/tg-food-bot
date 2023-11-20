@@ -5,7 +5,7 @@ import type { Options } from 'chakra-react-select';
 import { rtdb } from '../../../shared/firebase';
 
 import type { CustomOption } from '../interfaces';
-import type { Category } from '../../ShowcaseSection';
+import type { Category } from '../../../shared/interfaces';
 
 export const useCategoriesQuery = () => {
   const [currentCategory, setCurrentCategory] = useState<CustomOption>({ label: '', value: '' });

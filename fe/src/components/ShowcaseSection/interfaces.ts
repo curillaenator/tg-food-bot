@@ -1,10 +1,6 @@
-export interface Category {
-  id: string;
-  title: string;
-  description: string;
-  imgPath: string;
-  type?: string;
-  parent?: string;
-  adress?: string;
-  categories?: Category[];
+import { Category } from '../../shared/interfaces';
+
+export interface ShowcaseSectionProps extends Category {
+  onMenuAdd?: (serviceId: string) => void;
+  onMenuItemRemove?: (serviceId: string, itemId: string) => void;
 }

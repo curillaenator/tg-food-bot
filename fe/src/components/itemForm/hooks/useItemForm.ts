@@ -10,7 +10,7 @@ import { rtdb, strg } from '../../../shared/firebase';
 import { resizeFile } from '../../../utils';
 
 import type { ItemFormValuesType, CustomOption } from '../interfaces';
-import type { Category } from '../../ShowcaseSection';
+import type { Category } from '../../../shared/interfaces';
 
 const FILE_META = {
   cacheControl: 'public,max-age=7200',

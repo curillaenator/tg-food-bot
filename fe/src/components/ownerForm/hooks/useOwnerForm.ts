@@ -5,8 +5,7 @@ import type { OptionsOrGroups, GroupBase } from 'chakra-react-select';
 
 import { rtdb } from '../../../shared/firebase';
 
-import type { User } from '../../../store/index';
-import type { Category as Service } from '../../ShowcaseSection';
+import type { User, Category as Service } from '../../../shared/interfaces';
 
 import type { OwnerFormState } from '../interfaces';
 

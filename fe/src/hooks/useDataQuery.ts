@@ -4,7 +4,7 @@ import { ref, onValue, get, child } from 'firebase/database';
 
 import { rtdb } from '../shared/firebase';
 
-import type { Category } from '../components/ShowcaseSection';
+import type { Category } from '../shared/interfaces';
 
 type ParamName = 'categoryId' | 'serviceId' | 'showcaseId';
 

@@ -20,6 +20,17 @@ export type User = {
   tel?: string;
   adress?: string;
   role?: Role;
+  pickedApplications?: Application[];
   ownerOf?: Record<string, boolean>;
-  // orders?: Order['id'];
 };
+
+export interface Category {
+  id: string;
+  title: string;
+  description: string;
+  imgPath: string;
+  type?: string;
+  parent?: string;
+  adress?: string;
+  categories?: Category[];
+}

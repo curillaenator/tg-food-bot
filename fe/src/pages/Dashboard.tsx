@@ -9,21 +9,21 @@ import { useDashboard } from '../hooks/useDashboard';
 import type { Application as ApplicationType } from '../shared/interfaces';
 
 export const Dashboard: FC = () => {
-  const { orders, pickIsDisabled, employeeId, onAplicationPick } = useDashboard();
+  const { orders, pickIsDisabled, currentUser, onAplicationPick } = useDashboard();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!employeeId) navigate('/');
-  }, [employeeId, navigate]);
+    if (!currentUser?.id) navigate('/');
+  }, [currentUser, navigate]);
 
   const [dash, setDash] = useState<string>('all');
 
   const filters = useMemo(
     () => ({
       all: (el: ApplicationType) => !el?.executor,
-      mine: (el: ApplicationType) => el?.executor === employeeId,
+      mine: (el: ApplicationType) => el?.executor === currentUser?.id,
     }),
-    [employeeId],
+    [currentUser],
   );
 
   return (
@@ -41,13 +41,13 @@ export const Dashboard: FC = () => {
         Заявки
       </Heading>
 
-      {!!employeeId && (
+      {!!currentUser?.id && (
         <SimpleGrid columns={dash === 'all' ? 2 : 1} spacing={2}>
           {orders.filter(filters[dash]).map((application) => (
             <Application
               {...application}
               key={application.id}
-              currentUserId={employeeId}
+              currentUserId={currentUser.id}
               onAplicationPick={onAplicationPick}
               pickIsDisabled={pickIsDisabled}
             />

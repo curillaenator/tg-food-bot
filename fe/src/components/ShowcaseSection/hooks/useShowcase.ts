@@ -5,9 +5,10 @@ import { ref, update, get, child } from 'firebase/database';
 
 import { strg, rtdb } from '../../../shared/firebase';
 
-import type { Category } from '../interfaces';
+import type { ShowcaseSectionProps } from '../interfaces';
+import type { Category } from '../../../shared/interfaces';
 
-export const useShowcase = (props: Category) => {
+export const useShowcase = (props: ShowcaseSectionProps) => {
   const { id, imgPath, type, parent } = props;
 
   const [serviceImgUrl, setServiceImgUrl] = useState<string | undefined>(undefined);

@@ -2,8 +2,8 @@ import React, { FC, useState, useEffect, ChangeEvent } from 'react';
 import { useStore } from 'effector-react';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
-import { ref, update, set } from 'firebase/database';
-import { ref as storageRef, getDownloadURL, deleteObject, uploadBytes } from 'firebase/storage';
+import { ref, set } from 'firebase/database';
+import { ref as storageRef, getDownloadURL, uploadBytes } from 'firebase/storage';
 
 import {
   Card as UICard,
@@ -30,6 +30,8 @@ import { debounced, resizeFile, VNpricer } from '../../utils';
 import { IMAGE_META } from './constants';
 import type { CardProps } from './interfaces';
 import s from './styles.module.scss';
+
+import noImage from './assets/no-image.jpg';
 
 const onEditValue = (
   e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
@@ -75,20 +77,23 @@ const CardComponent: FC<CardProps> = (props) => {
     parent,
     // likes,
     qty,
+    onMenuItemRemove,
   } = props;
 
   const { user, isEditor } = useStore($globalStore);
 
-  const [imageURL, setImageURL] = useState<string | undefined>(undefined);
+  const [imageURL, setImageURL] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (!imgPath) return;
+
     setLoading(true);
-    getDownloadURL(storageRef(strg, imgPath)).then((url) => {
-      setImageURL(url);
-      setLoading(false);
-    });
+
+    getDownloadURL(storageRef(strg, imgPath))
+      .then((url) => setImageURL(url))
+      .catch((err) => console.table(err))
+      .finally(() => setLoading(false));
   }, [imgPath]);
 
   return (
@@ -151,7 +156,7 @@ const CardComponent: FC<CardProps> = (props) => {
             )}
 
             <Image
-              src={imageURL}
+              src={imageURL || noImage}
               alt={title}
               borderRadius={8}
               objectFit='cover'
@@ -217,12 +222,7 @@ const CardComponent: FC<CardProps> = (props) => {
                   e.preventDefault();
 
                   if (confirm('Точно удалить товар из базы?')) {
-                    deleteObject(storageRef(strg, `items/${id}`));
-
-                    update(ref(rtdb), {
-                      [`services/${parent}/categories/${id}`]: null,
-                      [`items/${id}`]: null,
-                    });
+                    onMenuItemRemove(parent, id);
                   }
                 }}
               >

@@ -9,8 +9,7 @@ import { DeleteIcon } from '@chakra-ui/icons';
 import { rtdb } from '../../shared/firebase';
 
 import type { OwnerFormState } from './interfaces';
-import type { Category as Service } from '../ShowcaseSection';
-import type { User } from '../../store/index';
+import type { User, Category as Service } from '../../shared/interfaces';
 
 interface AttachedServiceProps {
   allServices: Service[];

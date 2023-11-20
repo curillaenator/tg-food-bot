@@ -1,56 +1,129 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from 'effector-react';
 
-import { ref, get, child } from 'firebase/database';
+import { ref, get, child, push, update } from 'firebase/database';
+import { ref as storageRef, deleteObject } from 'firebase/storage';
 
 import { Box, Progress, Accordion } from '@chakra-ui/react';
 
-import { rtdb } from '../shared/firebase';
+import { rtdb, strg } from '../shared/firebase';
 import { $globalStore, setEditor } from '../store';
 
-import { ShowcaseSection, type Category } from '../components/ShowcaseSection';
+import { ShowcaseSection } from '../components/ShowcaseSection';
 
-// type ServiceItems = Record
+import type { Category } from '../shared/interfaces';
 
 export const ServicePage: FC = () => {
-  const { user } = useStore($globalStore);
+  const { user: currentUser } = useStore($globalStore);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!!user?.id) return;
+    if (!!currentUser?.id) return;
     navigate('/');
-  }, [user, navigate]);
+  }, [currentUser, navigate]);
 
   const [services, setServices] = useState<Category[]>([]);
   const [servicesFull, setServicesFull] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (!user?.id) return;
+  const onMenuAddItem = useCallback(
+    async (serviceId: string) => {
+      const newPostKey = await push(child(ref(rtdb), 'items')).key;
 
-    setLoading(true);
+      const menuItem: Category = {
+        title: '',
+        description: '',
+        // @ts-expect-error types
+        price: 10000,
+        type: 'item',
+        parent: serviceId,
+        imgPath: `items/${newPostKey}`,
+      };
 
-    get(child(ref(rtdb), `users/${user.id}/ownerOf`)).then((snap) => {
-      const response = (snap.exists() ? snap.val() : {}) as Record<string, boolean>;
+      const updates = {
+        [`items/${newPostKey}`]: menuItem,
+        [`services/${serviceId}/categories/${newPostKey}`]: true,
+      };
 
-      const sevicesWithItemIds = Object.keys(response);
+      await update(ref(rtdb), updates);
 
-      if (!sevicesWithItemIds.length) {
-        setLoading(false);
-        navigate('/');
-      }
+      const serviceIndex = servicesFull.findIndex((srvc) => srvc.id === serviceId);
 
-      const servicePromises = sevicesWithItemIds.map((serviceId) => {
-        return get(child(ref(rtdb), `services/${serviceId}`)).then((snap) => {
-          return (snap.exists() ? { ...snap.val(), id: serviceId } : {}) as Category;
-        });
+      const targetService = { ...servicesFull[serviceIndex] };
+
+      targetService.categories = [
+        ...targetService.categories,
+        {
+          ...menuItem,
+          id: newPostKey,
+        },
+      ];
+
+      const updatedServicesFull = [...servicesFull];
+      updatedServicesFull.splice(serviceIndex, 1, targetService);
+
+      setServicesFull(updatedServicesFull);
+    },
+    [servicesFull],
+  );
+
+  const onMenuItemRemove = useCallback(
+    async (serviceId: string, itemId: string) => {
+      await update(ref(rtdb), {
+        [`services/${serviceId}/categories/${itemId}`]: null,
+        [`items/${itemId}`]: null,
       });
 
-      Promise.all(servicePromises).then((services) => setServices(services.filter((s) => !!Object.keys(s).length)));
-    });
-  }, [user, navigate]);
+      await deleteObject(storageRef(strg, `items/${itemId}`)).catch((err) => console.table(err));
 
+      const serviceIndex = servicesFull.findIndex((srvc) => srvc.id === serviceId);
+
+      const targetService = { ...servicesFull[serviceIndex] };
+
+      targetService.categories = targetService.categories.filter((item) => item.id !== itemId);
+
+      const updatedServicesFull = [...servicesFull];
+      updatedServicesFull.splice(serviceIndex, 1, targetService);
+
+      setServicesFull(updatedServicesFull);
+    },
+    [servicesFull],
+  );
+
+  // get all owned sevices data by ids
+  useEffect(() => {
+    if (!currentUser?.id) return;
+
+    const getOwnedServicesAsync = async () => {
+      setLoading(true);
+
+      const ownerOfsnap = await get(child(ref(rtdb), `users/${currentUser.id}/ownerOf`)); // ownerOf - bad prop naming
+      const data = (ownerOfsnap.exists() ? ownerOfsnap.val() : {}) as Record<string, boolean>;
+      const ownerOfSevicesIds = Object.keys(data);
+
+      if (!ownerOfSevicesIds.length) {
+        setLoading(false);
+        return;
+      }
+
+      const servicePromises = ownerOfSevicesIds.map(async (serviceId) => {
+        const serviceSnap = await get(child(ref(rtdb), `services/${serviceId}`));
+
+        return (serviceSnap.exists() ? { ...serviceSnap.val(), id: serviceId } : {}) as Category;
+      });
+
+      const resolvedServices = await Promise.all(servicePromises);
+
+      const filteredServices = resolvedServices.filter((srvc) => !!Object.keys(srvc).length);
+
+      setServices(filteredServices);
+    };
+
+    getOwnedServicesAsync();
+  }, [currentUser]);
+
+  // fill owned services by full data (products details)
   useEffect(() => {
     const servicesWithItemsPromise = services.map(async (service) => {
       if (!service.categories) return service;
@@ -73,8 +146,6 @@ export const ServicePage: FC = () => {
     });
   }, [services]);
 
-  console.log(servicesFull);
-
   useEffect(() => {
     setEditor(true);
 
@@ -89,7 +160,12 @@ export const ServicePage: FC = () => {
 
       <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5, 6, 7]}>
         {servicesFull.map((service) => (
-          <ShowcaseSection key={service.id} {...service} />
+          <ShowcaseSection
+            {...service}
+            key={service.id}
+            onMenuAdd={onMenuAddItem}
+            onMenuItemRemove={onMenuItemRemove}
+          />
         ))}
       </Accordion>
     </Box>

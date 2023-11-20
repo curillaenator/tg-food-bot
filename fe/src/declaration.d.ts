@@ -12,3 +12,8 @@ declare module '*.png' {
   const imageSrc: string;
   export default imageSrc;
 }
+
+declare module '*.jpg' {
+  const imageSrc: string;
+  export default imageSrc;
+}
