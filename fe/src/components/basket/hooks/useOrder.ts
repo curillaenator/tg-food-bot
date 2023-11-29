@@ -1,6 +1,8 @@
 import { useStore } from 'effector-react';
 import { ref, child, push, set } from 'firebase/database';
 
+import { useTelegram } from '../../../hooks/useTelegram';
+
 import { $globalStore, resetBasket, type ShowcaseItem } from '../../../store';
 import { rtdb } from '../../../shared/firebase';
 
@@ -20,30 +22,44 @@ const group = (basket: ShowcaseItem[]) => {
 export const useOrder = (onBasketClose: () => void) => {
   const { user, basket } = useStore($globalStore);
 
-  const onPlaceOrder = () => {
-    const orderId = push(child(ref(rtdb), 'orders')).key;
+  const { tgQueryId } = useTelegram();
 
-    const order: Application = {
-      // id: orderId,
-      customer: user.id,
-      placed: String(+new Date()),
-      status: 'open',
-      executor: null,
-      content: group(basket),
-      expectedTime: '',
-    };
+  const onPlaceOrder = async () => {
+    try {
+      const orderId = push(child(ref(rtdb), 'orders')).key;
 
-    set(ref(rtdb, `orders/${orderId}`), order).then(() => {
+      const order: Application = {
+        // id: orderId,
+        customer: user.id,
+        placed: String(+new Date()),
+        status: 'open',
+        executor: null,
+        content: group(basket),
+        expectedTime: '',
+      };
+
+      await set(ref(rtdb, `orders/${orderId}`), order);
+
+      await fetch('5.35.13.184:6006/bot-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          queryId: tgQueryId,
+          orderId,
+          title: 'Спасибо за Ваш заказ!!!',
+          clientSupport: 'По вопросу заказа можно связаться с ...',
+          order,
+        }),
+      });
+
       resetBasket();
-      onBasketClose();
+    } catch (error) {
+      console.log(error);
+    }
 
-      console.table(order);
-
-      // TODO тг шлет ответ пользаку с номером заказа
-
-      // window.Telegram.WebApp.sendData(order)
-      // window.Telegram.WebApp.close()
-    });
+    onBasketClose();
   };
 
   return {
