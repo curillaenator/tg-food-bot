@@ -40,11 +40,9 @@ export const useOrder = (onBasketClose: () => void) => {
 
       await set(ref(rtdb, `orders/${orderId}`), order);
 
-      await fetch('5.35.13.184:6006/bot-data', {
+      await fetch('http://5.35.13.184:6006/bot-data', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           queryId: tgQueryId,
           orderId,
@@ -52,14 +50,14 @@ export const useOrder = (onBasketClose: () => void) => {
           clientSupport: 'По вопросу заказа можно связаться с ...',
           order,
         }),
+      }).then((res) => {
+        resetBasket();
+        onBasketClose();
+        console.log(res);
       });
-
-      resetBasket();
     } catch (error) {
       console.log(error);
     }
-
-    onBasketClose();
   };
 
   return {
