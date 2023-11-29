@@ -5,7 +5,6 @@
   "license": "MIT",
   "scripts": {
     "start:fe": "cd ./fe && yarn start",
-    "start:be": "cd ./back && yarn start",
     "prepare": "npx husky install"
   },
   "devDependencies": {

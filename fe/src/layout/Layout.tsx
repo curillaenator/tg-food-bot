@@ -11,16 +11,12 @@ import s from './layout.module.scss';
 
 export const Layout: FC = () => {
   // useUpdateImageMeta();
-  const { tg, tgUser, tgQueryId } = useTelegram();
+  const { tg } = useTelegram();
 
   useEffect(() => {
     if (!!tg) {
       tg.ready();
       tg.expand();
-
-      console.log(window.Telegram);
-
-      // tg.onEvent('')
     }
   }, [tg]);
 
@@ -29,8 +25,8 @@ export const Layout: FC = () => {
       <UserSection />
       <Outlet />
 
-      <div>{tgUser?.id || 'no user'}</div>
-      <div>{tgQueryId || 'no Id'}</div>
+      {/* <div>{tgUser?.id || 'no user'}</div>
+      <div>{tgQueryId || 'no Id'}</div> */}
     </div>
   );
 };

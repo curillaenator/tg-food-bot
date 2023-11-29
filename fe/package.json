@@ -15,6 +15,7 @@
     "@chakra-ui/react": "2.8.1",
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
+    "axios": "1.6.2",
     "chakra-react-select": "4.7.4",
     "classnames": "2.3.2",
     "effector": "22.8.7",
