@@ -1,8 +1,8 @@
 import { useStore } from 'effector-react';
-// import axios from 'axios';
+import axios from 'axios';
 import { ref, child, push, set } from 'firebase/database';
 
-// import { useTelegram } from '../../../hooks/useTelegram';
+import { useTelegram } from '../../../hooks/useTelegram';
 
 import { $globalStore, resetBasket, type ShowcaseItem } from '../../../store';
 import { rtdb } from '../../../shared/firebase';
@@ -23,7 +23,7 @@ const group = (basket: ShowcaseItem[]) => {
 export const useOrder = (onBasketClose: () => void) => {
   const { user, basket } = useStore($globalStore);
 
-  // const { tgQueryId } = useTelegram();
+  const { tgQueryId } = useTelegram();
 
   const onPlaceOrder = async () => {
     try {
@@ -44,26 +44,25 @@ export const useOrder = (onBasketClose: () => void) => {
       resetBasket();
       onBasketClose();
 
-      // await axios
-      //   .post(
-      //     'http://5.35.13.184:6006/bot-data',
-      //     {
-      //       queryId: tgQueryId,
-      //       orderId,
-      //       title: 'Спасибо за Ваш заказ!!!',
-      //       clientSupport: 'По вопросу заказа можно связаться с ...',
-      //       order,
-      //     },
-      //     {
-      //       headers: {
-      //         'Content-Type': 'application/json',
-      //       },
-      //     },
-      //   )
-      //   .then((res) => {
-
-      //     console.log(res);
-      //   });
+      await axios
+        .post(
+          process.env.TG_BOT_API,
+          {
+            queryId: tgQueryId,
+            orderId,
+            title: 'Спасибо за Ваш заказ!!!',
+            clientSupport: 'По вопросу заказа можно связаться с ...',
+            order,
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        )
+        .then((res) => {
+          console.log(res);
+        });
     } catch (error) {
       console.log(error);
     }
