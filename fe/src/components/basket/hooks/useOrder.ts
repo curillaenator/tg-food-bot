@@ -1,5 +1,6 @@
-import { useStore } from 'effector-react';
 import axios from 'axios';
+import { useStore } from 'effector-react';
+import { useToast } from '@chakra-ui/react';
 import { ref, child, push, set } from 'firebase/database';
 
 import { useTelegram } from '../../../hooks/useTelegram';
@@ -25,25 +26,47 @@ export const useOrder = (onBasketClose: () => void) => {
 
   const { tgQueryId } = useTelegram();
 
+  const toast = useToast();
+
   const onPlaceOrder = async () => {
-    try {
-      const orderId = push(child(ref(rtdb), 'orders')).key;
+    const orderId = push(child(ref(rtdb), 'orders')).key;
 
-      const order: Application = {
-        // id: orderId,
-        customer: user.id,
-        placed: String(+new Date()),
-        status: 'open',
-        executor: null,
-        content: group(basket),
-        expectedTime: '',
-      };
+    const order: Application = {
+      // id: orderId,
+      customer: user.id,
+      placed: String(+new Date()),
+      status: 'open',
+      executor: null,
+      content: group(basket),
+      expectedTime: '',
+    };
 
-      await set(ref(rtdb, `orders/${orderId}`), order);
+    await set(ref(rtdb, `orders/${orderId}`), order)
+      .then(() => {
+        if (!tgQueryId) {
+          toast({
+            title: 'Спасибо!',
+            description: 'Ващ заказ создан',
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      })
+      .catch((rtdbErr) => {
+        toast({
+          title: 'Ошибка RTDB',
+          description: rtdbErr.message,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        });
+      });
 
-      resetBasket();
-      onBasketClose();
+    resetBasket();
+    onBasketClose();
 
+    if (!!tgQueryId) {
       await axios
         .post(
           process.env.TG_BOT_API,
@@ -60,11 +83,15 @@ export const useOrder = (onBasketClose: () => void) => {
             },
           },
         )
-        .then((res) => {
-          console.log(res);
+        .catch((tgErr) => {
+          toast({
+            title: 'Ошибка TGBT',
+            description: tgErr.message,
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+          });
         });
-    } catch (error) {
-      console.log(error);
     }
   };
 
