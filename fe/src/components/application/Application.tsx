@@ -19,15 +19,7 @@ type ApplicationProps = ApllicationType & {
 export const Application: FC<ApplicationProps> = (props) => {
   const { id, onAplicationPick, pickIsDisabled, status, currentUserId, content } = props;
 
-  const {
-    customerName = 'загружаю...',
-    customeAdress = 'загружаю...',
-    customeTel = 'загружаю...',
-    executorName,
-    executorId,
-    placed,
-    emergency,
-  } = useApplication(props);
+  const { customer, executorName, executorId, placed, emergency } = useApplication(props);
 
   const isUnpicked = currentUserId !== executorId;
 
@@ -49,11 +41,9 @@ export const Application: FC<ApplicationProps> = (props) => {
             pickIsDisabled={pickIsDisabled}
             placed={placed}
             content={content}
-            customerName={customerName}
+            customer={customer}
             status={status}
             onAplicationPick={() => onAplicationPick(props)}
-            customerAdress={customeAdress}
-            customerTel={customeTel}
             emergency={emergency}
           />
         ) : (
@@ -62,9 +52,7 @@ export const Application: FC<ApplicationProps> = (props) => {
             currentUserId={currentUserId}
             executorId={executorId}
             content={content}
-            customerName={customerName}
-            customerAdress={customeAdress}
-            customerTel={customeTel}
+            customer={customer}
             placed={placed}
             emergency={emergency}
             status={status}

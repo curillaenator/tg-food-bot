@@ -14,9 +14,12 @@ export interface UseDetailesProps {
 
 interface CommonContent {
   id: string;
-  customerName: string;
-  customerAdress: string;
-  customerTel: string;
+  customer: {
+    name: string;
+    adress: string;
+    tel: string;
+    tme: string;
+  };
   placed: string;
   emergency: EmergencyStatus;
   executorId: string;

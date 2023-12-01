@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { Card, Flex, CardBody, Stack, Text, Button, Divider, Progress } from '@chakra-ui/react';
+import React, { FC, useState } from 'react';
+import { Card, Flex, CardBody, Stack, Text, Button, Divider, Progress, Link } from '@chakra-ui/react';
 
 import { useDetailes as useDetails } from './hooks/useDetailes';
 import { useAccomplish } from './hooks/useAccomplish';
@@ -12,8 +12,9 @@ import { DELIVERY_PRICE } from '../../shared/constants';
 import type { PickedContentProps } from './interfaces';
 
 export const PickedContent: FC<PickedContentProps> = (props) => {
-  const { id, customerName, emergency, placed, customerAdress, customerTel, currentUserId, executorId, content } =
-    props;
+  const { id, customer, emergency, placed, currentUserId, executorId, content } = props;
+
+  const { name, tel, tme, adress } = customer;
 
   const {
     loading: isDetailsloading,
@@ -22,6 +23,8 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
   } = useDetails({ currentUserId, executorId, content });
 
   const { loading: isAcomlishInProcess, accomplish } = useAccomplish();
+
+  const [telString, setTelString] = useState<string>(tel);
 
   if (isDetailsloading || isAcomlishInProcess) return <Progress w='full' size='sm' isIndeterminate />;
 
@@ -33,7 +36,7 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
             Клиент:
           </Text>
           <Text fontSize='sm' fontWeight='bold'>
-            {customerName}
+            {name}
           </Text>
         </Stack>
 
@@ -53,17 +56,46 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
             Адрес:
           </Text>
           <Text fontSize='sm' fontWeight='bold'>
-            {customerAdress}
+            {adress}
           </Text>
         </Stack>
 
-        <Stack gap={0}>
+        <Stack gap={2}>
           <Text fontSize='sm' color='chakra-subtle-text'>
             Телефон:
           </Text>
-          <Text fontSize='sm' fontWeight='bold'>
-            {customerTel}
-          </Text>
+
+          <Button
+            w='full'
+            size='sm'
+            onClick={() => {
+              navigator.clipboard.writeText(tel);
+              setTelString('Номер скопирован');
+              setTimeout(() => setTelString(tel), 1200);
+            }}
+          >
+            {telString}
+          </Button>
+
+          {customer?.tme && (
+            <Link
+              display='flex'
+              alignItems='center'
+              justifyContent='center'
+              w='full'
+              h='32px'
+              href={`https://${tme}`}
+              isExternal
+              boxShadow='inset 0 0 0 1px var(--pixpax-colors-telegram-200)'
+              p={2}
+              bg='var(--pixpax-colors-telegram-200)'
+              borderRadius={8}
+              color='telegram.900'
+              fontWeight='bold'
+            >
+              {customer.tme}
+            </Link>
+          )}
         </Stack>
 
         <Stack>
@@ -126,18 +158,19 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
         </Stack>
       </Stack>
 
-      <Flex w='full'>
+      <Stack w='full'>
         <Button
           w='full'
           size='sm'
+          colorScheme='red'
           //  isDisabled={pickIsDisabled || !!executorId}
           onClick={() =>
             accomplish({
               id,
               details,
-              customerName,
-              customerTel,
-              customerAdress,
+              customerName: name,
+              customerTel: tel,
+              customerAdress: adress,
               executorId,
               totalApplicationPrice,
             })
@@ -145,7 +178,7 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
         >
           Завершить
         </Button>
-      </Flex>
+      </Stack>
     </Stack>
   );
 };

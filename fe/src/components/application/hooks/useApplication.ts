@@ -46,9 +46,12 @@ export const useApplication = (props: Application) => {
   }, [executor]);
 
   return {
-    customerName: customerUser?.name,
-    customeAdress: customerUser?.adress,
-    customeTel: customerUser?.tel,
+    customer: {
+      name: customerUser?.name,
+      tel: customerUser?.tel,
+      adress: customerUser?.adress,
+      tme: customerUser?.tme,
+    },
     executorName: executorUser?.name,
     executorId: executorUser?.id,
     placed: getRelativeTime(placed),

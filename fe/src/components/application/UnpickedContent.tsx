@@ -6,17 +6,9 @@ import { EMERGENCY_ASSOC } from './constants';
 import type { UnpickedContentProps } from './interfaces';
 
 export const UnpickedContent: FC<UnpickedContentProps> = (props) => {
-  const {
-    customerName,
-    customerAdress,
-    emergency,
-    executorName,
-    placed,
-    pickIsDisabled,
-    executorId,
-    status,
-    onAplicationPick,
-  } = props;
+  const { customer, emergency, executorName, placed, pickIsDisabled, executorId, status, onAplicationPick } = props;
+
+  const { name, adress } = customer;
 
   return (
     <Stack gap={4} h='full' justifyContent='space-between'>
@@ -26,7 +18,7 @@ export const UnpickedContent: FC<UnpickedContentProps> = (props) => {
             Клиент:
           </Text>
           <Text fontSize='sm' fontWeight='bold'>
-            {customerName}
+            {name}
           </Text>
         </Stack>
 
@@ -35,7 +27,7 @@ export const UnpickedContent: FC<UnpickedContentProps> = (props) => {
             Адрес:
           </Text>
           <Text fontSize='sm' fontWeight='bold'>
-            {customerAdress}
+            {adress}
           </Text>
         </Stack>
 
