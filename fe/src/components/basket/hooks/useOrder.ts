@@ -35,14 +35,17 @@ const generateTgMessage = (basket: ShowcaseItem[]) => {
 
   return `\n----------------------------------------
     \nСпасибо, мы получили Ваш заказ!
+    \nThank you, we have received your order!
     \n${bill}
     \n----------------------------------------
-    \nДоставка: ${VNpricer.format(DELIVERY_PRICE)}
+    \nДоставка/Delivery: ${VNpricer.format(DELIVERY_PRICE)}
     \n----------------------------------------
-    \nИтог: ${totalPrice}
+    \nИтог/Total: ${totalPrice}
     \n----------------------------------------
     \nНаш курьер свяжеться с вами в самое ближайшее время
-    \nПо вопросу заказа можно связаться`;
+    \nOur courier will contact you as soon as possible
+    \n----------------------------------------
+    \nПоддержка/Support ${process.env.SUPPORT_CONTACT}`;
 };
 
 export const useOrder = (onBasketClose: () => void) => {
@@ -93,11 +96,10 @@ export const useOrder = (onBasketClose: () => void) => {
       .finally(() => {
         if (!tgQueryId) {
           setLoading(false);
+          resetBasket();
+          onBasketClose();
         }
       });
-
-    resetBasket();
-    onBasketClose();
 
     if (!!tgQueryId) {
       await axios
@@ -126,6 +128,8 @@ export const useOrder = (onBasketClose: () => void) => {
         })
         .finally(() => {
           setLoading(false);
+          resetBasket();
+          onBasketClose();
         });
     }
   };
