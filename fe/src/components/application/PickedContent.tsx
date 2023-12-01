@@ -1,6 +1,8 @@
 import React, { FC, useState } from 'react';
 import { Card, Flex, CardBody, Stack, Text, Button, Divider, Progress, Link } from '@chakra-ui/react';
 
+import { useTelegram } from '../../hooks/useTelegram';
+
 import { useDetailes as useDetails } from './hooks/useDetailes';
 import { useAccomplish } from './hooks/useAccomplish';
 
@@ -13,6 +15,8 @@ import type { PickedContentProps } from './interfaces';
 
 export const PickedContent: FC<PickedContentProps> = (props) => {
   const { id, customer, emergency, placed, currentUserId, executorId, content } = props;
+
+  const { tg } = useTelegram();
 
   const { name, tel, tme, adress } = customer;
 
@@ -92,6 +96,9 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
               borderRadius={8}
               color='telegram.900'
               fontWeight='bold'
+              onClick={() => {
+                if (!!tg) setTimeout(() => tg.close(), 200);
+              }}
             >
               {customer.tme}
             </Link>

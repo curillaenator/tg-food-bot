@@ -39,14 +39,26 @@ export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
 
   return (
     <AccordionItem py={6}>
-      <Heading as='h2' mx={4}>
+      <Heading as='h2' mx={4} display='flex' flexDirection='column' gap={2}>
+        {type === 'service' && (
+          <Image
+            src={serviceImgUrl}
+            alt={title}
+            w='full'
+            borderRadius={8}
+            aspectRatio='3 / 1'
+            objectFit='cover'
+            border={`2px solid var(--pixpax-colors-telegram-200)`}
+          />
+        )}
+
         <AccordionButton
           as='button'
-          borderRadius={12}
+          borderRadius={8}
           px={4}
           py={2}
-          fontSize='2xl'
-          fontWeight='bold'
+          fontSize='xl'
+          fontWeight='semibold'
           bg='telegram.200'
           color='gray.800'
           _hover={{
@@ -70,7 +82,7 @@ export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
       <AccordionPanel px={4} pt={4} pb={0}>
         {type === 'service' && (
           <Stack w='full' pb={4}>
-            <Image src={serviceImgUrl} alt={title} w='full' borderRadius={12} aspectRatio='3 / 1' objectFit='cover' />
+            {/* <Image src={serviceImgUrl} alt={title} w='full' borderRadius={12} aspectRatio='3 / 1' objectFit='cover' /> */}
 
             <Text color='chakra-subtle-text' className={cn(s.clamped, s.clamped_3)}>
               {description}

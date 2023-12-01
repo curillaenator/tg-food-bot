@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect, ChangeEvent } from 'react';
 import { useStore } from 'effector-react';
-import cn from 'classnames';
+// import cn from 'classnames';
 import { Link } from 'react-router-dom';
 import { ref, set, update } from 'firebase/database';
 import { ref as storageRef, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
@@ -29,7 +29,7 @@ import { debounced, resizeFile, VNpricer } from '../../utils';
 
 import { IMAGE_META } from './constants';
 import type { CardProps } from './interfaces';
-import s from './styles.module.scss';
+// import s from './styles.module.scss';
 
 import noImage from './assets/no-image.jpg';
 
@@ -180,14 +180,18 @@ const CardComponent: FC<CardProps> = (props) => {
 
           <Stack direction='column' spacing={6} h='100%' justifyContent='space-between'>
             {(!isEditor || type !== 'item') && (
-              <Stack direction='column' spacing={4}>
-                <Heading size='md' textTransform='uppercase'>
+              <Stack direction='column' spacing={2}>
+                <Heading size='sm' textTransform='uppercase' color='telegram.200'>
                   {title}
                 </Heading>
 
-                {!!price && <Text>{VNpricer.format(+price)}</Text>}
+                {!!price && <Text fontSize='xs'>{VNpricer.format(+price)}</Text>}
 
-                <Text color='chakra-subtle-text' className={cn(s.clamped, s.clamped_3)}>
+                <Text
+                  fontSize='xs'
+                  color='chakra-subtle-text'
+                  // className={cn(s.clamped, s.clamped_6)}
+                >
                   {description}
                 </Text>
               </Stack>
@@ -214,7 +218,7 @@ const CardComponent: FC<CardProps> = (props) => {
                   defaultValue={description}
                   onChange={(e) => onEditValueDebounced(e, 'description', id)}
                   resize='none'
-                  rows={5}
+                  rows={12}
                 />
               </InputGroup>
             )}
