@@ -1,5 +1,4 @@
-import type { User } from '../../store/index';
-import type { Category as Service } from '../../shared/interfaces';
+import type { User, Category as Service } from '../../shared/interfaces';
 
 export interface OwnerFormState {
   user: Partial<User>;

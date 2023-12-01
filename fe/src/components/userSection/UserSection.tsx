@@ -5,17 +5,14 @@ import { useStore } from 'effector-react';
 import {
   Flex,
   Spacer,
-  // Text,
   Heading,
   ButtonGroup,
   Button,
   Avatar,
-  // Stack,
   Image,
   Progress,
   Drawer,
   DrawerBody,
-  // DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
@@ -30,6 +27,7 @@ import { $globalStore, setEditor } from '../../store';
 import { useAuth } from '../../hooks/useAuth';
 
 import { useOverlaysControl } from './hooks/useOverlaysControl';
+import { useTelegramConnect } from './hooks/useTelegramConnect';
 
 import { Profile } from '../profile';
 import { Basket } from '../basket';
@@ -42,6 +40,7 @@ import s from './styles.module.scss';
 
 export const UserSection: FC = () => {
   const { user, basket, isEditor } = useStore($globalStore);
+  useTelegramConnect(user);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -245,10 +244,6 @@ export const UserSection: FC = () => {
               </ButtonGroup>
             </Stack>
           </DrawerBody>
-
-          {/* <DrawerFooter p={4}>
-            
-          </DrawerFooter> */}
         </DrawerContent>
       </Drawer>
 

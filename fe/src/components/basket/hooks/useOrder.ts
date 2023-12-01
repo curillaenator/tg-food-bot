@@ -4,10 +4,12 @@ import { useToast } from '@chakra-ui/react';
 import { ref, child, push, set } from 'firebase/database';
 
 import { useTelegram } from '../../../hooks/useTelegram';
+import { VNpricer } from '../../../utils';
 
 import { $globalStore, resetBasket, type ShowcaseItem } from '../../../store';
 import { rtdb } from '../../../shared/firebase';
 
+import { DELIVERY_PRICE } from '../../../shared/constants';
 import type { Application } from '../../../shared/interfaces';
 
 const group = (basket: ShowcaseItem[]) => {
@@ -19,6 +21,27 @@ const group = (basket: ShowcaseItem[]) => {
   });
 
   return grouped;
+};
+
+const generateTgMessage = (basket: ShowcaseItem[]) => {
+  const totalPrice = VNpricer.format(basket.reduce((acc, item) => acc + +item.qty * +item.price, 0) + DELIVERY_PRICE);
+
+  const bill = basket
+    .map(
+      ({ title, price, qty }) => `${title}\n   ${qty} x ${VNpricer.format(+price)} = ${VNpricer.format(+qty * +price)}`,
+    )
+    .join('\n--------------------\n');
+
+  return `\n----------------------------------------
+    \nСпасибо, мы получили Ваш заказ!
+    \n${bill}
+    \n----------------------------------------
+    \nДоставка: ${VNpricer.format(DELIVERY_PRICE)}
+    \n----------------------------------------
+    \nИтог: ${totalPrice}
+    \n----------------------------------------
+    \nНаш курьер свяжеться с вами в самое ближайшее время
+    \nПо вопросу заказа можно связаться`;
 };
 
 export const useOrder = (onBasketClose: () => void) => {
@@ -74,8 +97,7 @@ export const useOrder = (onBasketClose: () => void) => {
             queryId: tgQueryId,
             orderId,
             title: 'Спасибо за Ваш заказ!!!',
-            clientSupport: 'По вопросу заказа можно связаться с ...',
-            order,
+            clientSupport: generateTgMessage(basket),
           },
           {
             headers: {

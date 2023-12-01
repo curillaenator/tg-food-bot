@@ -1,5 +1,5 @@
 import { createEvent, createStore } from 'effector';
-import type { Application } from '../shared/interfaces';
+import type { User } from '../shared/interfaces';
 
 export type ShowcaseItem = {
   id: string;
@@ -19,18 +19,6 @@ export type Order = {
 };
 
 export type Role = 'business' | 'manager' | 'employee' | 'admin' | 'pixpax';
-
-export type User = {
-  id: string;
-  name?: string;
-  avatar?: string;
-  email?: string;
-  tel?: string;
-  adress?: string;
-  role?: Role;
-  pickedApplications?: Application[];
-  ownerOf?: Record<string, boolean>;
-};
 
 export type Background = 'wowwy' | 'playfull' | 'fire' | 'luxary';
 

@@ -22,6 +22,7 @@ export type User = {
   role?: Role;
   pickedApplications?: Application[];
   ownerOf?: Record<string, boolean>;
+  tme?: string;
 };
 
 export interface Category {

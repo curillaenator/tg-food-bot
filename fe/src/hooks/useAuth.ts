@@ -10,9 +10,10 @@ import {
   sendPasswordResetEmail,
 } from 'firebase/auth';
 
-import { rtdb, auth, firedb } from '../shared/firebase';
+import { setUser } from '../store';
 
-import { setUser, type User } from '../store';
+import { rtdb, auth, firedb } from '../shared/firebase';
+import type { User } from '../shared/interfaces';
 
 type ActionType = 'email' | 'password' | 'error';
 
