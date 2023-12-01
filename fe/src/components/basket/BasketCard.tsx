@@ -13,6 +13,7 @@ const ICONS_BOX_SIZE = 3;
 
 export interface BasketCardProps extends Partial<ShowcaseItem> {
   imgPath: string;
+  isDisabled?: boolean;
 }
 
 export const BasketCard: FC<BasketCardProps> = (props) => {
@@ -22,6 +23,7 @@ export const BasketCard: FC<BasketCardProps> = (props) => {
     // type,
     //  description,
     price,
+    isDisabled,
   } = props;
 
   const { qty, incr, decr } = useBasketCard(props);
@@ -32,6 +34,7 @@ export const BasketCard: FC<BasketCardProps> = (props) => {
         <Flex w='full' justifyContent='space-between' alignItems='center' gap={2}>
           <Flex w='calc(100% - 128px)' gap={2}>
             <Button
+              isDisabled={isDisabled}
               colorScheme='red'
               variant='outline'
               h='fit-content'
@@ -57,7 +60,7 @@ export const BasketCard: FC<BasketCardProps> = (props) => {
           <Flex w='120px' justifyContent='space-between' flexShrink={0}>
             <Button
               flexShrink={0}
-              isDisabled={qty === 0}
+              isDisabled={qty === 0 || isDisabled}
               variant='outline'
               h='fit-content'
               w='fit-content'
@@ -74,6 +77,7 @@ export const BasketCard: FC<BasketCardProps> = (props) => {
             </Center>
 
             <Button
+              isDisabled={isDisabled}
               flexShrink={0}
               variant='outline'
               h='fit-content'

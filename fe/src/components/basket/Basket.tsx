@@ -46,7 +46,7 @@ export const Basket: FC<BasketProps> = (props) => {
   const [totalPriceAcc, setTotalPriceAcc] = useState<Record<string, number>>({});
   const calcedTotalPrice = Object.values(totalPriceAcc).reduce((acc, item) => acc + item, 0);
 
-  const { onPlaceOrder } = useOrder(onBasketClose);
+  const { loading, onPlaceOrder } = useOrder(onBasketClose);
 
   useEffect(() => {
     const effectiveTotal = Object.fromEntries(basket.map(({ id, price, qty }) => [id, +price * qty]));
@@ -75,7 +75,7 @@ export const Basket: FC<BasketProps> = (props) => {
         <DrawerBody p={4}>
           <Stack gap={4}>
             {basket.map((basketItem) => (
-              <BasketCard key={basketItem.id} imgPath='' {...basketItem} />
+              <BasketCard key={basketItem.id} imgPath='' {...basketItem} isDisabled={loading} />
             ))}
           </Stack>
 
@@ -103,6 +103,8 @@ export const Basket: FC<BasketProps> = (props) => {
           </Stat>
 
           <Button
+            isLoading={loading}
+            loadingText='Секундочку...'
             isDisabled={!calcedTotalPrice}
             ref={initialFocusRef}
             size='lg'

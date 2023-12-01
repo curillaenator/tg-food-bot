@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import axios from 'axios';
 import { useStore } from 'effector-react';
 import { useToast } from '@chakra-ui/react';
@@ -49,9 +50,13 @@ export const useOrder = (onBasketClose: () => void) => {
 
   const { tgQueryId } = useTelegram();
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   const toast = useToast();
 
   const onPlaceOrder = async () => {
+    setLoading(true);
+
     const orderId = push(child(ref(rtdb), 'orders')).key;
 
     const order: Application = {
@@ -84,6 +89,11 @@ export const useOrder = (onBasketClose: () => void) => {
           duration: 9000,
           isClosable: true,
         });
+      })
+      .finally(() => {
+        if (!tgQueryId) {
+          setLoading(false);
+        }
       });
 
     resetBasket();
@@ -113,11 +123,15 @@ export const useOrder = (onBasketClose: () => void) => {
             duration: 9000,
             isClosable: true,
           });
+        })
+        .finally(() => {
+          setLoading(false);
         });
     }
   };
 
   return {
+    loading,
     onPlaceOrder,
   };
 };
