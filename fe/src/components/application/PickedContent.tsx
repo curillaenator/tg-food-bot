@@ -152,14 +152,14 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
           <Flex h='100%' justifyContent='space-between'>
             <Text fontSize='sm'>Доставка:</Text>
             <Text fontSize='sm' textAlign='right' fontWeight='bold'>
-              {VNpricer.format(DELIVERY_PRICE)}
+              {VNpricer.format(DELIVERY_PRICE * details.length)}
             </Text>
           </Flex>
 
           <Flex h='100%' justifyContent='space-between'>
             <Text fontSize='lg'>Итог:</Text>
             <Text fontSize='lg' textAlign='right' fontWeight='bold'>
-              {VNpricer.format(totalApplicationPrice + DELIVERY_PRICE)}
+              {VNpricer.format(totalApplicationPrice + DELIVERY_PRICE * details.length)}
             </Text>
           </Flex>
         </Stack>

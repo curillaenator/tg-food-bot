@@ -123,7 +123,11 @@ export const useDataQuery = () => {
   return {
     loading,
     services,
-    contentMap: Object.entries(categories),
+    contentMap: Object.entries(categories).sort((cat1) => {
+      if (cat1[0] === ' beverages') return 1;
+      if (cat1[0] === 'utilities') return 0;
+      return -1;
+    }),
     onRemoveItem,
     onRemoveService,
   };

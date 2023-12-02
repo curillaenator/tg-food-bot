@@ -10,7 +10,7 @@ import { VNpricer } from '../../../utils';
 import { $globalStore, resetBasket, type ShowcaseItem } from '../../../store';
 import { rtdb } from '../../../shared/firebase';
 
-import { DELIVERY_PRICE } from '../../../shared/constants';
+import { DELIVERY_PRICE, TOAST_DURATION } from '../../../shared/constants';
 import type { Application } from '../../../shared/interfaces';
 
 const group = (basket: ShowcaseItem[]) => {
@@ -24,8 +24,10 @@ const group = (basket: ShowcaseItem[]) => {
   return grouped;
 };
 
-const generateTgMessage = (basket: ShowcaseItem[]) => {
-  const totalPrice = VNpricer.format(basket.reduce((acc, item) => acc + +item.qty * +item.price, 0) + DELIVERY_PRICE);
+const generateTgMessage = (basket: ShowcaseItem[], adressesQty: number) => {
+  const totalPrice = VNpricer.format(
+    basket.reduce((acc, item) => acc + +item.qty * +item.price, 0) + DELIVERY_PRICE * adressesQty,
+  );
 
   const bill = basket
     .map(
@@ -38,7 +40,7 @@ const generateTgMessage = (basket: ShowcaseItem[]) => {
     \nThank you, we have received your order!
     \n${bill}
     \n----------------------------------------
-    \nДоставка/Delivery: ${VNpricer.format(DELIVERY_PRICE)}
+    \nДоставка/Delivery: ${VNpricer.format(DELIVERY_PRICE * adressesQty)}
     \n----------------------------------------
     \nИтог/Total: ${totalPrice}
     \n----------------------------------------
@@ -62,13 +64,15 @@ export const useOrder = (onBasketClose: () => void) => {
 
     const orderId = push(child(ref(rtdb), 'orders')).key;
 
+    const baskerGroupedByServices = group(basket);
+
     const order: Application = {
       // id: orderId,
       customer: user.id,
       placed: String(+new Date()),
       status: 'open',
       executor: null,
-      content: group(basket),
+      content: baskerGroupedByServices,
       expectedTime: '',
     };
 
@@ -79,7 +83,7 @@ export const useOrder = (onBasketClose: () => void) => {
             title: 'Спасибо!',
             description: 'Ващ заказ создан',
             status: 'success',
-            duration: 9000,
+            duration: TOAST_DURATION,
             isClosable: true,
           });
         }
@@ -89,7 +93,7 @@ export const useOrder = (onBasketClose: () => void) => {
           title: 'Ошибка RTDB',
           description: rtdbErr.message,
           status: 'error',
-          duration: 9000,
+          duration: TOAST_DURATION,
           isClosable: true,
         });
       })
@@ -109,7 +113,7 @@ export const useOrder = (onBasketClose: () => void) => {
             queryId: tgQueryId,
             orderId,
             title: 'Спасибо за Ваш заказ!!!',
-            clientSupport: generateTgMessage(basket),
+            clientSupport: generateTgMessage(basket, Object.keys(baskerGroupedByServices).length),
           },
           {
             headers: {
@@ -122,7 +126,7 @@ export const useOrder = (onBasketClose: () => void) => {
             title: 'Ошибка TGBT',
             description: tgErr.message,
             status: 'error',
-            duration: 9000,
+            duration: TOAST_DURATION,
             isClosable: true,
           });
         })

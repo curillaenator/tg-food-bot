@@ -18,6 +18,7 @@ import {
   InputGroup,
   Textarea,
   Progress,
+  // useToast,
 } from '@chakra-ui/react';
 
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
@@ -74,6 +75,8 @@ export const Card: FC<CardProps> = (props) => {
 const CardComponent: FC<CardProps> = (props) => {
   const { id, title, description, imgPath, price, type, waitTime, parent, qty, onMenuItemRemove = () => {} } = props;
 
+  // const toast = useToast();
+
   const { user, isEditor } = useStore($globalStore);
 
   const [imageURL, setImageURL] = useState<string | null>(null);
@@ -112,7 +115,17 @@ const CardComponent: FC<CardProps> = (props) => {
       transition='background-color 80ms ease'
       _active={{ backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
       onClick={() => {
-        if (!user?.id || type !== 'item' || isEditor) return;
+        if (!user?.id || type !== 'item' || isEditor) {
+          // toast({
+          //   title: 'Authentication',
+          //   description:
+          //     'Пожалуйста, авторизируйтесь через меню чтобы разместить заказ / Please login before order placement',
+          //   status: 'info',
+          //   duration: TOAST_DURATION,
+          //   isClosable: true,
+          // });
+          return;
+        }
 
         setBasket({
           id,

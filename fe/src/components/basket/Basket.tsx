@@ -43,15 +43,28 @@ export const Basket: FC<BasketProps> = (props) => {
   const initialFocusRef = React.useRef();
   const finalFocusRef = React.useRef();
 
+  const [parents, setParents] = useState<string[]>([]);
   const [totalPriceAcc, setTotalPriceAcc] = useState<Record<string, number>>({});
   const calcedTotalPrice = Object.values(totalPriceAcc).reduce((acc, item) => acc + item, 0);
 
   const { loading, onPlaceOrder } = useOrder(onBasketClose);
 
   useEffect(() => {
-    const effectiveTotal = Object.fromEntries(basket.map(({ id, price, qty }) => [id, +price * qty]));
+    const parentsFromBasket: string[] = [];
+
+    const effectiveTotal = Object.fromEntries(
+      basket.map(({ id, price, qty, parent }) => {
+        parentsFromBasket.push(parent);
+
+        return [id, +price * qty];
+      }),
+    );
+
+    setParents([...new Set(parentsFromBasket)]);
     setTotalPriceAcc(effectiveTotal);
   }, [basket]);
+
+  const deliveryPrice = DELIVERY_PRICE * parents.length;
 
   return (
     <Drawer size='full' isOpen={isBasketOpen} placement='right' onClose={onBasketClose} finalFocusRef={finalFocusRef}>
@@ -88,7 +101,7 @@ export const Basket: FC<BasketProps> = (props) => {
 
               <Flex justifyContent='space-between'>
                 <Text>Доставка</Text>
-                <Text>{VNpricer.format(calcedTotalPrice ? DELIVERY_PRICE : 0)}</Text>
+                <Text>{VNpricer.format(calcedTotalPrice > 0 ? deliveryPrice : 0)}</Text>
               </Flex>
             </StatHelpText>
 
@@ -96,7 +109,7 @@ export const Basket: FC<BasketProps> = (props) => {
               <Flex justifyContent='space-between'>
                 <Text>Итог</Text>
                 <Text>
-                  {calcedTotalPrice > 0 ? VNpricer.format(calcedTotalPrice + DELIVERY_PRICE) : VNpricer.format(0)}
+                  {calcedTotalPrice > 0 ? VNpricer.format(calcedTotalPrice + deliveryPrice) : VNpricer.format(0)}
                 </Text>
               </Flex>
             </StatNumber>
