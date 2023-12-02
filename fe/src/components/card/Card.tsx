@@ -252,8 +252,8 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
                   <Checkbox
                     size='lg'
                     defaultChecked={isActive}
-                    onChange={() => {
-                      set(ref(rtdb, `services/${parent}/categories/${id}`), !isActive).catch((err) =>
+                    onChange={(e) => {
+                      set(ref(rtdb, `services/${parent}/categories/${id}`), e.target.checked).catch((err) =>
                         console.table(err),
                       );
                     }}

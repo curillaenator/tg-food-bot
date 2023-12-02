@@ -65,7 +65,7 @@ export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
           }}
         >
           <Flex gap={2} flex={1} alignItems='center'>
-            {isEditor && (user?.role === 'admin' || user?.role === 'manager') && type === 'service' && (
+            {isEditor && user?.role === 'admin' && type === 'service' && (
               <DeleteIcon role='button' color='red' boxSize={6} onClick={removeService} />
             )}
 
