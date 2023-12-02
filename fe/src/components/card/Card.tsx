@@ -1,4 +1,5 @@
 import React, { FC, useState, useEffect, ChangeEvent } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useStore } from 'effector-react';
 import parse from 'html-react-parser';
 import { Link } from 'react-router-dom';
@@ -18,6 +19,7 @@ import {
   InputGroup,
   Textarea,
   Progress,
+  Checkbox,
   // useToast,
 } from '@chakra-ui/react';
 
@@ -72,8 +74,22 @@ export const Card: FC<CardProps> = (props) => {
   return <CardComponent {...rest} type={type} />;
 };
 
-const CardComponent: FC<CardProps> = (props) => {
-  const { id, title, description, imgPath, price, type, waitTime, parent, qty, onMenuItemRemove = () => {} } = props;
+const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
+  const {
+    id,
+    title,
+    description,
+    imgPath,
+    price,
+    type,
+    waitTime,
+    parent,
+    qty,
+    isActive,
+    onMenuItemRemove = () => {},
+  } = props;
+
+  const { pathname } = useLocation();
 
   // const toast = useToast();
 
@@ -231,6 +247,20 @@ const CardComponent: FC<CardProps> = (props) => {
                   resize='none'
                   rows={12}
                 />
+
+                {pathname === '/service' && (
+                  <Checkbox
+                    size='lg'
+                    defaultChecked={isActive}
+                    onChange={() => {
+                      set(ref(rtdb, `services/${parent}/categories/${id}`), !isActive).catch((err) =>
+                        console.table(err),
+                      );
+                    }}
+                  >
+                    Активно
+                  </Checkbox>
+                )}
               </InputGroup>
             )}
           </Stack>

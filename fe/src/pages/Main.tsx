@@ -9,8 +9,8 @@ import { ShowcaseSection } from '../components/ShowcaseSection';
 const CATEGORIES_ASSOC: Record<string, string> = {
   ' beverages': ' Напитки / Beverages',
   food: 'Еда / Food',
-  utilities: 'Услуги',
-  retail: 'Магазины',
+  utilities: 'Услуги / Services',
+  retail: 'Магазины / Shops',
 };
 
 export const Main: FC = () => {

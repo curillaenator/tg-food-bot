@@ -121,10 +121,10 @@ export const ServicePage: FC = () => {
       if (!service.categories) return service;
 
       const itemsPromises = Object.entries(service.categories)
-        .filter(([itemId, isActive]) => !!itemId && isActive)
-        .map(([itemId]) =>
+        // .filter(([itemId, isActive]) => !!itemId && isActive)
+        .map(([itemId, isActive]) =>
           get(child(ref(rtdb), `items/${itemId}`)).then(
-            (snap) => ({ id: itemId, ...(snap.exists() ? snap.val() : {}) }) as Category,
+            (snap) => ({ id: itemId, isActive, ...(snap.exists() ? snap.val() : {}) }) as Category,
           ),
         );
 
