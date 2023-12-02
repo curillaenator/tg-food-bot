@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect, ChangeEvent } from 'react';
 import { useStore } from 'effector-react';
-// import cn from 'classnames';
+import parse from 'html-react-parser';
 import { Link } from 'react-router-dom';
 import { ref, set, update } from 'firebase/database';
 import { ref as storageRef, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
@@ -38,7 +38,13 @@ const onEditValue = (
   field: 'title' | 'description' | 'price',
   itemId: string,
 ) => {
-  set(ref(rtdb, `items/${itemId}/${field}`), e.target.value);
+  let value = e.target.value;
+
+  if (field === 'description') {
+    value = e.target.value.replace(/\n/g, '<br />');
+  }
+
+  set(ref(rtdb, `items/${itemId}/${field}`), value);
 };
 
 const onImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -66,19 +72,7 @@ export const Card: FC<CardProps> = (props) => {
 };
 
 const CardComponent: FC<CardProps> = (props) => {
-  const {
-    id,
-    title,
-    description,
-    imgPath,
-    price,
-    type,
-    waitTime,
-    parent,
-    // likes,
-    qty,
-    onMenuItemRemove = () => {},
-  } = props;
+  const { id, title, description, imgPath, price, type, waitTime, parent, qty, onMenuItemRemove = () => {} } = props;
 
   const { user, isEditor } = useStore($globalStore);
 
@@ -192,7 +186,7 @@ const CardComponent: FC<CardProps> = (props) => {
                   color='chakra-subtle-text'
                   // className={cn(s.clamped, s.clamped_6)}
                 >
-                  {description}
+                  {parse(description)}
                 </Text>
               </Stack>
             )}
@@ -215,7 +209,7 @@ const CardComponent: FC<CardProps> = (props) => {
 
                 <Textarea
                   placeholder='Description'
-                  defaultValue={description}
+                  defaultValue={description.replace(/<br \/>/g, '\n')}
                   onChange={(e) => onEditValueDebounced(e, 'description', id)}
                   resize='none'
                   rows={12}
