@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useReducer } from 'react';
 import { ref, set, child, get } from 'firebase/database';
-import { doc, setDoc } from 'firebase/firestore';
+// import { doc, setDoc } from 'firebase/firestore';
 
 import {
   createUserWithEmailAndPassword,
@@ -12,7 +12,7 @@ import {
 
 import { setUser } from '../store';
 
-import { rtdb, auth, firedb } from '../shared/firebase';
+import { rtdb, auth } from '../shared/firebase';
 import type { User } from '../shared/interfaces';
 
 type ActionType = 'email' | 'password' | 'error';
@@ -95,7 +95,7 @@ export const useAuth = () => {
           role: 'pixpax',
         };
 
-        await setDoc(doc(firedb, 'users', user.uid), appUser);
+        // await setDoc(doc(firedb, 'users', user.uid), appUser);
         await set(ref(rtdb, `users/${user.uid}`), appUser);
 
         setUser(appUser);
