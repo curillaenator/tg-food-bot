@@ -1,13 +1,12 @@
 import React, { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useStore } from 'effector-react';
-import cn from 'classnames';
+// import cn from 'classnames';
 
 import {
   Center,
   Flex,
   Stack,
-  Image,
   Text,
   SimpleGrid,
   Heading,
@@ -20,20 +19,21 @@ import {
 
 import { DeleteIcon, PlusSquareIcon } from '@chakra-ui/icons';
 import { Card } from '../card';
+import { ServiceImage, ServiceDescription } from './components';
 
 import { useShowcase } from './hooks/useShowcase';
 import { $globalStore } from '../../store';
 
 import type { ShowcaseSectionProps } from './interfaces';
-import s from './styles.module.scss';
+// import s from './styles.module.scss';
 
 export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
-  const { id, parent, title, description, type, categories, onMenuAdd, onMenuItemRemove } = props;
+  const { id, parent, imgPath, title, description, type, categories, onMenuAdd, onMenuItemRemove } = props;
   const { pathname } = useLocation();
 
   const { isEditor, user } = useStore($globalStore);
 
-  const { serviceImgUrl, removeService } = useShowcase(props);
+  const { serviceImgUrl, removeService, setServiceImgUrl } = useShowcase(props);
 
   const menu = categories?.filter((c) => c.type === 'item' || !!c.categories) || [];
 
@@ -41,14 +41,13 @@ export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
     <AccordionItem py={6}>
       <Heading as='h2' mx={4} display='flex' flexDirection='column' gap={2}>
         {type === 'service' && (
-          <Image
-            src={serviceImgUrl}
-            alt={title}
-            w='full'
-            borderRadius={8}
-            aspectRatio='3 / 1'
-            objectFit='cover'
-            border={`2px solid var(--pixpax-colors-telegram-200)`}
+          <ServiceImage
+            serviceImgUrl={serviceImgUrl}
+            title={title}
+            isEditor={isEditor}
+            serviceId={id}
+            imgPath={imgPath}
+            setServiceImgUrl={setServiceImgUrl}
           />
         )}
 
@@ -82,11 +81,7 @@ export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
       <AccordionPanel px={4} pt={4} pb={0}>
         {type === 'service' && (
           <Stack w='full' pb={4}>
-            {/* <Image src={serviceImgUrl} alt={title} w='full' borderRadius={12} aspectRatio='3 / 1' objectFit='cover' /> */}
-
-            <Text color='chakra-subtle-text' className={cn(s.clamped, s.clamped_3)}>
-              {description}
-            </Text>
+            <ServiceDescription description={description} serviceId={id} isEditor={isEditor} />
 
             {!!menu.length && (
               <Heading mt={4} fontSize='2xl'>

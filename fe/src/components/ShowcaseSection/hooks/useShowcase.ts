@@ -50,10 +50,9 @@ export const useShowcase = (props: ShowcaseSectionProps) => {
     [id, parent, imgPath, onRemoveService],
   );
 
-  // const addItem = useCallback(() => {}, [])
-
   return {
     serviceImgUrl,
     removeService,
+    setServiceImgUrl,
   };
 };

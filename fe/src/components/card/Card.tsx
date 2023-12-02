@@ -20,14 +20,14 @@ import {
   Progress,
 } from '@chakra-ui/react';
 
-import { DeleteIcon } from '@chakra-ui/icons';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 
 import { strg, rtdb } from '../../shared/firebase';
 
 import { setBasket, $globalStore } from '../../store';
 import { debounced, resizeFile, VNpricer } from '../../utils';
 
-import { IMAGE_META } from './constants';
+import { IMAGE_META } from '../../shared/constants';
 import type { CardProps } from './interfaces';
 // import s from './styles.module.scss';
 
@@ -142,22 +142,26 @@ const CardComponent: FC<CardProps> = (props) => {
             }}
           >
             {isEditor && type === 'item' && (
-              <input
-                id={`card-image-picker-${id}`}
-                data-itemid={id}
-                style={{ position: 'absolute', top: 0, left: 0, zIndex: '-100', opacity: 0 }}
-                type='file'
-                multiple={false}
-                onChange={(e) => {
-                  setLoading(true);
+              <>
+                <input
+                  id={`card-image-picker-${id}`}
+                  data-itemid={id}
+                  style={{ position: 'absolute', top: 0, left: 0, zIndex: '-100', opacity: 0 }}
+                  type='file'
+                  multiple={false}
+                  onChange={(e) => {
+                    setLoading(true);
 
-                  onImageChange(e).then(() =>
-                    getDownloadURL(storageRef(strg, imgPath))
-                      .then((url) => setImageURL(url))
-                      .finally(() => setLoading(false)),
-                  );
-                }}
-              />
+                    onImageChange(e).then(() =>
+                      getDownloadURL(storageRef(strg, imgPath))
+                        .then((url) => setImageURL(url))
+                        .finally(() => setLoading(false)),
+                    );
+                  }}
+                />
+
+                <EditIcon boxSize={6} color='orange.400' position='absolute' top={2} right={2} zIndex={1} />
+              </>
             )}
 
             <Image
