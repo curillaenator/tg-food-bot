@@ -12,7 +12,7 @@ export interface Application {
   expectedTime: string;
 }
 
-export type Role = 'business' | 'manager' | 'employee' | 'admin' | 'pixpax';
+export type Role = 'business' | 'manager' | 'employee' | 'admin' | 'pixpax' | 'service-owner';
 
 export type User = {
   id: string;

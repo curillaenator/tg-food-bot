@@ -66,12 +66,15 @@ export const useOwnerForm = () => {
 
           const users = snap.val() as Record<string, User>;
 
-          const usersMaped = Object.entries(users).map(([usrId, usr]) => ({
-            ...usr,
-            id: usrId,
-            label: usr.email,
-            value: usrId,
-          }));
+          const usersMaped = Object.entries(users)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            .filter(([_, usr]) => usr?.role === 'service-owner')
+            .map(([usrId, usr]) => ({
+              ...usr,
+              id: usrId,
+              label: usr.email,
+              value: usrId,
+            }));
 
           setAllUsers(usersMaped);
           setValue('user', null);
