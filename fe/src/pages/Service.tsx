@@ -4,13 +4,15 @@ import { useStore } from 'effector-react';
 
 import { ref, get, child, push, update } from 'firebase/database';
 
-import { Box, Progress, Accordion } from '@chakra-ui/react';
+import { Box, Progress, Accordion, useToast } from '@chakra-ui/react';
 
 import { rtdb } from '../shared/firebase';
+import { debounced } from '../utils';
 import { $globalStore, setEditor } from '../store';
 
 import { ShowcaseSection } from '../components/ShowcaseSection';
 
+import { TOAST_DURATION } from '../shared/constants';
 import type { Category } from '../shared/interfaces';
 
 export const ServicePage: FC = () => {
@@ -83,6 +85,10 @@ export const ServicePage: FC = () => {
     [servicesFull],
   );
 
+  const toast = useToast();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedToast = useCallback(debounced(toast, 2000), [toast]);
+
   // get all owned sevices data by ids
   useEffect(() => {
     if (!currentUser?.id) return;
@@ -113,7 +119,16 @@ export const ServicePage: FC = () => {
     };
 
     getOwnedServicesAsync();
-  }, [currentUser]);
+
+    debouncedToast({
+      title: 'Важно',
+      description:
+        'На данной странице работает автосохранение! Любые изменения в полях форм будут автоматически сохранены в течении не 3-5 сек после ввода данных',
+      status: 'warning',
+      duration: TOAST_DURATION * 4,
+      isClosable: true,
+    });
+  }, [currentUser, debouncedToast]);
 
   // fill owned services by full data (products details)
   useEffect(() => {

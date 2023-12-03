@@ -1,6 +1,20 @@
 import React, { FC, useState } from 'react';
 
-import { Checkbox, Button, InputGroup, Input, InputLeftAddon, InputRightElement, Stack, Text } from '@chakra-ui/react';
+import {
+  Checkbox,
+  Button,
+  InputGroup,
+  Input,
+  InputLeftAddon,
+  InputRightElement,
+  Stack,
+  Text,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+} from '@chakra-ui/react';
 import { EmailIcon, UnlockIcon } from '@chakra-ui/icons';
 
 import type { Action } from '../../hooks/useAuth';
@@ -16,7 +30,7 @@ const ErrorText: FC<ErrorTextProps> = ({ error, resetPassword }) => (
       {error}
     </Text>
 
-    {error.includes('email-already-in-use') && <Button onClick={() => resetPassword()}>Восстановить пасс</Button>}
+    {error.includes('email-already-in-use') && <Button onClick={() => resetPassword()}>Восстановить пароль</Button>}
   </Stack>
 );
 
@@ -36,12 +50,12 @@ export const SignForm: FC<SignFormProps> = (props) => {
 
   return (
     <Stack spacing={4}>
-      <Text fontSize='sm' color='chakra-subtle-text'>
+      <Text fontSize='md' color='chakra-body-text'>
         Привет!
       </Text>
 
       <Text fontSize='sm' color='chakra-subtle-text'>
-        Пожалуйста, авторизируйся для возможности оформиить заказ!
+        {'Пожалуйста, авторизируйся для возможности оформить заказ 😉'}
       </Text>
 
       <InputGroup>
@@ -60,6 +74,10 @@ export const SignForm: FC<SignFormProps> = (props) => {
           onChange={(e) => onCredsChange({ type: 'email', payload: e.target.value })}
         />
       </InputGroup>
+
+      <Text fontSize='sm' color='chakra-subtle-text'>
+        {'Придумай хороший пароль! Если забудешь, можно будет легко восстановить по указанному email выше 😎'}
+      </Text>
 
       <InputGroup>
         <InputLeftAddon
@@ -86,16 +104,45 @@ export const SignForm: FC<SignFormProps> = (props) => {
 
       {!!creds.error?.length && <ErrorText error={creds.error} resetPassword={resetPassword} />}
 
-      <Checkbox
-        isDisabled={authLoading}
-        colorScheme='telegram'
-        mt={4}
-        size='lg'
-        checked={firstTime}
-        onChange={() => setFirstTime((prev) => !prev)}
-      >
-        Я новый пользователь
-      </Checkbox>
+      <Accordion allowToggle borderStyle='none'>
+        <AccordionItem border='none'>
+          <AccordionButton
+            w='full'
+            display='flex'
+            justifyContent='space-between'
+            borderBottom='1px solid var(--pixpax-colors-whiteAlpha-200)'
+          >
+            <Text fontSize='sm' color='whiteAlpha.200' textAlign='left'>
+              Упс, я забыл пароль, что делать?
+            </Text>
+            <AccordionIcon color='whiteAlpha.200' />
+          </AccordionButton>
+
+          <AccordionPanel>
+            <Text fontSize='sm' color='chakra-subtle-text'>
+              {
+                'Укажи email, по которому был зарегистрирован аккаунт, укажи любой 10 значный пароль "от балды", отметь "Я новый пользователь" и нажми "Зарегистрироваться". Pixpax предложит восстановить пароль'
+              }
+            </Text>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
+
+      <Stack gap={0}>
+        <Text fontSize='sm' color='chakra-subtle-text'>
+          {'👇 Если впервые на Pixpax, то'}
+        </Text>
+        <Checkbox
+          isDisabled={authLoading}
+          colorScheme='telegram'
+          size='lg'
+          checked={firstTime}
+          onChange={() => setFirstTime((prev) => !prev)}
+        >
+          Я новый пользователь
+        </Checkbox>
+        Accordion
+      </Stack>
     </Stack>
   );
 };
