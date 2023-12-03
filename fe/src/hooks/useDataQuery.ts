@@ -4,12 +4,17 @@ import { ref, onValue, get, child } from 'firebase/database';
 
 import { rtdb } from '../shared/firebase';
 
-import type { Category } from '../shared/interfaces';
+import type { Category, CategoryDbName } from '../shared/interfaces';
 
-type ParamName = 'categoryId' | 'serviceId' | 'showcaseId';
+const CATEGORY_ORDER: Record<CategoryDbName, number> = {
+  food: 1,
+  ' beverages': 2,
+  utilities: 3,
+  retail: 4,
+};
 
 export const useDataQuery = () => {
-  const { categoryId, serviceId } = useParams<Record<ParamName, string>>();
+  const { categoryId } = useParams<Record<'categoryId', string>>();
   const { pathname, search } = useLocation();
   const navigate = useNavigate();
 
@@ -34,7 +39,7 @@ export const useDataQuery = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!!categoryId || !!serviceId) return;
+    if (!!categoryId) return;
 
     setCategories({});
     setLoading(true);
@@ -45,7 +50,7 @@ export const useDataQuery = () => {
 
         const linkedCategories = Object.keys(data).map((key) => {
           const categories = Object.entries(data[key]).map(([id, category]) => {
-            let queryString = !!category.categories ? '?categories=' : '';
+            let queryString = !!category.categories ? '?services=' : '';
 
             if (!!category.categories) {
               const serviceIds = Object.entries(category.categories)
@@ -71,7 +76,7 @@ export const useDataQuery = () => {
     });
 
     return () => usubscribeCategories();
-  }, [categoryId, serviceId, lastRemovedId]);
+  }, [categoryId, lastRemovedId]);
 
   useEffect(() => {
     if (!categoryId) return;
@@ -82,24 +87,24 @@ export const useDataQuery = () => {
     const searchParams = new URLSearchParams(search);
     const { value } = searchParams.values().next();
 
-    const requiredServises = JSON.parse(value) as string[];
+    const requiredServisesIds = JSON.parse(value) as string[];
 
-    const servicePromises = requiredServises.map((serviseName) => {
-      return get(child(ref(rtdb), `services/${serviseName}`)).then((snap) => {
-        if (snap.exists()) return [serviseName, snap.val()] as [string, Category];
+    const servicePromises = requiredServisesIds.map((serviceId) => {
+      return get(child(ref(rtdb), `services/${serviceId}`)).then((snap) => {
+        if (snap.exists()) return [serviceId, snap.val()] as [string, Category];
         return null;
       });
     });
 
     Promise.all(servicePromises).then((services) => {
-      const servicesCleared = services.filter((s) => !!s[1]) as [string, Category][];
+      const servicesCleared = services.filter((s) => !!s[1].isActive);
 
       if (!!servicesCleared.length) setServices(Object.fromEntries(servicesCleared));
 
-      const servicesWithItemsPromise = servicesCleared.map(async ([serviceName, serviceItem]) => {
-        if (!serviceItem.categories) return [];
+      const servicesWithItemsPromise = servicesCleared.map(async ([serviceId, srvc]) => {
+        if (!srvc.categories) return [];
 
-        const itemsPromises = Object.entries(serviceItem.categories)
+        const itemsPromises = Object.entries(srvc.categories)
           .filter(([itemId, isActiveItem]) => !!itemId && isActiveItem)
           .map(([itemId]) =>
             get(child(ref(rtdb), `items/${itemId}`)).then((snap) => {
@@ -107,7 +112,7 @@ export const useDataQuery = () => {
             }),
           );
 
-        return Promise.all(itemsPromises).then((serviceItems) => [serviceName, { categories: serviceItems }]);
+        return Promise.all(itemsPromises).then((serviceItems) => [serviceId, { categories: serviceItems }]);
       });
 
       Promise.all(servicesWithItemsPromise).then((withCategoriesMap) => {
@@ -118,16 +123,12 @@ export const useDataQuery = () => {
         setLoading(false);
       });
     });
-  }, [search, categoryId, serviceId, lastRemovedId]);
+  }, [search, categoryId, lastRemovedId]);
 
   return {
     loading,
     services,
-    contentMap: Object.entries(categories).sort((cat1) => {
-      if (cat1[0] === ' beverages') return 1;
-      if (cat1[0] === 'utilities') return 0;
-      return -1;
-    }),
+    contentMap: Object.entries(categories).sort(([a], [b]) => CATEGORY_ORDER[a] - CATEGORY_ORDER[b]),
     onRemoveItem,
     onRemoveService,
   };

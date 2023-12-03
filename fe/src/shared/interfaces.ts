@@ -1,3 +1,5 @@
+export type CategoryDbName = ' beverages' | 'food' | 'retail' | 'utilities';
+
 export type ApplicationStatus = 'open' | 'accepted' | 'process' | 'done';
 
 export interface Application {
@@ -34,4 +36,5 @@ export interface Category {
   parent?: string;
   adress?: string;
   categories?: Category[];
+  isActive?: boolean;
 }

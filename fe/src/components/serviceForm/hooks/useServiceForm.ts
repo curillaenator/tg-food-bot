@@ -73,6 +73,7 @@ export const useServiceForm = () => {
           waitTime: data.serviceWaitTime,
           imgPath: `services/${renamedFile.name}`,
           type: 'service',
+          isActive: true,
         },
       };
 
