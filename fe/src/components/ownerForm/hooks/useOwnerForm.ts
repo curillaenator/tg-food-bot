@@ -1,10 +1,12 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { ref, child, update, get } from 'firebase/database';
 import { useToast } from '@chakra-ui/react';
 import type { OptionsOrGroups, GroupBase } from 'chakra-react-select';
 
-import { rtdb } from '../../../shared/firebase';
+import { ref, child, update, get } from 'firebase/database';
+import { collection, getDocs } from 'firebase/firestore';
+
+import { rtdb, firedb } from '../../../shared/firebase';
 import { TOAST_DURATION } from '../../../shared/constants';
 
 import type { User, Category as Service } from '../../../shared/interfaces';
@@ -60,27 +62,29 @@ export const useOwnerForm = () => {
         })
         .catch((err) => console.table(err));
 
-      await get(child(ref(rtdb), 'users'))
-        .then((snap) => {
-          if (!snap.exists()) return;
+      const serviceOwners =
+        (await getDocs(collection(firedb, 'serviceOwners'))
+          .then((serviceOwnersIds) =>
+            serviceOwnersIds.docs.map((doc) => ({ ...doc.data(), id: doc.id }) as Partial<User>),
+          )
+          .catch((err) => console.table(err))) || [];
 
-          const users = snap.val() as Record<string, User>;
+      const ownersWithServices = serviceOwners.map(
+        async (usr) =>
+          ({
+            ...usr,
+            label: usr.email,
+            ownerOf: await get(ref(rtdb, `users/${usr.id}/ownerOf`))
+              .then((snap) => ({
+                ...((snap.exists() ? snap.val() : {}) as Record<string, boolean>),
+              }))
+              .catch((err) => console.table(err)),
+          }) as Partial<User>,
+      );
 
-          const usersMaped = Object.entries(users)
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            .filter(([_, usr]) => usr?.role === 'service-owner')
-            .map(([usrId, usr]) => ({
-              ...usr,
-              id: usrId,
-              label: usr.email,
-              value: usrId,
-            }));
+      await Promise.all(ownersWithServices).then((ownersList) => setAllUsers(ownersList));
 
-          setAllUsers(usersMaped);
-          setValue('user', null);
-        })
-        .catch((err) => console.table(err));
-
+      setValue('user', null);
       setLoading(false);
     };
 
