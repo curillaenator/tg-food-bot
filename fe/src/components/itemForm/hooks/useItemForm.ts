@@ -1,13 +1,14 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useToast } from '@chakra-ui/react';
 import { useForm, useFormState } from 'react-hook-form';
 import type { Options } from 'chakra-react-select';
 
 import { ref, child, push, update, get } from 'firebase/database';
 import { ref as storageRef, uploadBytes } from 'firebase/storage';
 
-// import { useCategoriesQuery } from './useCategoriesQuery';
 import { rtdb, strg } from '../../../shared/firebase';
 import { resizeFile } from '../../../utils';
+import { TOAST_DURATION } from '../../../shared/constants';
 
 import type { ItemFormValuesType, CustomOption } from '../interfaces';
 import type { Category } from '../../../shared/interfaces';
@@ -37,6 +38,8 @@ export const useItemForm = () => {
     formState: { errors, isSubmitting },
   } = useForm<ItemFormValuesType>({ defaultValues: INITIAL_ITEM_FORM });
 
+  const toast = useToast();
+
   const [services, setServices] = useState<Options<CustomOption>>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -49,8 +52,6 @@ export const useItemForm = () => {
         ...formValues,
         itemService: formValues.itemService.value,
       };
-
-      // return console.log(data);
 
       const itemId = push(child(ref(rtdb), 'items')).key;
 
@@ -84,9 +85,18 @@ export const useItemForm = () => {
 
       setImgSrcFromFile(undefined);
 
+      toast({
+        title: 'Готово',
+        description:
+          'Товар создан, теперь его можно редактировать либо хозяину сервиса через Мои сервисы, либо менеджерам Pixpax из любого места меню при включеном editMode',
+        status: 'warning',
+        duration: TOAST_DURATION * 3,
+        isClosable: true,
+      });
+
       console.log(data);
     },
-    [reset, services],
+    [reset, toast, services],
   );
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useToast } from '@chakra-ui/react';
 import { useForm, useFormState } from 'react-hook-form';
 
 import { ref, child, push, update } from 'firebase/database';
@@ -8,6 +9,7 @@ import { useCategoriesQuery } from './useCategoriesQuery';
 import { rtdb, strg } from '../../../shared/firebase';
 import { resizeFile } from '../../../utils';
 
+import { TOAST_DURATION } from '../../../shared/constants';
 import type { ServiceFormValuesType } from '../interfaces';
 
 const FILE_META = {
@@ -27,6 +29,8 @@ const INITIAL_SERVICE_FORM: ServiceFormValuesType = {
 
 export const useServiceForm = () => {
   const { loading, categories, subcategories, handleCurrentCategory } = useCategoriesQuery();
+
+  const toast = useToast();
 
   const {
     getValues,
@@ -82,9 +86,18 @@ export const useServiceForm = () => {
 
       setImgSrcFromFile(undefined);
 
+      toast({
+        title: 'Готово',
+        description:
+          'Сервис создан, теперь его можно привязать к владельцу сервиса, после чего редактировать как владельцу сервиса, так и менеджерам Pixpax из любого места меню при включеном editMode',
+        status: 'warning',
+        duration: TOAST_DURATION * 3,
+        isClosable: true,
+      });
+
       console.table(data);
     },
-    [reset, categories, subcategories],
+    [reset, toast, categories, subcategories],
   );
 
   useEffect(() => {
