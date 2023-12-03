@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from 'effector-react';
 
@@ -54,10 +54,15 @@ export const UserSection: FC = () => {
   const isHomePage = pathname === '/';
   const role = user?.role;
 
+  const userTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
+    if (userTimer.current) clearTimeout(userTimer.current);
+
     if (!user) {
-      setTimeout(() => onAuthOpen(), 10000);
+      userTimer.current = setTimeout(() => onAuthOpen(), 10000);
     }
+
     // onAuthOpen не нужен в зависимостях
   }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
