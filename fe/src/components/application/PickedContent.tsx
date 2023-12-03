@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react';
-import { Card, Flex, CardBody, Stack, Text, Button, Divider, Progress, Link } from '@chakra-ui/react';
+import { Card, Flex, CardBody, Stack, Text, Button, Divider, Progress, Link, Input, useToast } from '@chakra-ui/react';
+import { CopyIcon } from '@chakra-ui/icons';
 
 import { useTelegram } from '../../hooks/useTelegram';
 
@@ -9,7 +10,7 @@ import { useAccomplish } from './hooks/useAccomplish';
 import { VNpricer } from '../../utils';
 
 import { EMERGENCY_ASSOC } from './constants';
-import { DELIVERY_PRICE } from '../../shared/constants';
+import { DELIVERY_PRICE, TOAST_DURATION } from '../../shared/constants';
 
 import type { PickedContentProps } from './interfaces';
 
@@ -17,6 +18,8 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
   const { id, customer, emergency, placed, currentUserId, executorId, content } = props;
 
   const { tg } = useTelegram();
+
+  const toast = useToast();
 
   const { name, tel, tme, adress } = customer;
 
@@ -28,12 +31,12 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
 
   const { loading: isAcomlishInProcess, accomplish } = useAccomplish();
 
-  const [telString, setTelString] = useState<string>(tel);
+  const [payed, setPayed] = useState<string>('');
 
   if (isDetailsloading || isAcomlishInProcess) return <Progress w='full' size='sm' isIndeterminate />;
 
   return (
-    <Stack gap={4} h='full' justifyContent='space-between'>
+    <Stack w='full' gap={2}>
       <Flex w='full' gap={4} justifyContent='space-between'>
         <Stack gap={0}>
           <Text fontSize='sm' color='chakra-subtle-text'>
@@ -54,138 +57,183 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
         </Stack>
       </Flex>
 
-      <Stack gap={2}>
-        <Stack gap={0}>
-          <Text fontSize='sm' color='chakra-subtle-text'>
-            Адрес:
-          </Text>
-          <Text fontSize='sm' fontWeight='bold'>
-            {adress}
-          </Text>
-        </Stack>
+      <Stack gap={0}>
+        <Text fontSize='sm' color='chakra-subtle-text'>
+          Адрес:
+        </Text>
+        <Text fontSize='sm' fontWeight='bold'>
+          {adress}
+        </Text>
+      </Stack>
 
-        <Stack gap={2}>
-          <Text fontSize='sm' color='chakra-subtle-text'>
-            Телефон:
+      <Stack gap={0}>
+        <Text fontSize='sm' color='chakra-subtle-text'>
+          Телефон/Контакт:
+        </Text>
+
+        <Flex gap='8px' w='full' alignItems='center' justifyContent='space-between'>
+          <Text fontSize='sm' fontWeight='bold'>
+            {tel}
           </Text>
 
           <Button
-            w='full'
+            variant='outline'
             size='sm'
-            onClick={() => {
-              navigator.clipboard.writeText(tel);
-              setTelString('Номер скопирован');
-              setTimeout(() => setTelString(tel), 1200);
+            colorScheme='orange'
+            p={0}
+            onClick={async () => {
+              await navigator.clipboard.writeText(tel);
+
+              toast({
+                title: 'Контакт клиента скопирован',
+                status: 'info',
+                duration: TOAST_DURATION,
+                isClosable: true,
+              });
             }}
           >
-            {telString}
+            <CopyIcon boxSize={6} />
           </Button>
+        </Flex>
+      </Stack>
 
-          {customer?.tme && (
-            <Link
-              display='flex'
-              alignItems='center'
-              justifyContent='center'
-              w='full'
-              h='32px'
-              href={`https://${tme}`}
-              isExternal
-              boxShadow='inset 0 0 0 1px var(--pixpax-colors-telegram-200)'
-              p={2}
-              bg='var(--pixpax-colors-telegram-200)'
-              borderRadius={8}
-              color='telegram.900'
-              fontWeight='bold'
-              onClick={() => {
-                if (!!tg) setTimeout(() => tg.close(), 200);
-              }}
-            >
-              {customer.tme}
-            </Link>
-          )}
-        </Stack>
-
-        <Stack>
+      {customer.tme && (
+        <Stack gap={2}>
           <Text fontSize='sm' color='chakra-subtle-text'>
-            Состав заказа:
+            Написать напрямую:
           </Text>
 
-          {details.map((serviceId) => (
-            <Card
-              key={serviceId.id}
-              p={2}
-              bg='chakra-body-bg'
-              borderRadius={8}
-              boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-200)'
-            >
-              <CardBody p={0}>
-                <Text fontWeight='bold'>{serviceId?.title}</Text>
-
-                <Divider />
-
-                {serviceId.order.map((item) => (
-                  <Flex fontSize='sm' key={item.id} w='full' justifyContent='space-between'>
-                    <Text flexShrink={0} color='chakra-subtle-text'>
-                      {item.title}
-                    </Text>
-
-                    <Flex w='70%' justifyContent='flex-end'>
-                      <Text fontSize='sm' w='12%' textAlign='right' color='chakra-subtle-text'>
-                        {item.qty}
-                      </Text>
-                      <Text fontSize='sm' w='50%' textAlign='right' color='chakra-subtle-text'>
-                        {VNpricer.format(+item.price)}
-                      </Text>
-                    </Flex>
-                  </Flex>
-                ))}
-
-                <Divider />
-
-                <Text fontSize='sm' w='full' textAlign='right' fontWeight='bold'>
-                  {VNpricer.format(+serviceId.totalServicePrice)}
-                </Text>
-              </CardBody>
-            </Card>
-          ))}
-
-          <Flex h='100%' justifyContent='space-between'>
-            <Text fontSize='sm'>Доставка:</Text>
-            <Text fontSize='sm' textAlign='right' fontWeight='bold'>
-              {VNpricer.format(DELIVERY_PRICE * details.length)}
-            </Text>
-          </Flex>
-
-          <Flex h='100%' justifyContent='space-between'>
-            <Text fontSize='lg'>Итог:</Text>
-            <Text fontSize='lg' textAlign='right' fontWeight='bold'>
-              {VNpricer.format(totalApplicationPrice + DELIVERY_PRICE * details.length)}
-            </Text>
-          </Flex>
+          <Link
+            display='flex'
+            alignItems='center'
+            justifyContent='center'
+            w='full'
+            h='32px'
+            href={`https://${tme}`}
+            isExternal
+            boxShadow='inset 0 0 0 1px var(--pixpax-colors-telegram-200)'
+            p={2}
+            bg='var(--pixpax-colors-telegram-200)'
+            borderRadius={8}
+            color='telegram.900'
+            fontWeight='bold'
+            onClick={() => {
+              if (!!tg) setTimeout(() => tg.close(), 200);
+            }}
+          >
+            {customer.tme}
+          </Link>
         </Stack>
+      )}
+
+      <Divider my={2} />
+
+      <Stack>
+        <Text fontSize='sm' fontWeight='bold'>
+          Состав заказа:
+        </Text>
+
+        {details.map((serviceId) => (
+          <Card
+            key={serviceId.id}
+            p={2}
+            bg='chakra-body-bg'
+            borderRadius={8}
+            boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-200)'
+          >
+            <CardBody p={0}>
+              <Text fontWeight='bold'>{serviceId?.title}</Text>
+
+              {serviceId?.adress && (
+                <Flex gap='8px' w='full' alignItems='center' justifyContent='space-between'>
+                  <Text fontSize='sm' fontWeight='bold' color='chakra-subtle-text'>
+                    {serviceId.adress}
+                  </Text>
+
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    colorScheme='orange'
+                    p={0}
+                    onClick={async () => {
+                      await navigator.clipboard.writeText(serviceId.adress);
+
+                      toast({
+                        title: 'Адрес сервиса скопирован',
+                        status: 'info',
+                        duration: TOAST_DURATION,
+                        isClosable: true,
+                      });
+                    }}
+                  >
+                    <CopyIcon boxSize={6} />
+                  </Button>
+                </Flex>
+              )}
+
+              <Divider my={2} />
+
+              {serviceId.order.map((item) => (
+                <Flex fontSize='sm' key={item.id} w='full' justifyContent='space-between'>
+                  <Text flexShrink={0} color='chakra-subtle-text'>
+                    {item.title}
+                  </Text>
+
+                  <Flex w='70%' justifyContent='flex-end'>
+                    <Text fontSize='sm' w='12%' textAlign='right' color='chakra-subtle-text'>
+                      {item.qty}
+                    </Text>
+                    <Text fontSize='sm' w='50%' textAlign='right' color='chakra-subtle-text'>
+                      {VNpricer.format(+item.price)}
+                    </Text>
+                  </Flex>
+                </Flex>
+              ))}
+
+              <Divider my={2} />
+
+              <Text fontSize='sm' w='full' textAlign='right' fontWeight='bold'>
+                {VNpricer.format(+serviceId.totalServicePrice)}
+              </Text>
+            </CardBody>
+          </Card>
+        ))}
+
+        <Flex h='100%' justifyContent='space-between'>
+          <Text fontSize='sm'>Доставка:</Text>
+          <Text fontSize='sm' textAlign='right' fontWeight='bold'>
+            {VNpricer.format(DELIVERY_PRICE * details.length)}
+          </Text>
+        </Flex>
+
+        <Flex h='100%' justifyContent='space-between'>
+          <Text fontSize='lg'>Итог:</Text>
+          <Text fontSize='lg' textAlign='right' fontWeight='bold'>
+            {VNpricer.format(totalApplicationPrice + DELIVERY_PRICE * details.length)}
+          </Text>
+        </Flex>
       </Stack>
 
-      <Stack w='full'>
-        <Button
-          w='full'
-          size='sm'
-          colorScheme='red'
-          //  isDisabled={pickIsDisabled || !!executorId}
-          onClick={() =>
-            accomplish({
-              id,
-              details,
-              customerName: name,
-              customerTel: tel,
-              customerAdress: adress,
-              executorId,
-              totalApplicationPrice,
-            })
-          }
-        >
-          Завершить
-        </Button>
-      </Stack>
+      <Divider my={2} />
+
+      <Input
+        placeholder='Оплаченная сумма'
+        borderColor='orange.200'
+        size='sm'
+        type='number'
+        value={payed}
+        _placeholder={{ color: 'orange.200' }}
+        onChange={(e) => setPayed(e.target.value)}
+      />
+
+      <Button
+        w='full'
+        size='sm'
+        colorScheme={payed ? 'green' : 'red'}
+        onClick={() => accomplish({ id, details, customer, executorId, totalApplicationPrice, payed })}
+      >
+        {payed ? 'Завершить' : 'Отменить'}
+      </Button>
     </Stack>
   );
 };

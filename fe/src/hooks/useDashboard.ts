@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useStore } from 'effector-react';
 import { ref, get, child, onValue, update } from 'firebase/database';
+import { useToast } from '@chakra-ui/react';
 
 import { rtdb } from '../shared/firebase';
 
@@ -8,10 +9,12 @@ import type { Application } from '../shared/interfaces';
 import { $globalStore } from '../store';
 import { $aplicationsStore, setPickedApplications } from '../store/applications';
 
-import { LIMIT_PER_EMPLOYEE_APLICATIONS } from '../shared/constants';
+import { LIMIT_PER_EMPLOYEE_APLICATIONS, TOAST_DURATION } from '../shared/constants';
 
 export const useDashboard = () => {
   const [orders, setOrders] = useState<Application[]>([]);
+
+  const toast = useToast();
 
   const { user: currentUser } = useStore($globalStore);
   const { pickedApplications } = useStore($aplicationsStore);
@@ -33,12 +36,20 @@ export const useDashboard = () => {
         (snap) => (snap.exists() ? snap.val() : {}) as Record<string, boolean>,
       );
 
-      update(ref(rtdb), {
+      await update(ref(rtdb), {
         [`orders/${application.id}`]: updatedApplication,
         [`users/${employeeId}/pickedApplications`]: { ...previouslyPickedApplications, [application.id]: true },
       });
+
+      toast({
+        title: 'Заявка принята',
+        description: "Перемещена в раздел 'мои'",
+        status: 'success',
+        duration: TOAST_DURATION,
+        isClosable: true,
+      });
     },
-    [currentUser],
+    [toast, currentUser],
   );
 
   // следит за принятыми заказами сотрудником

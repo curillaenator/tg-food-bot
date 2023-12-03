@@ -3,7 +3,7 @@ import { ref, update } from 'firebase/database';
 
 import { UseFormSetValue } from 'react-hook-form';
 
-import { Heading, Flex, Button, Text, ListItem, UnorderedList, Divider } from '@chakra-ui/react';
+import { Heading, Flex, Button, Text, ListItem, UnorderedList, Divider, useToast } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 
 import { rtdb } from '../../shared/firebase';
@@ -21,6 +21,8 @@ interface AttachedServiceProps {
 export const AttachedServices: FC<AttachedServiceProps> = (props) => {
   const { selectedUser, allServices, attachedServices, setValue } = props;
 
+  const toast = useToast();
+
   const removeAttached = useCallback(
     async (serviceId: string, serviceTitle: string) => {
       if (!selectedUser?.id) return;
@@ -36,8 +38,16 @@ export const AttachedServices: FC<AttachedServiceProps> = (props) => {
       await update(ref(rtdb), updates);
 
       setValue('servicesOwned', clearedServices);
+
+      toast({
+        title: 'Внимание',
+        description: 'Сервис отвязан, желательно обновить страницу отображения бота',
+        status: 'warning',
+        duration: 9000,
+        isClosable: true,
+      });
     },
-    [attachedServices, selectedUser, setValue],
+    [attachedServices, selectedUser, setValue, toast],
   );
 
   useEffect(() => {

@@ -1,9 +1,11 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { ref, child, update, get } from 'firebase/database';
+import { useToast } from '@chakra-ui/react';
 import type { OptionsOrGroups, GroupBase } from 'chakra-react-select';
 
 import { rtdb } from '../../../shared/firebase';
+import { TOAST_DURATION } from '../../../shared/constants';
 
 import type { User, Category as Service } from '../../../shared/interfaces';
 
@@ -28,6 +30,8 @@ export const useOwnerForm = () => {
     // reset,
     formState: { errors, isSubmitting },
   } = useForm<OwnerFormState>({ defaultValues: INITIAL_STATE });
+
+  const toast = useToast();
 
   const [allUsers, setAllUsers] = useState<OptionsOrGroups<Partial<User>, GroupBase<User>>>([]);
   const [allServices, setAllServices] = useState<OptionsOrGroups<Partial<Service>, GroupBase<Service>>>([]);
@@ -98,7 +102,15 @@ export const useOwnerForm = () => {
     setValue('serviceToOwn', null);
 
     setLoading(false);
-  }, [setValue, getValues]);
+
+    toast({
+      title: 'Готово',
+      description: 'Сервис привязан к пользователю. ВАЖНО ОБНОВИТЬ СТРАНИЦУ !!!',
+      status: 'success',
+      duration: TOAST_DURATION * 3,
+      isClosable: true,
+    });
+  }, [toast, setValue, getValues]);
 
   const attachedServices = watch('servicesOwned');
   const selectedUser = watch('user');
