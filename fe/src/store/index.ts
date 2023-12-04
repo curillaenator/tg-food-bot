@@ -5,8 +5,8 @@ export type ShowcaseItem = {
   id: string;
   title: string;
   description: string;
-  adress: string;
-  immPath: string;
+  adress?: string;
+  immPath?: string;
   type: string;
   price: string;
   parent?: string;

@@ -46,7 +46,7 @@ export const ItemForm: FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={s.form}>
-      <Flex gap={2} justifyContent='space-between' alignItems='center' mb={8}>
+      <Flex gap={2} justifyContent='space-between' alignItems='center' mb={4}>
         <Heading fontSize='2xl'>Новый товар</Heading>
 
         {loading && <Spinner />}

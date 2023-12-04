@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Controller } from 'react-hook-form';
 import { Select } from 'chakra-react-select';
 
-import { Box, Flex, FormErrorMessage, FormLabel, FormControl, Button, Heading, Spinner } from '@chakra-ui/react';
+import { Box, Flex, FormErrorMessage, FormLabel, FormControl, Button, Heading, Spinner, Text } from '@chakra-ui/react';
 
 import { PlusSquareIcon } from '@chakra-ui/icons';
 
@@ -15,30 +15,36 @@ import s from './styles.module.scss';
 export const OwnerForm: FC = () => {
   const {
     selectedUser,
-    attachedServices,
-    allUsers,
-    allServices,
+    servicesOwned,
+    serviceToOwn,
+
+    ownersList,
+    servicesList,
+
     loading = false,
+
     control,
-    // errors,
     handleSubmit,
-    // register,
     onSubmit,
     setValue,
   } = useOwnerForm();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={s.form}>
-      <Flex gap={2} justifyContent='space-between' alignItems='center' mb={8}>
+      <Flex gap={2} justifyContent='space-between' alignItems='center' mb={4}>
         <Heading fontSize='2xl'>Привязать сервис к пользователю</Heading>
 
         {loading && <Spinner />}
       </Flex>
 
+      <Text fontSize='sm' color='chakra-subtle-text'>
+        Список отображаемых партнеров согласовывается с Админом
+      </Text>
+
       <Controller
         control={control}
         name='user'
-        rules={{ required: 'Please select at least one user' }}
+        rules={{ required: 'Нужно выбрать партнера из списка' }}
         render={(renderProps) => {
           const {
             field,
@@ -49,7 +55,7 @@ export const OwnerForm: FC = () => {
 
           return (
             <FormControl isRequired isDisabled={loading}>
-              <FormLabel>Выбрать пользователя</FormLabel>
+              <FormLabel>Выбрать партнера</FormLabel>
 
               <Select
                 size='lg'
@@ -59,7 +65,7 @@ export const OwnerForm: FC = () => {
                 onChange={onChange}
                 onBlur={onBlur}
                 value={value}
-                options={allUsers}
+                options={ownersList}
                 closeMenuOnSelect={true}
               />
 
@@ -69,15 +75,13 @@ export const OwnerForm: FC = () => {
         }}
       />
 
-      {selectedUser?.ownerOf && (
-        <AttachedServices
-          selectedUser={selectedUser}
-          attachedServices={attachedServices}
-          setValue={setValue}
-          // @ts-expect-error types
-          allServices={allServices}
-        />
-      )}
+      <AttachedServices
+        selectedUser={selectedUser}
+        setValue={setValue}
+        // @ts-expect-error types
+        servicesList={servicesList}
+        servicesOwned={servicesOwned}
+      />
 
       <Controller
         control={control}
@@ -92,7 +96,7 @@ export const OwnerForm: FC = () => {
           const { onChange, onBlur, value, name, ref } = field;
 
           return (
-            <FormControl isRequired isDisabled={loading}>
+            <FormControl isRequired isDisabled={!selectedUser?.id || loading}>
               <FormLabel>Выбрать сервис</FormLabel>
 
               <Select
@@ -103,7 +107,7 @@ export const OwnerForm: FC = () => {
                 onChange={onChange}
                 onBlur={onBlur}
                 value={value}
-                options={allServices}
+                options={servicesList}
                 closeMenuOnSelect={true}
               />
 
@@ -115,6 +119,7 @@ export const OwnerForm: FC = () => {
 
       <Box mt={8} pb={0} w='full'>
         <Button
+          isDisabled={!serviceToOwn}
           leftIcon={<PlusSquareIcon boxSize={6} />}
           size='lg'
           w='full'

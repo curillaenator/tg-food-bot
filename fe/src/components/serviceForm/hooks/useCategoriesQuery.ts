@@ -43,6 +43,8 @@ export const useCategoriesQuery = () => {
   }, []);
 
   useEffect(() => {
+    if (!currentCategory.value) return;
+
     setLoading(true);
 
     get(child(ref(rtdb), `categories/${currentCategory.value}`))

@@ -15,9 +15,7 @@ import type { OwnerFormState } from '../interfaces';
 
 const INITIAL_STATE: OwnerFormState = {
   user: {},
-
   serviceToOwn: {},
-
   servicesOwned: [],
 };
 
@@ -29,14 +27,13 @@ export const useOwnerForm = () => {
     control,
     handleSubmit,
     register,
-    // reset,
     formState: { errors, isSubmitting },
   } = useForm<OwnerFormState>({ defaultValues: INITIAL_STATE });
 
   const toast = useToast();
 
-  const [allUsers, setAllUsers] = useState<OptionsOrGroups<Partial<User>, GroupBase<User>>>([]);
-  const [allServices, setAllServices] = useState<OptionsOrGroups<Partial<Service>, GroupBase<Service>>>([]);
+  const [ownersList, setOwnersList] = useState<OptionsOrGroups<Partial<User>, GroupBase<User>>>([]);
+  const [servicesList, setServicesList] = useState<OptionsOrGroups<Partial<Service>, GroupBase<Service>>>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -44,59 +41,54 @@ export const useOwnerForm = () => {
     setLoading(true);
 
     const getAsyncData = async () => {
-      await get(child(ref(rtdb), 'services'))
-        .then((snap) => {
-          if (!snap.exists()) return;
-
-          const services = snap.val() as Record<string, Service>;
-
-          const servicesMaped = Object.entries(services).map(([srvcId, srvc]) => ({
-            ...srvc,
-            id: srvcId,
-            label: srvc.title,
-            value: srvcId,
-          }));
-
-          setAllServices(servicesMaped);
-          setValue('serviceToOwn', null);
-        })
-        .catch((err) => console.table(err));
-
       const serviceOwners =
         (await getDocs(collection(firedb, 'serviceOwners'))
           .then((serviceOwnersIds) =>
-            serviceOwnersIds.docs.map((doc) => ({ ...doc.data(), id: doc.id }) as Partial<User>),
+            serviceOwnersIds.docs.map(
+              (doc) => ({ id: doc.id, label: doc.data().email, value: doc.id }) as Partial<User>,
+            ),
           )
           .catch((err) => console.table(err))) || [];
 
-      const ownersWithServices = serviceOwners.map(
-        async (usr) =>
-          ({
-            ...usr,
-            label: usr.email,
-            ownerOf: await get(ref(rtdb, `users/${usr.id}/ownerOf`))
-              .then((snap) => ({
-                ...((snap.exists() ? snap.val() : {}) as Record<string, boolean>),
-              }))
-              .catch((err) => console.table(err)),
-          }) as Partial<User>,
-      );
-
-      await Promise.all(ownersWithServices).then((ownersList) => setAllUsers(ownersList));
-
+      setOwnersList(serviceOwners);
       setValue('user', null);
+
       setLoading(false);
     };
 
     getAsyncData();
   }, [setValue]);
 
+  useEffect(() => {
+    if (!ownersList.length) return;
+
+    setLoading(true);
+
+    get(child(ref(rtdb), 'services'))
+      .then((snap) => {
+        const services = (snap.exists() ? snap.val() : {}) as Record<string, Service>;
+
+        const servicesMaped = Object.entries(services).map(([srvcId, srvc]) => ({
+          ...srvc,
+          id: srvcId,
+          label: srvc.title,
+          value: srvcId,
+        }));
+
+        setServicesList(servicesMaped);
+
+        setValue('serviceToOwn', null);
+      })
+      .catch((err) => console.table(err))
+      .finally(() => setLoading(false));
+  }, [ownersList, setValue]);
+
   const onSubmit = useCallback(async () => {
     setLoading(true);
 
     const { servicesOwned, user, serviceToOwn } = getValues();
 
-    const combined = [...servicesOwned, serviceToOwn];
+    const combined = [...servicesOwned, serviceToOwn] as Service[];
 
     const updates = {
       [`users/${user.id}/ownerOf`]: Object.fromEntries(combined.map((item) => [item.id, true])),
@@ -104,34 +96,27 @@ export const useOwnerForm = () => {
 
     await update(ref(rtdb), updates);
 
-    // @ts-expect-error types
-    setValue('servicesOwned', combined);
     setValue('serviceToOwn', null);
 
     setLoading(false);
 
     toast({
       title: 'Готово',
-      description: 'Сервис привязан к пользователю. ВАЖНО ОБНОВИТЬ СТРАНИЦУ !!!',
+      description: 'Сервис привязан к пользователю',
       status: 'success',
-      duration: TOAST_DURATION * 3,
+      duration: TOAST_DURATION,
       isClosable: true,
     });
   }, [toast, setValue, getValues]);
 
-  const attachedServices = watch('servicesOwned');
-  const selectedUser = watch('user');
-
-  const attachedIds = attachedServices.map((item) => item.id);
-
   return {
-    selectedUser,
-    attachedServices,
-    allUsers,
-    allServices: allServices.filter((item) => {
-      // @ts-expect-error types
-      return !attachedIds.includes(item.id);
-    }),
+    selectedUser: watch('user'),
+    servicesOwned: watch('servicesOwned'),
+    serviceToOwn: watch('serviceToOwn'),
+
+    ownersList,
+    servicesList,
+
     loading: loading || isSubmitting,
     control,
     errors,

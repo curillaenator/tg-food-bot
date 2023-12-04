@@ -3,7 +3,7 @@ import { useToast } from '@chakra-ui/react';
 import { useForm, useFormState } from 'react-hook-form';
 import type { Options } from 'chakra-react-select';
 
-import { ref, child, push, update, get } from 'firebase/database';
+import { ref, child, push, update, onValue } from 'firebase/database';
 import { ref as storageRef, uploadBytes } from 'firebase/storage';
 
 import { rtdb, strg } from '../../../shared/firebase';
@@ -41,7 +41,6 @@ export const useItemForm = () => {
   const toast = useToast();
 
   const [services, setServices] = useState<Options<CustomOption>>([]);
-  const [loading, setLoading] = useState<boolean>(false);
 
   const [imgSrcFromFile, setImgSrcFromFile] = useState<string | undefined>(undefined);
   const { dirtyFields } = useFormState({ control });
@@ -89,7 +88,7 @@ export const useItemForm = () => {
         title: 'Готово',
         description:
           'Товар создан, теперь его можно редактировать либо хозяину сервиса через Мои сервисы, либо менеджерам Pixpax из любого места меню при включеном editMode',
-        status: 'warning',
+        status: 'success',
         duration: TOAST_DURATION * 3,
         isClosable: true,
       });
@@ -107,31 +106,28 @@ export const useItemForm = () => {
   }, [dirtyFields.itemImage, getValues]);
 
   useEffect(() => {
-    setLoading(true);
+    // setLoading(true);
 
-    get(child(ref(rtdb), 'services'))
-      .then((snap) => {
-        if (snap.exists()) {
-          const data = snap.val() as Record<string, Category>;
+    const unsubServices = onValue(child(ref(rtdb), 'services'), (snap) => {
+      if (snap.exists()) {
+        const data = snap.val() as Record<string, Category>;
 
-          const mapedData = Object.entries(data).map(([serviceKey, service]) => ({
-            label: service.title,
-            value: serviceKey,
-          }));
+        const mapedData = Object.entries(data).map(([serviceKey, service]) => ({
+          label: service.title,
+          value: serviceKey,
+        }));
 
-          setServices(mapedData);
-          setValue('itemService', mapedData[0]);
-        }
-      })
-      .catch((err) => console.table(err))
-      .finally(() => {
-        setLoading(false);
-      });
+        setServices(mapedData);
+        setValue('itemService', mapedData[0]);
+      }
+    });
+
+    return () => unsubServices();
   }, [setValue]);
 
   return {
     services,
-    loading: loading || isSubmitting,
+    loading: isSubmitting,
     control,
     errors,
     pickedImage: imgSrcFromFile,

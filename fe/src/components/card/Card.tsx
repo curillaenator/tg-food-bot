@@ -82,7 +82,7 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
     imgPath,
     price,
     type,
-    waitTime,
+    // waitTime,
     parent,
     qty,
     isActive,
@@ -131,17 +131,7 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
       transition='background-color 80ms ease'
       _active={{ backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
       onClick={() => {
-        if (!user?.id || type !== 'item' || isEditor) {
-          // toast({
-          //   title: 'Authentication',
-          //   description:
-          //     'Пожалуйста, авторизируйтесь через меню чтобы разместить заказ / Please login before order placement',
-          //   status: 'info',
-          //   duration: TOAST_DURATION,
-          //   isClosable: true,
-          // });
-          return;
-        }
+        if (!user?.id || type !== 'item' || isEditor) return;
 
         setBasket({
           id,
@@ -150,7 +140,6 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
           description,
           type,
           price,
-          waitTime,
           qty: qty === undefined ? 1 : qty,
         });
       }}

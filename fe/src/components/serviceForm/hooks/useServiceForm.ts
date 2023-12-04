@@ -91,7 +91,7 @@ export const useServiceForm = () => {
         title: 'Готово',
         description:
           'Сервис создан, теперь его можно привязать к владельцу сервиса, после чего редактировать как владельцу сервиса, так и менеджерам Pixpax из любого места меню при включеном editMode',
-        status: 'warning',
+        status: 'success',
         duration: TOAST_DURATION * 3,
         isClosable: true,
       });
