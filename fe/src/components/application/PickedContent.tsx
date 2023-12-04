@@ -81,8 +81,8 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
             size='sm'
             colorScheme='orange'
             p={0}
-            onClick={async () => {
-              await navigator.clipboard.writeText(tel);
+            onClick={() => {
+              navigator.clipboard.writeText(tel);
 
               toast({
                 title: 'Контакт клиента скопирован',
@@ -118,7 +118,7 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
             color='telegram.900'
             fontWeight='bold'
             onClick={() => {
-              if (!!tg) setTimeout(() => tg.close(), 200);
+              if (!!tg) setTimeout(() => tg.close(), 100);
             }}
           >
             {customer.tme}
@@ -155,8 +155,8 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
                     size='sm'
                     colorScheme='orange'
                     p={0}
-                    onClick={async () => {
-                      await navigator.clipboard.writeText(serviceId.adress);
+                    onClick={() => {
+                      navigator.clipboard.writeText(serviceId.adress);
 
                       toast({
                         title: 'Адрес сервиса скопирован',
