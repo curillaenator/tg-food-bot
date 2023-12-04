@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useStore } from 'effector-react';
 // import cn from 'classnames';
@@ -37,27 +37,36 @@ export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
 
   const menu = categories?.filter((c) => c.type === 'item' || !!c.categories) || [];
 
+  const openButtonRef = useRef<HTMLButtonElement>(null);
+
   return (
-    <AccordionItem py={6}>
-      <Heading as='h2' mx={4} display='flex' flexDirection='column' gap={2}>
-        {type === 'service' && (
-          <ServiceImage
-            serviceImgUrl={serviceImgUrl}
-            title={title}
-            isEditor={isEditor}
-            serviceId={id}
-            imgPath={imgPath}
-            setServiceImgUrl={setServiceImgUrl}
-          />
-        )}
+    <AccordionItem py={4}>
+      <Stack
+        mx={4}
+        gap={0}
+        onClick={() => {
+          if (openButtonRef.current && !isEditor) openButtonRef.current.click();
+        }}
+      >
+        <ServiceImage
+          type={type}
+          serviceImgUrl={serviceImgUrl}
+          title={title}
+          isEditor={isEditor}
+          serviceId={id}
+          imgPath={imgPath}
+          setServiceImgUrl={setServiceImgUrl}
+        />
 
         <AccordionButton
+          ref={openButtonRef}
           as='button'
-          borderRadius={8}
-          px={4}
-          py={2}
-          fontSize='xl'
-          fontWeight='semibold'
+          h={type === 'category' ? '24px' : '32px'}
+          borderRadius='0 0 8px 8px'
+          px={2}
+          py={0}
+          fontSize='md'
+          fontWeight='medium'
           bg='telegram.200'
           color='gray.800'
           _hover={{
@@ -69,14 +78,12 @@ export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
               <DeleteIcon role='button' color='red' boxSize={6} onClick={removeService} />
             )}
 
-            <Text textAlign='left' textTransform='capitalize'>
-              {title}
-            </Text>
+            {type !== 'category' && <Text textAlign='left'>{title}</Text>}
           </Flex>
 
           <AccordionIcon />
         </AccordionButton>
-      </Heading>
+      </Stack>
 
       <AccordionPanel px={4} pt={4} pb={0}>
         {type === 'service' && (

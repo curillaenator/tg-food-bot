@@ -13,10 +13,13 @@ export const useShowcase = (props: ShowcaseSectionProps) => {
 
   const [serviceImgUrl, setServiceImgUrl] = useState<string | undefined>(undefined);
 
+  const isCoverRecievable = type === 'service' || type === 'category';
+
   useEffect(() => {
-    if (type !== 'service' || !imgPath) return;
+    if (!isCoverRecievable || !imgPath) return;
+
     getDownloadURL(storageRef(strg, imgPath)).then((url) => setServiceImgUrl(url));
-  }, [imgPath, type]);
+  }, [imgPath, isCoverRecievable]);
 
   const removeService = useCallback(
     (e: React.MouseEvent<SVGElement, MouseEvent>) => {

@@ -1,5 +1,5 @@
 import React, { FC, useState, ChangeEvent } from 'react';
-import { Stack, Image, Progress } from '@chakra-ui/react';
+import { Stack, Image, Progress, Heading } from '@chakra-ui/react';
 
 import { EditIcon } from '@chakra-ui/icons';
 
@@ -12,6 +12,7 @@ import { resizeFile } from '../../../utils';
 import { IMAGE_META } from '../../../shared/constants';
 
 interface ServiceImage {
+  type: string;
   serviceId: string;
   serviceImgUrl: string;
   imgPath: string;
@@ -30,7 +31,7 @@ const onImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
 };
 
 export const ServiceImage: FC<ServiceImage> = (props) => {
-  const { serviceId, serviceImgUrl, imgPath, title, isEditor, setServiceImgUrl } = props;
+  const { type, serviceId, serviceImgUrl, imgPath, title, isEditor, setServiceImgUrl } = props;
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -40,12 +41,12 @@ export const ServiceImage: FC<ServiceImage> = (props) => {
       flexShrink={0}
       w='100%'
       onClick={(e) => {
-        if (isEditor) {
+        if (isEditor && type !== 'category') {
           (e.currentTarget.firstChild as HTMLInputElement).click();
         }
       }}
     >
-      {isEditor && (
+      {isEditor && type !== 'category' && (
         <>
           <input
             id={`service-image-picker-${serviceId}`}
@@ -74,11 +75,28 @@ export const ServiceImage: FC<ServiceImage> = (props) => {
         src={serviceImgUrl}
         alt={title}
         w='full'
-        borderRadius={8}
+        borderRadius='8px 8px 0 0'
         aspectRatio='3 / 1'
         objectFit='cover'
         border={`2px solid var(--pixpax-colors-telegram-200)`}
+        filter={type === 'category' ? 'brightness(0.6)' : undefined}
       />
+
+      {type === 'category' && (
+        <Stack
+          w='full'
+          h='100%'
+          position='absolute'
+          top='0'
+          left='0'
+          alignItems='center'
+          justifyContent='center'
+          borderRadius='8px 8px 0 0'
+          border={`2px solid var(--pixpax-colors-telegram-200)`}
+        >
+          <Heading color='white'>{title}</Heading>
+        </Stack>
+      )}
     </Stack>
   );
 };

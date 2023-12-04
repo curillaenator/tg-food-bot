@@ -8,11 +8,28 @@ import { ShowcaseSection } from '../components/ShowcaseSection';
 
 import type { CategoryDbName } from '../shared/interfaces';
 
-const CATEGORIES_ASSOC: Record<CategoryDbName, string> = {
-  ' beverages': ' Напитки / Beverages',
-  food: 'Еда / Food',
-  utilities: 'Услуги / Services',
-  retail: 'Магазины / Shops',
+interface CategoryUiDictionary {
+  caption: string;
+  imgPath: string;
+}
+
+const CATEGORIES_ASSOC: Record<CategoryDbName, CategoryUiDictionary> = {
+  ' beverages': {
+    caption: 'Напитки / Beverages',
+    imgPath: 'main/beverages.jpg',
+  },
+  food: {
+    caption: 'Еда / Food',
+    imgPath: 'main/food.jpg',
+  },
+  utilities: {
+    caption: 'Услуги / Services',
+    imgPath: 'main/utilities.jpg',
+  },
+  retail: {
+    caption: 'Магазины / Shops',
+    imgPath: 'main/retail.jpg',
+  },
 };
 
 export const Main: FC = () => {
@@ -26,15 +43,16 @@ export const Main: FC = () => {
         allowMultiple
         // defaultIndex={[0, 1, 2, 3, 4, 5, 6, 7]}
       >
-        {contentMap.map(([serviceName, content]) => (
+        {contentMap.map(([serviceId, content]) => (
           <ShowcaseSection
-            key={serviceName}
-            id={serviceName}
-            parent={services[serviceName]?.parent}
-            title={CATEGORIES_ASSOC[serviceName]}
-            description={services[serviceName]?.description}
-            imgPath={services[serviceName]?.imgPath}
-            type={services[serviceName]?.type}
+            key={serviceId}
+            id={serviceId}
+            parent={services[serviceId]?.parent}
+            title={CATEGORIES_ASSOC[serviceId]['caption']}
+            description={services[serviceId]?.description}
+            // imgPath={services[serviceId]?.imgPath}
+            imgPath={CATEGORIES_ASSOC[serviceId]['imgPath']}
+            type='category'
             categories={content || []}
           />
         ))}
