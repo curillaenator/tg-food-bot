@@ -37,7 +37,7 @@ const TEXT_INPUTS_TITLES = {
   serviceTitle: 'Название ',
   serviceDescription: 'Описание',
   serviceAddres: 'Адрес сервиса',
-  serviceWaitTime: 'Время ожидания доставки ~',
+  serviceWaitTime: 'Время работы сервиса',
 };
 
 export const ServiceForm: FC = () => {
@@ -56,9 +56,8 @@ export const ServiceForm: FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={s.form}>
-      <Flex gap={2} justifyContent='space-between' alignItems='center' mb={4}>
-        <Heading fontSize='2xl'>Новый сервис</Heading>
-
+      <Flex gap={2} justifyContent='space-between' alignItems='center'>
+        <Heading fontSize='xl'>Новый сервис</Heading>
         {loading && <Spinner />}
       </Flex>
 
@@ -76,10 +75,10 @@ export const ServiceForm: FC = () => {
 
           return (
             <FormControl isRequired isDisabled={loading}>
-              <FormLabel>Категория</FormLabel>
+              <FormLabel fontSize='sm'>Категория</FormLabel>
 
               <Select
-                size='lg'
+                size='md'
                 isMulti={false}
                 name={name}
                 ref={ref}
@@ -114,11 +113,11 @@ export const ServiceForm: FC = () => {
 
           return (
             <FormControl isRequired isDisabled={loading || !subcategories.length}>
-              <FormLabel>Подкатегория</FormLabel>
+              <FormLabel fontSize='sm'>Подкатегория</FormLabel>
 
               <Select
                 // isDisabled={!categories.length}
-                size='lg'
+                size='md'
                 isMulti={false}
                 name={name}
                 ref={ref}
@@ -137,7 +136,7 @@ export const ServiceForm: FC = () => {
       />
 
       <FormControl isInvalid={!!errors.serviceImage} isRequired isDisabled={loading}>
-        <FormLabel>Обложка</FormLabel>
+        <FormLabel fontSize='sm'>Обложка</FormLabel>
 
         <FileUploader
           // multiple
@@ -149,10 +148,9 @@ export const ServiceForm: FC = () => {
             colorScheme='gray'
             color='whiteAlpha.400'
             leftIcon={<LinkIcon boxSize={4} />}
-            size='lg'
+            size='md'
             w='full'
-            h='fit-content'
-            p={3}
+            p={2}
           >
             Add photo
           </Button>
@@ -162,7 +160,7 @@ export const ServiceForm: FC = () => {
       {pickedImage && <Image w='full' aspectRatio='3 / 1' objectFit='cover' borderRadius={12} src={pickedImage} />}
 
       {TEXT_INPUTS.map((inputId) => {
-        const isRequired = inputId !== 'serviceWaitTime';
+        const isWorkingHours = inputId === 'serviceWaitTime';
 
         const requiredRegisterOptions = {
           required: 'Required',
@@ -170,15 +168,17 @@ export const ServiceForm: FC = () => {
         };
 
         return (
-          <FormControl key={inputId} isInvalid={!!errors[inputId]} isRequired={isRequired} isDisabled={loading}>
-            <FormLabel htmlFor={inputId}>{TEXT_INPUTS_TITLES[inputId]}</FormLabel>
+          <FormControl key={inputId} isInvalid={!!errors[inputId]} isRequired isDisabled={loading}>
+            <FormLabel fontSize='sm' htmlFor={inputId}>
+              {TEXT_INPUTS_TITLES[inputId]}
+            </FormLabel>
 
             <Input
-              size='lg'
+              size='md'
               autoComplete='off'
               id={inputId}
-              placeholder={isRequired ? 'Минимум 5 букв' : ''}
-              {...register(inputId, isRequired && requiredRegisterOptions)}
+              placeholder={isWorkingHours ? '9:00-20:00' : 'Минимум 5 букв'}
+              {...register(inputId, requiredRegisterOptions)}
             />
 
             <FormErrorMessage>{errors[inputId] && errors[inputId].message}</FormErrorMessage>
@@ -186,16 +186,8 @@ export const ServiceForm: FC = () => {
         );
       })}
 
-      <Box mt={8} pb={0} w='full'>
-        <Button
-          leftIcon={<PlusSquareIcon boxSize={6} />}
-          size='lg'
-          w='full'
-          p={4}
-          h='fit-content'
-          isLoading={loading}
-          type='submit'
-        >
+      <Box mt={2} pb={0} w='full'>
+        <Button leftIcon={<PlusSquareIcon boxSize={6} />} size='md' w='full' p={4} isLoading={loading} type='submit'>
           Добавить в базу
         </Button>
       </Box>

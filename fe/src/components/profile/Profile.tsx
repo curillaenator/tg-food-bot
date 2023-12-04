@@ -18,14 +18,13 @@ export const Profile: FC = () => {
       </Text>
       <InputGroup>
         <InputLeftAddon
-          h={12}
           children={<StarIcon boxSize={4} />} // eslint-disable-line react/no-children-prop
         />
         <Input
           autoComplete='off'
           placeholder='коротко и ясно'
           type='text'
-          size='lg'
+          size='md'
           value={name}
           onChange={(e) => updateUser({ name: e.target.value })}
         />
@@ -38,14 +37,13 @@ export const Profile: FC = () => {
 
       <InputGroup>
         <InputLeftAddon
-          h={12}
           children={<EditIcon boxSize={4} />} // eslint-disable-line react/no-children-prop
         />
         <Input
           autoComplete='off'
           placeholder='Адресс доставки'
           type='text'
-          size='lg'
+          size='md'
           value={adress}
           onChange={(e) => updateUser({ adress: e.target.value })}
         />
@@ -57,14 +55,13 @@ export const Profile: FC = () => {
 
       <InputGroup>
         <InputLeftAddon
-          h={12}
           children={<PhoneIcon boxSize={4} />} // eslint-disable-line react/no-children-prop
         />
         <Input
           autoComplete='off'
           placeholder='+84... или +7().... или t.me/...'
           type='text'
-          size='lg'
+          size='md'
           value={tel}
           onChange={(e) => updateUser({ tel: e.target.value })}
         />

@@ -31,9 +31,8 @@ export const OwnerForm: FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={s.form}>
-      <Flex gap={2} justifyContent='space-between' alignItems='center' mb={4}>
-        <Heading fontSize='2xl'>Привязать сервис к пользователю</Heading>
-
+      <Flex gap={2} justifyContent='space-between' alignItems='center'>
+        <Heading fontSize='xl'>Связать сервис и партнера</Heading>
         {loading && <Spinner />}
       </Flex>
 
@@ -55,10 +54,10 @@ export const OwnerForm: FC = () => {
 
           return (
             <FormControl isRequired isDisabled={loading}>
-              <FormLabel>Выбрать партнера</FormLabel>
+              <FormLabel fontSize='sm'>Выбрать партнера</FormLabel>
 
               <Select
-                size='lg'
+                size='md'
                 isMulti={false}
                 name={name}
                 ref={ref}
@@ -97,10 +96,10 @@ export const OwnerForm: FC = () => {
 
           return (
             <FormControl isRequired isDisabled={!selectedUser?.id || loading}>
-              <FormLabel>Выбрать сервис</FormLabel>
+              <FormLabel fontSize='sm'>Выбрать сервис</FormLabel>
 
               <Select
-                size='lg'
+                size='md'
                 isMulti={false}
                 name={name}
                 ref={ref}
@@ -117,14 +116,13 @@ export const OwnerForm: FC = () => {
         }}
       />
 
-      <Box mt={8} pb={0} w='full'>
+      <Box mt={2} pb={0} w='full'>
         <Button
           isDisabled={!serviceToOwn}
           leftIcon={<PlusSquareIcon boxSize={6} />}
-          size='lg'
+          size='md'
           w='full'
           p={4}
-          h='fit-content'
           isLoading={loading}
           type='submit'
         >

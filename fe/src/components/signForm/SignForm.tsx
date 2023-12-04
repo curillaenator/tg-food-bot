@@ -60,7 +60,6 @@ export const SignForm: FC<SignFormProps> = (props) => {
 
       <InputGroup>
         <InputLeftAddon
-          h={12}
           children={<EmailIcon boxSize={4} />} // eslint-disable-line react/no-children-prop
         />
 
@@ -69,7 +68,7 @@ export const SignForm: FC<SignFormProps> = (props) => {
           autoComplete='off'
           placeholder='Email'
           type='email'
-          size='lg'
+          size='md'
           value={creds.email}
           onChange={(e) => onCredsChange({ type: 'email', payload: e.target.value })}
         />
@@ -81,7 +80,6 @@ export const SignForm: FC<SignFormProps> = (props) => {
 
       <InputGroup>
         <InputLeftAddon
-          h={12}
           children={<UnlockIcon boxSize={4} />} // eslint-disable-line react/no-children-prop
         />
 
@@ -90,7 +88,7 @@ export const SignForm: FC<SignFormProps> = (props) => {
           autoComplete='off'
           placeholder='Password'
           type={showPass ? 'text' : 'password'}
-          size='lg'
+          size='md'
           value={creds.password}
           onChange={(e) => onCredsChange({ type: 'password', payload: e.target.value })}
         />

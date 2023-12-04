@@ -46,9 +46,8 @@ export const ItemForm: FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={s.form}>
-      <Flex gap={2} justifyContent='space-between' alignItems='center' mb={4}>
-        <Heading fontSize='2xl'>Новый товар</Heading>
-
+      <Flex gap={2} justifyContent='space-between' alignItems='center'>
+        <Heading fontSize='xl'>Новый товар</Heading>
         {loading && <Spinner />}
       </Flex>
 
@@ -66,10 +65,10 @@ export const ItemForm: FC = () => {
 
           return (
             <FormControl isRequired isDisabled={loading}>
-              <FormLabel>Выбрать сервис</FormLabel>
+              <FormLabel fontSize='sm'>Выбрать сервис</FormLabel>
 
               <Select
-                size='lg'
+                size='md'
                 isMulti={false}
                 name={name}
                 ref={ref}
@@ -88,7 +87,7 @@ export const ItemForm: FC = () => {
       />
 
       <FormControl isInvalid={!!errors.itemImage} isRequired isDisabled={loading}>
-        <FormLabel>Обложка</FormLabel>
+        <FormLabel fontSize='sm'>Обложка</FormLabel>
 
         <FileUploader
           // multiple
@@ -100,10 +99,9 @@ export const ItemForm: FC = () => {
             colorScheme='gray'
             color='whiteAlpha.400'
             leftIcon={<LinkIcon boxSize={4} />}
-            size='lg'
+            size='md'
             w='full'
-            h='fit-content'
-            p={3}
+            p={2}
           >
             Add photo
           </Button>
@@ -114,10 +112,12 @@ export const ItemForm: FC = () => {
 
       {TEXT_INPUTS.map((inputId) => (
         <FormControl key={inputId} isInvalid={!!errors[inputId]} isRequired isDisabled={loading}>
-          <FormLabel htmlFor={inputId}>{TEXT_INPUTS_TITLES[inputId]}</FormLabel>
+          <FormLabel fontSize='sm' htmlFor={inputId}>
+            {TEXT_INPUTS_TITLES[inputId]}
+          </FormLabel>
 
           <Input
-            size='lg'
+            size='md'
             type={inputId === 'itemPrice' ? 'number' : 'text'}
             autoComplete='off'
             id={inputId}
@@ -132,16 +132,8 @@ export const ItemForm: FC = () => {
         </FormControl>
       ))}
 
-      <Box mt={8} pb={0} w='full'>
-        <Button
-          leftIcon={<PlusSquareIcon boxSize={6} />}
-          size='lg'
-          w='full'
-          p={4}
-          h='fit-content'
-          isLoading={loading}
-          type='submit'
-        >
+      <Box mt={2} pb={0} w='full'>
+        <Button leftIcon={<PlusSquareIcon boxSize={6} />} size='md' w='full' p={4} isLoading={loading} type='submit'>
           Добавить в базу
         </Button>
       </Box>

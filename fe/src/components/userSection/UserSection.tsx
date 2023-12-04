@@ -181,7 +181,7 @@ export const UserSection: FC = () => {
                   <ButtonGroup orientation='vertical' variant='outline' isAttached w='full'>
                     <Button
                       leftIcon={<CopyIcon boxSize={6} />}
-                      size='lg'
+                      size='md'
                       w='full'
                       onClick={() => {
                         navigate('/orders');
@@ -193,7 +193,7 @@ export const UserSection: FC = () => {
 
                     <Button
                       leftIcon={<SmallAddIcon boxSize={8} />}
-                      size='lg'
+                      size='md'
                       w='full'
                       onClick={() => {
                         navigate('/add');
@@ -203,7 +203,7 @@ export const UserSection: FC = () => {
                       Добавить
                     </Button>
 
-                    <Button leftIcon={<CalendarIcon boxSize={6} />} size='lg' w='full'>
+                    <Button leftIcon={<CalendarIcon boxSize={6} />} size='md' w='full'>
                       Отчеты
                     </Button>
                   </ButtonGroup>
@@ -214,7 +214,7 @@ export const UserSection: FC = () => {
                 <ButtonGroup>
                   <Button
                     leftIcon={<AttachmentIcon boxSize={6} />}
-                    size='lg'
+                    size='md'
                     w='full'
                     onClick={() => {
                       navigate('service');
@@ -229,11 +229,9 @@ export const UserSection: FC = () => {
               <ButtonGroup isAttached w='full'>
                 {!user?.id && (
                   <Button
-                    p={4}
                     width='100%'
                     variant='solid'
                     colorScheme='telegram'
-                    h='fit-content'
                     isDisabled={authLoading}
                     onClick={authAction}
                   >
@@ -242,12 +240,11 @@ export const UserSection: FC = () => {
                 )}
 
                 <Button
-                  p={4}
+                  size='md'
                   width='100%'
                   variant={!!user?.id ? 'solid' : 'outline'}
                   colorScheme={!!user?.id ? 'telegram' : undefined}
                   color={!!user?.id ? undefined : 'chakra-subtle-text'}
-                  h='fit-content'
                   isDisabled={authLoading}
                   onClick={onAuthClose}
                 >

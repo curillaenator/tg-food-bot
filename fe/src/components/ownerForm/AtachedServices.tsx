@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useCallback } from 'react';
-import { ref, update, onValue } from 'firebase/database';
+import React, { FC, useRef, useEffect, useCallback } from 'react';
+import { ref, update, onValue, type Unsubscribe } from 'firebase/database';
 
 import { UseFormSetValue } from 'react-hook-form';
 
@@ -49,10 +49,17 @@ export const AttachedServices: FC<AttachedServiceProps> = (props) => {
     [servicesOwned, selectedUser, toast],
   );
 
+  const unsubUserOwnerOf = useRef<Unsubscribe>(null);
+
   useEffect(() => {
     if (!selectedUser?.id) return;
 
-    const unsubOwnerOf = onValue(ref(rtdb, `users/${selectedUser.id}/ownerOf`), (snap) => {
+    if (unsubUserOwnerOf.current) {
+      console.log('prev usubed: ', unsubUserOwnerOf.current);
+      unsubUserOwnerOf.current();
+    }
+
+    unsubUserOwnerOf.current = onValue(ref(rtdb, `users/${selectedUser.id}/ownerOf`), (snap) => {
       const ownedServicesIds = ((snap.exists() ? Object.entries(snap.val()) : []) as [string, boolean][]).map(
         ([serviceId]) => serviceId,
       );
@@ -63,7 +70,7 @@ export const AttachedServices: FC<AttachedServiceProps> = (props) => {
       );
     });
 
-    return () => unsubOwnerOf();
+    return () => unsubUserOwnerOf.current();
   }, [selectedUser, servicesList, setValue]);
 
   if (!selectedUser?.id) return null;
@@ -72,17 +79,17 @@ export const AttachedServices: FC<AttachedServiceProps> = (props) => {
     <>
       <Divider />
 
-      <Heading as='h3' pt={4} mb={2} fontSize='lg' color='chakra-subtle-text'>
+      <Heading as='h3' fontSize='sm' color='chakra-subtle-text'>
         {!servicesOwned.length ? 'Нет прикрепленных сервисов' : 'Прикрепленные сервисы:'}
       </Heading>
 
-      <UnorderedList pb={4}>
+      <UnorderedList p={0}>
         {servicesOwned.map(({ id, title }) => (
           <ListItem key={`${id}-${title}`}>
             <Flex w='full' alignItems='center' justifyContent='space-between'>
               <Text>{title}</Text>
 
-              <Button size='lg' variant='outline' colorScheme='red' p={2} onClick={() => removeAttached(id, title)}>
+              <Button size='sm' variant='outline' colorScheme='red' p={2} onClick={() => removeAttached(id, title)}>
                 <DeleteIcon />
               </Button>
             </Flex>
