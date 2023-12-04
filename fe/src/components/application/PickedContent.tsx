@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { Card, Flex, CardBody, Stack, Text, Button, Divider, Progress, Link, Input, useToast } from '@chakra-ui/react';
 import { CopyIcon } from '@chakra-ui/icons';
 
@@ -32,6 +32,21 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
   const { loading: isAcomlishInProcess, accomplish } = useAccomplish();
 
   const [payed, setPayed] = useState<string>('');
+
+  const onCopy = useCallback(
+    (text: string) => {
+      navigator.clipboard.writeText(text);
+
+      toast({
+        title: 'Скопировано',
+        description: text,
+        status: 'success',
+        duration: TOAST_DURATION,
+        isClosable: true,
+      });
+    },
+    [toast],
+  );
 
   if (isDetailsloading || isAcomlishInProcess) return <Progress w='full' size='sm' isIndeterminate />;
 
@@ -76,22 +91,7 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
             {tel}
           </Text>
 
-          <Button
-            variant='outline'
-            size='sm'
-            colorScheme='orange'
-            p={0}
-            onClick={() => {
-              navigator.clipboard.writeText(tel);
-
-              toast({
-                title: 'Контакт клиента скопирован',
-                status: 'info',
-                duration: TOAST_DURATION,
-                isClosable: true,
-              });
-            }}
-          >
+          <Button variant='outline' size='sm' colorScheme='orange' p={0} onClick={() => onCopy(tel)}>
             <CopyIcon boxSize={6} />
           </Button>
         </Flex>
@@ -155,16 +155,7 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
                     size='sm'
                     colorScheme='orange'
                     p={0}
-                    onClick={() => {
-                      navigator.clipboard.writeText(serviceId.adress);
-
-                      toast({
-                        title: 'Адрес сервиса скопирован',
-                        status: 'info',
-                        duration: TOAST_DURATION,
-                        isClosable: true,
-                      });
-                    }}
+                    onClick={() => onCopy(serviceId.adress)}
                   >
                     <CopyIcon boxSize={6} />
                   </Button>
