@@ -35,8 +35,6 @@ export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
 
   const { serviceImgUrl, removeService, setServiceImgUrl } = useShowcase(props);
 
-  const menu = categories?.filter((c) => c.type === 'item' || !!c.categories) || [];
-
   const openButtonRef = useRef<HTMLButtonElement>(null);
 
   return (
@@ -90,7 +88,7 @@ export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
           <Stack w='full' pb={4}>
             <ServiceDescription description={description} serviceId={id} isEditor={isEditor} />
 
-            {!!menu.length && (
+            {!!categories.length && (
               <Heading mt={4} fontSize='2xl'>
                 Menu:
               </Heading>
@@ -99,7 +97,7 @@ export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
         )}
 
         <SimpleGrid columns={2} spacing={2}>
-          {menu.map((category) => (
+          {categories.map((category) => (
             <Card key={category.id} {...category} onMenuItemRemove={onMenuItemRemove} />
           ))}
 

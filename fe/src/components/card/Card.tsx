@@ -75,19 +75,7 @@ export const Card: FC<CardProps> = (props) => {
 };
 
 const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
-  const {
-    id,
-    title,
-    description,
-    imgPath,
-    price,
-    type,
-    // waitTime,
-    parent,
-    qty,
-    isActive,
-    onMenuItemRemove = () => {},
-  } = props;
+  const { id, title, description, imgPath, price, type, parent, qty, isActive, onMenuItemRemove = () => {} } = props;
 
   const { pathname } = useLocation();
 
@@ -141,6 +129,7 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
           type,
           price,
           qty: qty === undefined ? 1 : qty,
+          imgPath,
         });
       }}
     >

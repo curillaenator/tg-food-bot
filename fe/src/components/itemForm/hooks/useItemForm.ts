@@ -11,7 +11,7 @@ import { resizeFile } from '../../../utils';
 import { TOAST_DURATION } from '../../../shared/constants';
 
 import type { ItemFormValuesType, CustomOption } from '../interfaces';
-import type { Category } from '../../../shared/interfaces';
+import type { Item, Service } from '../../../shared/interfaces';
 
 const FILE_META = {
   cacheControl: 'public,max-age=7200',
@@ -61,18 +61,18 @@ export const useItemForm = () => {
 
       await uploadBytes(fileRef, renamedFile, FILE_META).catch((err) => console.table(err));
 
+      const newItem: Omit<Item, 'id' | 'qty'> = {
+        title: data.itemTitle,
+        description: data.itemDescription,
+        price: data.itemPrice,
+        imgPath: `items/${renamedFile.name}`,
+        parent: data.itemService,
+        type: 'item',
+      };
+
       const updates = {
         [`services/${data.itemService}/categories/${itemId}`]: true,
-
-        [`items/${itemId}`]: {
-          title: data.itemTitle,
-          description: data.itemDescription,
-          price: data.itemPrice,
-          imgPath: `items/${renamedFile.name}`,
-          parent: data.itemService,
-          type: 'item',
-          waitTime: data.itemWaitTime,
-        },
+        [`items/${itemId}`]: newItem,
       };
 
       await update(ref(rtdb), updates);
@@ -106,11 +106,9 @@ export const useItemForm = () => {
   }, [dirtyFields.itemImage, getValues]);
 
   useEffect(() => {
-    // setLoading(true);
-
     const unsubServices = onValue(child(ref(rtdb), 'services'), (snap) => {
       if (snap.exists()) {
-        const data = snap.val() as Record<string, Category>;
+        const data = snap.val() as Record<string, Service>;
 
         const mapedData = Object.entries(data).map(([serviceKey, service]) => ({
           label: service.title,

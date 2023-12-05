@@ -7,13 +7,13 @@ import { ref, child, push, set } from 'firebase/database';
 import { useTelegram } from '../../../hooks/useTelegram';
 import { VNpricer } from '../../../utils';
 
-import { $globalStore, resetBasket, type ShowcaseItem } from '../../../store';
+import { $globalStore, resetBasket } from '../../../store';
 import { rtdb } from '../../../shared/firebase';
 
 import { DELIVERY_PRICE, TOAST_DURATION } from '../../../shared/constants';
-import type { Application } from '../../../shared/interfaces';
+import type { Application, Item } from '../../../shared/interfaces';
 
-const group = (basket: ShowcaseItem[]) => {
+const group = (basket: Item[]) => {
   const grouped: Record<string, Record<string, number>> = {};
 
   basket.forEach((item) => {
@@ -24,7 +24,7 @@ const group = (basket: ShowcaseItem[]) => {
   return grouped;
 };
 
-const generateTgMessage = (basket: ShowcaseItem[], adressesQty: number) => {
+const generateTgMessage = (basket: Item[], adressesQty: number) => {
   const totalPrice = VNpricer.format(
     basket.reduce((acc, item) => acc + +item.qty * +item.price, 0) + DELIVERY_PRICE * adressesQty,
   );

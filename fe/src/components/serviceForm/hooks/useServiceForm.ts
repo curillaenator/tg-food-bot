@@ -10,6 +10,7 @@ import { rtdb, strg } from '../../../shared/firebase';
 import { resizeFile } from '../../../utils';
 
 import { TOAST_DURATION } from '../../../shared/constants';
+import type { Service } from '../../../shared/interfaces';
 import type { ServiceFormValuesType } from '../interfaces';
 
 const FILE_META = {
@@ -62,19 +63,21 @@ export const useServiceForm = () => {
 
       await uploadBytes(fileRef, renamedFile, FILE_META).catch((err) => console.table(err));
 
+      const newService: Omit<Service, 'id'> = {
+        title: data.serviceTitle,
+        description: data.serviceDescription,
+        parent: `${data.serviceCategory}/${data.serviceSubcategory}`,
+        adress: data.serviceAddres,
+        imgPath: `services/${renamedFile.name}`,
+        type: 'service',
+        isActive: true,
+        workHours: '9:00-22:00',
+        zone: 'common',
+      };
+
       const updates = {
         [`categories/${data.serviceCategory}/${data.serviceSubcategory}/categories/${serviceId}`]: true,
-
-        [`services/${serviceId}`]: {
-          title: data.serviceTitle,
-          description: data.serviceDescription,
-          parent: `${data.serviceCategory}/${data.serviceSubcategory}`,
-          adress: data.serviceAddres,
-          waitTime: data.serviceWaitTime,
-          imgPath: `services/${renamedFile.name}`,
-          type: 'service',
-          isActive: true,
-        },
+        [`services/${serviceId}`]: newService,
       };
 
       await update(ref(rtdb), updates);

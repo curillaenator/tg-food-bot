@@ -1,8 +1,9 @@
-import type { ShowcaseItem } from '../../store';
+import type { Category, Item, Service } from '../../shared/interfaces';
 
-export interface CardProps extends Partial<ShowcaseItem> {
-  imgPath: string;
+type FromItem = Partial<Pick<Item, 'price' | 'qty'>>;
+type FromService = Partial<Pick<Service, 'workHours' | 'zone' | 'isActive' | 'adress'>>;
+
+export interface CardProps extends Omit<Category, 'categories'>, FromService, FromItem {
   to?: string;
-  likes?: number;
   onMenuItemRemove?: (serviceId: string, itemId: string) => void;
 }

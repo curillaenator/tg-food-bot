@@ -1,33 +1,18 @@
 import { createEvent, createStore } from 'effector';
-import type { User } from '../shared/interfaces';
-
-export type ShowcaseItem = {
-  id: string;
-  title: string;
-  description: string;
-  adress?: string;
-  immPath?: string;
-  type: string;
-  price: string;
-  parent?: string;
-  waitTime?: string;
-  qty: number;
-};
+import type { User, Item } from '../shared/interfaces';
 
 export type Order = {
   id: string;
   applicant: User['id'];
-  items: ShowcaseItem[];
+  items: Item[];
 };
-
-export type Role = 'business' | 'manager' | 'employee' | 'admin' | 'pixpax';
 
 export type Background = 'wowwy' | 'playfull' | 'fire' | 'luxary';
 
 export interface GlobalStore {
   background: Background;
   user: User | null;
-  basket: ShowcaseItem[];
+  basket: Item[];
   isEditor: boolean;
 }
 
@@ -39,7 +24,7 @@ export const updateUser = createEvent<Partial<User>>();
 export const setEditor = createEvent<boolean>();
 
 export const resetBasket = createEvent();
-export const setBasket = createEvent<ShowcaseItem>();
+export const setBasket = createEvent<Item>();
 export const removeBasketItem = createEvent<string>();
 export const setBasketItemQty = createEvent<{ itemId: string; qty: number }>();
 

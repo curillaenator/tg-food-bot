@@ -2,6 +2,10 @@ export type CategoryDbName = ' beverages' | 'food' | 'retail' | 'utilities';
 
 export type ApplicationStatus = 'open' | 'accepted' | 'process' | 'done';
 
+export type Role = 'business' | 'manager' | 'employee' | 'admin' | 'pixpax' | 'service-owner';
+
+export type Zone = 'north' | 'south' | 'center' | 'gomart' | 'common';
+
 export interface Application {
   id?: string;
   customer: string; // uid
@@ -11,8 +15,6 @@ export interface Application {
   content: Record<string, Record<string, number>>;
   expectedTime: string;
 }
-
-export type Role = 'business' | 'manager' | 'employee' | 'admin' | 'pixpax' | 'service-owner';
 
 export type User = {
   id: string;
@@ -27,14 +29,24 @@ export type User = {
   tme?: string;
 };
 
-export interface Category {
+export interface Category<T = string> {
   id: string;
   title: string;
   description: string;
   imgPath: string;
   type?: string;
   parent?: string;
-  adress?: string;
-  categories?: Category[];
+  categories?: T[];
+}
+
+export interface Service extends Category<Item> {
+  workHours: string;
+  zone: Zone;
   isActive?: boolean;
+  adress?: string;
+}
+
+export interface Item extends Omit<Category<string>, 'categories' | 'adress' | 'zone'> {
+  price: string | number;
+  qty?: number;
 }

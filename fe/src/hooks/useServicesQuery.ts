@@ -4,7 +4,7 @@ import { ref, get, child } from 'firebase/database';
 
 import { rtdb } from '../shared/firebase';
 
-import type { Category } from '../shared/interfaces';
+import type { Service, Item } from '../shared/interfaces';
 
 export const useServicesQuery = () => {
   // const { categoryId } = useParams<Record<'categoryId', string>>();
@@ -27,7 +27,7 @@ export const useServicesQuery = () => {
     [search, pathname, navigate],
   );
 
-  const [categories, setCategories] = useState<Record<string, Category>>({});
+  const [categories, setCategories] = useState<Record<string, Service>>({});
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export const useServicesQuery = () => {
 
     const servicePromises = requiredServisesIds.map((serviceId) =>
       get(child(ref(rtdb), `services/${serviceId}`)).then(
-        (snap) => [serviceId, snap.exists() ? snap.val() : {}] as [string, Category],
+        (snap) => [serviceId, snap.exists() ? snap.val() : {}] as [string, Service],
       ),
     );
 
@@ -49,24 +49,24 @@ export const useServicesQuery = () => {
       const servicesCleared = services.filter(([srvsId, srvc]) => srvsId.length && srvc.isActive);
 
       const serviceWithItemsPromises = servicesCleared.map(async ([serviceId, srvc]) => {
-        if (!srvc.categories) return [serviceId, { ...srvc, categories: [] }] as [string, Category];
+        if (!srvc.categories) return [serviceId, { ...srvc, categories: [] }] as [string, Service];
 
         const itemsPromises = Object.entries(srvc.categories)
           .filter(([itemId, isActiveItem]) => !!itemId && isActiveItem)
           .map(([itemId]) =>
             get(child(ref(rtdb), `items/${itemId}`)).then(
-              (snap) => ({ id: itemId, ...(snap.exists() ? snap.val() : {}) }) as Category,
+              (snap) => ({ id: itemId, ...(snap.exists() ? snap.val() : {}) }) as Item,
             ),
           );
 
         return Promise.all(itemsPromises).then(
-          (items) => [serviceId, { ...srvc, categories: items }] as [string, Category],
+          (items) => [serviceId, { ...srvc, categories: items }] as [string, Service],
         );
       });
 
       Promise.all(serviceWithItemsPromises)
         .then((serviceWithItems) => {
-          setCategories(Object.fromEntries(serviceWithItems) as Record<string, Category>);
+          setCategories(Object.fromEntries(serviceWithItems) as Record<string, Service>);
         })
         .finally(() => setLoading(false));
     });

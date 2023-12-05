@@ -13,7 +13,7 @@ import { $globalStore, setEditor } from '../store';
 import { ShowcaseSection } from '../components/ShowcaseSection';
 
 import { TOAST_DURATION } from '../shared/constants';
-import type { Category } from '../shared/interfaces';
+import type { Service, Item } from '../shared/interfaces';
 
 export const ServicePage: FC = () => {
   const { user: currentUser } = useStore($globalStore);
@@ -24,18 +24,17 @@ export const ServicePage: FC = () => {
     navigate('/');
   }, [currentUser, navigate]);
 
-  const [services, setServices] = useState<Category[]>([]);
-  const [servicesFull, setServicesFull] = useState<Category[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
+  const [servicesFull, setServicesFull] = useState<Service[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   const onMenuAddItem = useCallback(
     async (serviceId: string) => {
       const newPostKey = await push(child(ref(rtdb), 'items')).key;
 
-      const menuItem: Category = {
+      const menuItem: Omit<Item, 'id' | 'qty'> = {
         title: '',
         description: '',
-        // @ts-expect-error types
         price: 10000,
         type: 'item',
         parent: serviceId,
@@ -108,7 +107,7 @@ export const ServicePage: FC = () => {
       const servicePromises = ownerOfSevicesIds.map(async (serviceId) => {
         const serviceSnap = await get(child(ref(rtdb), `services/${serviceId}`));
 
-        return (serviceSnap.exists() ? { ...serviceSnap.val(), id: serviceId } : {}) as Category;
+        return (serviceSnap.exists() ? { ...serviceSnap.val(), id: serviceId } : {}) as Service;
       });
 
       const resolvedServices = await Promise.all(servicePromises);
@@ -139,7 +138,7 @@ export const ServicePage: FC = () => {
         // .filter(([itemId, isActive]) => !!itemId && isActive)
         .map(([itemId, isActive]) =>
           get(child(ref(rtdb), `items/${itemId}`)).then(
-            (snap) => ({ id: itemId, isActive, ...(snap.exists() ? snap.val() : {}) }) as Category,
+            (snap) => ({ id: itemId, isActive, ...(snap.exists() ? snap.val() : {}) }) as Item,
           ),
         );
 

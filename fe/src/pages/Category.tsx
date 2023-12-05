@@ -4,14 +4,14 @@ import { useServicesQuery } from '../hooks/useServicesQuery';
 import { ShowcaseSection } from '../components/ShowcaseSection';
 
 export const Category: FC = () => {
-  const { loading, categories, onRemoveItem, onRemoveService } = useServicesQuery();
+  const { loading, categories: services, onRemoveItem, onRemoveService } = useServicesQuery();
 
   return (
     <Box as='main'>
       {loading && <Progress isIndeterminate size='xs' />}
 
       <Accordion allowMultiple>
-        {categories.map(([serviceId, content]) => (
+        {services.map(([serviceId, content]) => (
           <ShowcaseSection
             {...content}
             key={serviceId}

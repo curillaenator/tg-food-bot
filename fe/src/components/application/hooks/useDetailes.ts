@@ -4,7 +4,7 @@ import { ref, child, get } from 'firebase/database';
 import { rtdb } from '../../../shared/firebase';
 
 import type { UseDetailesProps, FullShowcaseItem } from '../interfaces';
-import type { ShowcaseItem } from '../../../store';
+import type { Item } from '../../../shared/interfaces';
 
 export const useDetailes = (props: UseDetailesProps) => {
   const { content, currentUserId, executorId } = props;
@@ -21,7 +21,7 @@ export const useDetailes = (props: UseDetailesProps) => {
     const detailesPromises = Object.entries(content).map(async ([serviceId, qtyByItemId]) => {
       const orderItemsPromises = Object.entries(qtyByItemId).map(([itemId, qty]) =>
         get(child(ref(rtdb), `items/${itemId}`)).then((snap) => ({
-          ...((snap.val() as ShowcaseItem) || {}),
+          ...((snap.val() as Item) || {}),
           id: itemId,
           qty: String(qty),
         })),

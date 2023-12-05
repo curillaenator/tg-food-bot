@@ -1,9 +1,8 @@
-import type { ShowcaseItem } from '../../store';
-import type { Application } from '../../shared/interfaces';
+import type { Application, Item } from '../../shared/interfaces';
 
 export type EmergencyStatus = 'fire' | 'warn' | 'ok';
 
-export type FullShowcaseItem = ShowcaseItem & { id: string; totalServicePrice: string; order: ShowcaseItem[] };
+export type FullShowcaseItem = Item & { id: string; totalServicePrice: string; order: Item[] };
 export type ContentIndexes = Record<string, Record<string, number>>;
 
 export interface UseDetailesProps {

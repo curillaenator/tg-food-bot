@@ -6,7 +6,7 @@ import { ref, update, get, child } from 'firebase/database';
 import { strg, rtdb } from '../../../shared/firebase';
 
 import type { ShowcaseSectionProps } from '../interfaces';
-import type { Category } from '../../../shared/interfaces';
+import type { Service } from '../../../shared/interfaces';
 
 export const useShowcase = (props: ShowcaseSectionProps) => {
   const { id, imgPath, type, parent, onRemoveService } = props;
@@ -29,7 +29,7 @@ export const useShowcase = (props: ShowcaseSectionProps) => {
       if (confirm('Точно удалить сервис?')) {
         get(child(ref(rtdb), `services/${id}`)).then((snap) => {
           if (snap.exists()) {
-            const linkedItems = Object.keys((snap.val() as Category).categories || {});
+            const linkedItems = Object.keys((snap.val() as Service).categories || {});
             const rtdbUpd = Object.fromEntries(linkedItems.map((itemId) => [`items/${itemId}`, null]));
 
             linkedItems.forEach((itemId) => deleteObject(storageRef(strg, `items/${itemId}`)));
