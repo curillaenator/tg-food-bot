@@ -1,14 +1,13 @@
 import React, { FC, useState, ChangeEvent } from 'react';
 import { Stack, Image, Progress, Heading } from '@chakra-ui/react';
+import { ref as storageRef, getDownloadURL, uploadBytes } from 'firebase/storage';
 
 import { EditIcon } from '@chakra-ui/icons';
 
-import { strg } from '../../../shared/firebase';
-
-import { ref as storageRef, getDownloadURL, uploadBytes } from 'firebase/storage';
+import { PointerIcon } from './PointerIcon';
 
 import { resizeFile } from '../../../utils';
-
+import { strg } from '../../../shared/firebase';
 import { IMAGE_META } from '../../../shared/constants';
 
 interface ServiceImage {
@@ -81,6 +80,8 @@ export const ServiceImage: FC<ServiceImage> = (props) => {
         border={`2px solid var(--pixpax-colors-telegram-200)`}
         filter={type === 'category' ? 'brightness(0.6)' : undefined}
       />
+
+      {!isEditor && <PointerIcon position='absolute' bottom='8px' right='4px' color='orange.300' boxSize={8} />}
 
       {type === 'category' && (
         <Stack
