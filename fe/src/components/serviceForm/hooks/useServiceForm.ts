@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useToast } from '@chakra-ui/react';
 import { useForm, useFormState } from 'react-hook-form';
+import { useHookFormMask } from 'use-mask-input';
 
 import { ref, child, push, update } from 'firebase/database';
 import { ref as storageRef, uploadBytes } from 'firebase/storage';
@@ -21,6 +22,7 @@ const FILE_META = {
 const INITIAL_SERVICE_FORM: ServiceFormValuesType = {
   serviceTitle: '',
   serviceAddres: '',
+  serviceWorkHours: '',
   serviceDescription: '',
   serviceWaitTime: '',
   serviceImage: null,
@@ -71,7 +73,7 @@ export const useServiceForm = () => {
         imgPath: `services/${renamedFile.name}`,
         type: 'service',
         isActive: true,
-        workHours: '9:00-22:00',
+        workHours: data.serviceWorkHours,
         zone: 'common',
       };
 
@@ -133,6 +135,7 @@ export const useServiceForm = () => {
     errors,
     handleSubmit,
     register,
+    registerWithMask: useHookFormMask(register),
     onSubmit,
     handleCurrentCategory,
   };

@@ -11,4 +11,5 @@ export interface ServiceFormValuesType {
   serviceImage: FileList;
   serviceCategory: CustomOption;
   serviceSubcategory: CustomOption;
+  serviceWorkHours: string;
 }

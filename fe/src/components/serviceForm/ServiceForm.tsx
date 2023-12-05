@@ -30,7 +30,7 @@ const TEXT_INPUTS: (keyof ServiceFormValuesType)[] = [
   'serviceTitle',
   'serviceDescription',
   'serviceAddres',
-  'serviceWaitTime',
+  'serviceWorkHours',
 ];
 
 const TEXT_INPUTS_TITLES = {
@@ -50,6 +50,7 @@ export const ServiceForm: FC = () => {
     errors,
     handleSubmit,
     register,
+    registerWithMask,
     onSubmit,
     handleCurrentCategory,
   } = useServiceForm();
@@ -160,12 +161,16 @@ export const ServiceForm: FC = () => {
       {pickedImage && <Image w='full' aspectRatio='3 / 1' objectFit='cover' borderRadius={12} src={pickedImage} />}
 
       {TEXT_INPUTS.map((inputId) => {
-        const isWorkingHours = inputId === 'serviceWaitTime';
+        const isWorkingHours = inputId === 'serviceWorkHours';
 
         const requiredRegisterOptions = {
           required: 'Required',
           minLength: { value: 5, message: 'Minimum length should be 5' },
         };
+
+        const formRegister = isWorkingHours
+          ? registerWithMask(inputId, ['99:99-99:99'], requiredRegisterOptions)
+          : register(inputId, requiredRegisterOptions);
 
         return (
           <FormControl key={inputId} isInvalid={!!errors[inputId]} isRequired isDisabled={loading}>
@@ -174,11 +179,11 @@ export const ServiceForm: FC = () => {
             </FormLabel>
 
             <Input
+              {...formRegister}
               size='md'
               autoComplete='off'
               id={inputId}
               placeholder={isWorkingHours ? '9:00-20:00' : 'Минимум 5 букв'}
-              {...register(inputId, requiredRegisterOptions)}
             />
 
             <FormErrorMessage>{errors[inputId] && errors[inputId].message}</FormErrorMessage>

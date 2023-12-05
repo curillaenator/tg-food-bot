@@ -9196,6 +9196,7 @@ __metadata:
     sass-loader: 13.3.2
     style-loader: 3.3.3
     telegram-webapps-types: 1.0.5
+    use-mask-input: ^3.3.7
     webpack: 5.88.2
     webpack-cli: 5.1.4
     webpack-dev-server: 4.15.1
@@ -11071,6 +11072,16 @@ __metadata:
     "@types/react":
       optional: true
   checksum: a6532f7fc9ae222c3725ff0308aaf1f1ddbd3c00d685ef9eee6714fd0684de5cb9741b432fbf51e61a784e2955424864f7ea9f99734a02f237b17ad3e18ea5cb
+  languageName: node
+  linkType: hard
+
+"use-mask-input@npm:^3.3.7":
+  version: 3.3.7
+  resolution: "use-mask-input@npm:3.3.7"
+  peerDependencies:
+    react: ">=16.4 || 17 || 18 || 20"
+    react-dom: ">=16.4 || 17 || 18 || 20"
+  checksum: 45c769f7b4874fab3bc6cdcbf60d9dd648d9af452a04546dbf732c2a64576d32eacba0ef321d80957e1ea088f840a8ee700fd064c531d0d052edd58a8da35436
   languageName: node
   linkType: hard
 

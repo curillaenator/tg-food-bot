@@ -19,7 +19,7 @@ import {
 
 import { DeleteIcon, PlusSquareIcon } from '@chakra-ui/icons';
 import { Card } from '../card';
-import { ServiceImage, ServiceDescription } from './components';
+import { ServiceImage, ServiceDescription, ServiceAdress } from './components';
 
 import { useShowcase } from './hooks/useShowcase';
 import { $globalStore } from '../../store';
@@ -28,7 +28,7 @@ import type { ShowcaseSectionProps } from './interfaces';
 // import s from './styles.module.scss';
 
 export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
-  const { id, parent, imgPath, title, description, type, categories = [], onMenuAdd, onMenuItemRemove } = props;
+  const { id, parent, imgPath, title, description, adress, type, categories = [], onMenuAdd, onMenuItemRemove } = props;
   const { pathname } = useLocation();
 
   const { isEditor, user } = useStore($globalStore);
@@ -86,10 +86,12 @@ export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
       <AccordionPanel px={4} pt={4} pb={0}>
         {type === 'service' && (
           <Stack w='full' pb={4}>
+            <ServiceAdress serviceId={id} adress={adress} isEditor={isEditor} />
+
             <ServiceDescription description={description} serviceId={id} isEditor={isEditor} />
 
             {!!categories.length && (
-              <Heading mt={4} fontSize='2xl'>
+              <Heading mt={4} fontSize='xl'>
                 Menu:
               </Heading>
             )}

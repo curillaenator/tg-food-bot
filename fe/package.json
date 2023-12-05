@@ -27,7 +27,8 @@
     "react-dom": "18.2.0",
     "react-hook-form": "7.47.0",
     "react-image-file-resizer": "0.4.8",
-    "react-router-dom": "6.16.0"
+    "react-router-dom": "6.16.0",
+    "use-mask-input": "3.3.7"
   },
   "devDependencies": {
     "@babel/cli": "7.23.0",

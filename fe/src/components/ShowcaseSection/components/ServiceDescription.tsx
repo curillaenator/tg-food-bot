@@ -25,15 +25,21 @@ export const ServiceDescription: FC<ServiceDescriptionProps> = (props) => {
 
   if (isEditor)
     return (
-      <InputGroup size='sm' flexDirection='column' gap='4px'>
-        <Textarea
-          placeholder='Description'
-          defaultValue={description.replace(/<br \/>/g, '\n')}
-          onChange={(e) => onEditValueDebounced(e, serviceId)}
-          resize='none'
-          rows={12}
-        />
-      </InputGroup>
+      <>
+        <Text fontSize='xs' color='chakra-subtle-text'>
+          Изменить описание сервиса:
+        </Text>
+
+        <InputGroup size='sm' flexDirection='column' gap='4px'>
+          <Textarea
+            placeholder='Description'
+            defaultValue={description.replace(/<br \/>/g, '\n')}
+            onChange={(e) => onEditValueDebounced(e, serviceId)}
+            resize='none'
+            rows={12}
+          />
+        </InputGroup>
+      </>
     );
 
   return (
