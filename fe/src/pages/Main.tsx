@@ -1,11 +1,8 @@
 import React, { FC } from 'react';
-
 import { Box, Accordion, Progress } from '@chakra-ui/react';
 
-import { useDataQuery } from '../hooks/useDataQuery';
-
+import { useCategoryQuery } from '../hooks/useCategoryQuery';
 import { ShowcaseSection } from '../components/ShowcaseSection';
-
 import type { CategoryDbName } from '../shared/interfaces';
 
 interface CategoryUiDictionary {
@@ -33,27 +30,22 @@ const CATEGORIES_ASSOC: Record<CategoryDbName, CategoryUiDictionary> = {
 };
 
 export const Main: FC = () => {
-  const { loading, services, contentMap } = useDataQuery();
+  const { loading, categories } = useCategoryQuery();
 
   return (
     <Box as='main'>
       {loading && <Progress isIndeterminate size='xs' />}
 
-      <Accordion
-        allowMultiple
-        // defaultIndex={[0, 1, 2, 3, 4, 5, 6, 7]}
-      >
-        {contentMap.map(([serviceId, content]) => (
+      <Accordion allowMultiple>
+        {categories.map(([categoryId, subcategories]) => (
           <ShowcaseSection
-            key={serviceId}
-            id={serviceId}
-            parent={services[serviceId]?.parent}
-            title={CATEGORIES_ASSOC[serviceId]['caption']}
-            description={services[serviceId]?.description}
-            // imgPath={services[serviceId]?.imgPath}
-            imgPath={CATEGORIES_ASSOC[serviceId]['imgPath']}
+            id={categoryId}
+            key={categoryId}
             type='category'
-            categories={content || []}
+            title={CATEGORIES_ASSOC[categoryId]['caption']}
+            description={undefined}
+            imgPath={CATEGORIES_ASSOC[categoryId]['imgPath']}
+            categories={subcategories}
           />
         ))}
       </Accordion>

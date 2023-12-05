@@ -28,7 +28,7 @@ import type { ShowcaseSectionProps } from './interfaces';
 // import s from './styles.module.scss';
 
 export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
-  const { id, parent, imgPath, title, description, type, categories, onMenuAdd, onMenuItemRemove } = props;
+  const { id, parent, imgPath, title, description, type, categories = [], onMenuAdd, onMenuItemRemove } = props;
   const { pathname } = useLocation();
 
   const { isEditor, user } = useStore($globalStore);
