@@ -34,7 +34,7 @@ export const useAccomplish = () => {
 
       setLoading(true);
 
-      const { id, details, payed, ...rest } = options;
+      const { id, details, payed, customer, ...rest } = options;
       const today = new Date();
 
       await setDoc(doc(firedb, 'orders', String(today.getFullYear()), String(today.getMonth()), id), {
@@ -42,6 +42,8 @@ export const useAccomplish = () => {
         status: !payed ? 'canceled' : 'confirmed',
         details: Object.fromEntries(details.map((record) => [record.id, record])),
         payed,
+        ...customer,
+        tme: customer?.tme || '',
         ...rest,
       }).catch(() => setLoading(false));
 
