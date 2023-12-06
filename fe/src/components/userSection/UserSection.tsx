@@ -134,7 +134,7 @@ export const UserSection: FC = () => {
         <DrawerOverlay />
 
         <DrawerContent className={s.authBg}>
-          <DrawerCloseButton size='lg' h='fit-content' px={2} py={4} color='whiteAlpha.400' top={4} right={4} />
+          <DrawerCloseButton size='lg' h='fit-content' px={2} py={4} color='white' top={4} right={4} />
 
           <DrawerHeader p={4} bg='blackAlpha.300'>
             <Flex gap={1} alignItems='center' h='48px'>

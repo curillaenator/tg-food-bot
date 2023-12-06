@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useStore } from 'effector-react';
 import parse from 'html-react-parser';
 import { Link } from 'react-router-dom';
-import { ref, set, update } from 'firebase/database';
+import { ref, set, get, update, onValue } from 'firebase/database';
 import { ref as storageRef, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
 
 import {
@@ -20,7 +20,7 @@ import {
   Textarea,
   Progress,
   Checkbox,
-  // useToast,
+  Flex,
 } from '@chakra-ui/react';
 
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
@@ -34,6 +34,8 @@ import { IMAGE_META } from '../../shared/constants';
 import type { CardProps } from './interfaces';
 // import s from './styles.module.scss';
 
+import { LikeIcon } from './assets/LikeIcon';
+import { AddIcon } from './assets/AddIcon';
 import noImage from './assets/no-image.jpg';
 
 const onEditValue = (
@@ -79,10 +81,9 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
 
   const { pathname } = useLocation();
 
-  // const toast = useToast();
+  const { user, isEditor, basket } = useStore($globalStore);
 
-  const { user, isEditor } = useStore($globalStore);
-
+  const [likes, setLikes] = useState<number>(0);
   const [imageURL, setImageURL] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -90,12 +91,22 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
     await update(ref(rtdb), {
       [`services/${serviceId}/categories/${itemId}`]: null,
       [`items/${itemId}`]: null,
+      [`likes/${itemId}`]: null,
     });
 
     if (imageURL) await deleteObject(storageRef(strg, `items/${itemId}`)).catch((err) => console.table(err));
 
     onMenuItemRemove(serviceId, itemId);
   };
+
+  useEffect(() => {
+    const unsubLikes = onValue(ref(rtdb, `likes/${id}`), (snap) => {
+      if (!snap.exists()) return;
+      setLikes(Object.values(snap.val()).filter(Boolean).length);
+    });
+
+    return () => unsubLikes();
+  }, [id]);
 
   useEffect(() => {
     if (!imgPath) return;
@@ -117,21 +128,21 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
       borderRadius={12}
       boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-400)'
       transition='background-color 80ms ease'
-      _active={{ backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
-      onClick={() => {
-        if (!user?.id || type !== 'item' || isEditor) return;
+      // _active={{ backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
+      // onClick={() => {
+      //   if (!user?.id || type !== 'item' || isEditor) return;
 
-        setBasket({
-          id,
-          parent,
-          title,
-          description,
-          type,
-          price,
-          qty: qty === undefined ? 1 : qty,
-          imgPath,
-        });
-      }}
+      //   setBasket({
+      //     id,
+      //     parent,
+      //     title,
+      //     description,
+      //     type,
+      //     price,
+      //     qty: qty === undefined ? 1 : qty,
+      //     imgPath,
+      //   });
+      // }}
     >
       {loading && <Progress isIndeterminate size='xs' mb={2} />}
 
@@ -185,20 +196,70 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
 
           <Stack direction='column' spacing={6} h='100%' justifyContent='space-between'>
             {(!isEditor || type !== 'item') && (
-              <Stack direction='column' spacing={2}>
-                <Heading size='sm' textTransform='uppercase' color='telegram.200'>
-                  {title}
-                </Heading>
+              <Stack spacing={2} justifyContent='space-between' h='100%'>
+                <Stack spacing={2}>
+                  <Heading size='sm' textTransform='uppercase' color='telegram.200'>
+                    {title}
+                  </Heading>
 
-                {!!price && <Text fontSize='xs'>{VNpricer.format(+price)}</Text>}
+                  {!!price && <Text fontSize='xs'>{VNpricer.format(+price)}</Text>}
 
-                <Text
-                  fontSize='xs'
-                  color='chakra-subtle-text'
-                  // className={cn(s.clamped, s.clamped_6)}
-                >
-                  {parse(description)}
-                </Text>
+                  <Text fontSize='xs' color='chakra-subtle-text'>
+                    {parse(description)}
+                  </Text>
+                </Stack>
+
+                {type === 'item' && (
+                  <Flex w='full' justifyContent='space-between' gap={2}>
+                    <Button
+                      size='md'
+                      w='112px'
+                      onClick={() => {
+                        if (!user?.id || type !== 'item' || isEditor) return;
+
+                        setBasket({
+                          id,
+                          parent,
+                          title,
+                          description,
+                          type,
+                          price,
+                          qty: qty === undefined ? 1 : qty,
+                          imgPath,
+                        });
+                      }}
+                    >
+                      <Text mr={2}>{basket.find((el) => el.id === id)?.qty}</Text>
+                      <AddIcon boxSize={6} />
+                    </Button>
+
+                    <Button
+                      py={0}
+                      px={2}
+                      size='md'
+                      variant='ghost'
+                      flexShrink={0}
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+
+                        const userLike = await get(ref(rtdb, `likes/${id}/${user.id}`)).then((s) =>
+                          s.exists() ? (s.val() as boolean) : false,
+                        );
+
+                        set(ref(rtdb, `likes/${id}/${user.id}`), !userLike);
+                      }}
+                    >
+                      {likes > 0 && (
+                        <Text fontSize='sm' mr={2}>
+                          {likes}
+                        </Text>
+                      )}
+
+                      <LikeIcon boxSize={6} color='red.400' />
+                    </Button>
+                  </Flex>
+                )}
               </Stack>
             )}
 

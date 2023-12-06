@@ -47,7 +47,7 @@ const generateTgMessage = (basket: Item[], adressesQty: number) => {
     \nНаш курьер свяжеться с вами в самое ближайшее время
     \nOur courier will contact you as soon as possible
     \n----------------------------------------
-    \nПоддержка/Support ${process.env.SUPPORT_CONTACT}`;
+    \nПоддержка/Support ${process.env.SUPPORT_CONTACT} или ${process.env.SUPPORT_CONTACT_2}`;
 };
 
 export const useOrder = (onBasketClose: () => void) => {
