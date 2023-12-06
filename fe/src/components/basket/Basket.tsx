@@ -1,5 +1,6 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, type ChangeEvent } from 'react';
 import { useStore } from 'effector-react';
+import { ref, set, onValue } from 'firebase/database';
 
 import {
   Box,
@@ -8,6 +9,7 @@ import {
   Button,
   Heading,
   Text,
+  Input,
   Drawer,
   DrawerBody,
   // DrawerFooter,
@@ -21,13 +23,15 @@ import {
 } from '@chakra-ui/react';
 
 import { $globalStore } from '../../store';
+import { rtdb } from '../../shared/firebase';
 
 import { BasketCard } from './BasketCard';
 import { BasketIcon } from '../../assets/BasketIcon';
 
 import { useOrder } from './hooks/useOrder';
-import { VNpricer } from '../../utils';
+import { VNpricer, debounced } from '../../utils';
 import { DELIVERY_PRICE } from '../../shared/constants';
+import type { User } from '../../shared/interfaces';
 
 import s from './styles.module.scss';
 
@@ -36,9 +40,17 @@ interface BasketProps {
   onBasketClose: () => void;
 }
 
+const onAdressEdit = (e: ChangeEvent<HTMLInputElement>, userId: string, field: 'adress' | 'tel' | 'name') => {
+  set(ref(rtdb, `users/${userId}/${field}`), e.target.value);
+};
+
+const POST_DELAY = 1000;
+
+const onAdressEditDebounced = debounced(onAdressEdit, POST_DELAY);
+
 export const Basket: FC<BasketProps> = (props) => {
   const { isBasketOpen, onBasketClose } = props;
-  const { basket } = useStore($globalStore);
+  const { user, basket } = useStore($globalStore);
 
   const initialFocusRef = React.useRef();
   const finalFocusRef = React.useRef();
@@ -48,6 +60,13 @@ export const Basket: FC<BasketProps> = (props) => {
   const calcedTotalPrice = Object.values(totalPriceAcc).reduce((acc, item) => acc + item, 0);
 
   const { loading, onPlaceOrder } = useOrder(onBasketClose);
+
+  const [locked, setLocked] = useState<boolean>(true);
+
+  // const unLock = useCallback(
+  //   debounced(() => setLocked(false), POST_DELAY),
+  //   [],
+  // );
 
   useEffect(() => {
     const parentsFromBasket: string[] = [];
@@ -63,6 +82,19 @@ export const Basket: FC<BasketProps> = (props) => {
     setParents([...new Set(parentsFromBasket)]);
     setTotalPriceAcc(effectiveTotal);
   }, [basket]);
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const unsub = onValue(ref(rtdb, `users/${user.id}`), (s) => {
+      if (!s.exists()) return;
+
+      const { adress, name, tel } = s.val() as User;
+      setLocked(!adress.length || !name.length || !tel.length);
+    });
+
+    return () => unsub();
+  }, [user]);
 
   const deliveryPrice = DELIVERY_PRICE * parents.length;
 
@@ -115,10 +147,67 @@ export const Basket: FC<BasketProps> = (props) => {
             </StatNumber>
           </Stat>
 
+          {user?.id && (
+            <Stack gap={2} pt={4} pb={2}>
+              <Text>Контактная информация</Text>
+
+              <Text fontSize='xs' color='chakra-subtle-text'>
+                Как Вас зовут?
+              </Text>
+              <Input
+                defaultValue={user.name}
+                placeholder='коротко и ясно!'
+                size='md'
+                onBlur={(e) => {
+                  onAdressEdit(e, user.id, 'name');
+                }}
+                onChange={(e) => {
+                  setLocked(true);
+                  onAdressEditDebounced(e, user.id, 'name');
+                  // unLock();
+                }}
+              />
+
+              <Text fontSize='xs' color='chakra-subtle-text'>
+                Где вы находитесь?
+              </Text>
+              <Input
+                defaultValue={user?.adress}
+                placeholder='чем точнее тем лучше ;-)'
+                size='md'
+                onBlur={(e) => {
+                  onAdressEdit(e, user.id, 'adress');
+                }}
+                onChange={(e) => {
+                  setLocked(true);
+                  onAdressEditDebounced(e, user.id, 'adress');
+                  // unLock();
+                }}
+              />
+
+              <Text fontSize='xs' color='chakra-subtle-text'>
+                Как с Вами связаться?
+              </Text>
+              <Input
+                defaultValue={user?.tel || user?.tme}
+                placeholder='телефон или t.me/вашИмяПользователя'
+                size='md'
+                onBlur={(e) => {
+                  onAdressEdit(e, user.id, 'tel');
+                }}
+                onChange={(e) => {
+                  setLocked(true);
+                  onAdressEditDebounced(e, user.id, 'tel');
+                  // unLock();
+                }}
+              />
+            </Stack>
+          )}
+
           <Button
             isLoading={loading}
             loadingText='Секундочку...'
-            isDisabled={!calcedTotalPrice}
+            isDisabled={locked || !calcedTotalPrice || !user?.id}
             ref={initialFocusRef}
             size='lg'
             p={2}

@@ -14,7 +14,10 @@ export interface GlobalStore {
   user: User | null;
   basket: Item[];
   isEditor: boolean;
+  touched: boolean;
 }
+
+export const setTouched = createEvent();
 
 export const setBackground = createEvent<Background>();
 
@@ -29,6 +32,7 @@ export const removeBasketItem = createEvent<string>();
 export const setBasketItemQty = createEvent<{ itemId: string; qty: number }>();
 
 export const $globalStore = createStore<GlobalStore>({
+  touched: false,
   background: 'wowwy',
   user: null,
   basket: [],
@@ -36,6 +40,10 @@ export const $globalStore = createStore<GlobalStore>({
 });
 
 $globalStore
+  .on(setTouched, (state) => ({
+    ...state,
+    touched: true,
+  }))
   .on(setEditor, (state, isEditor) => ({
     ...state,
     isEditor,

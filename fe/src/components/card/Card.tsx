@@ -128,7 +128,7 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
       borderRadius={12}
       boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-400)'
       transition='background-color 80ms ease'
-      // _active={{ backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
+      _active={!type && { backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
       // onClick={() => {
       //   if (!user?.id || type !== 'item' || isEditor) return;
 
@@ -215,7 +215,8 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
                       size='md'
                       w='112px'
                       onClick={() => {
-                        if (!user?.id || type !== 'item' || isEditor) return;
+                        // if (!user?.id || type !== 'item' || isEditor) return;
+                        if (type !== 'item' || isEditor) return;
 
                         setBasket({
                           id,
@@ -240,6 +241,8 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
                       variant='ghost'
                       flexShrink={0}
                       onClick={async (e) => {
+                        if (!user?.id) return;
+
                         e.stopPropagation();
                         e.preventDefault();
 
