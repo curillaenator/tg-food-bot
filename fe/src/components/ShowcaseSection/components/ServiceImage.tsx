@@ -81,7 +81,7 @@ export const ServiceImage: FC<ServiceImage> = (props) => {
         filter={type === 'category' ? 'brightness(0.6)' : undefined}
       />
 
-      {!isEditor && <PointerIcon position='absolute' bottom='8px' right='4px' color='orange.300' boxSize={8} />}
+      {!isEditor && <PointerIcon position='absolute' bottom='8px' right='8px' color='orange.300' boxSize={6} />}
 
       {type === 'category' && (
         <Stack

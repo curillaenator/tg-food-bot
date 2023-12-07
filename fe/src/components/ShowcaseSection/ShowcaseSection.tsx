@@ -94,9 +94,11 @@ export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
 
           {!!categories.length && (
             <>
-              <Heading as='h3' fontSize='md'>
-                Товары:
-              </Heading>
+              {type === 'service' && (
+                <Heading as='h3' fontSize='md'>
+                  Товары:
+                </Heading>
+              )}
 
               <SimpleGrid columns={2} spacing={2}>
                 {categories.map((category) => (
