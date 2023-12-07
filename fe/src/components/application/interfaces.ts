@@ -2,7 +2,7 @@ import type { Application, Item } from '../../shared/interfaces';
 
 export type EmergencyStatus = 'fire' | 'warn' | 'ok';
 
-export type FullShowcaseItem = Item & { id: string; totalServicePrice: string; order: Item[] };
+export type FullShowcaseItem = Item & { id: string; totalServicePrice: string; order: Item[]; adress: string };
 export type ContentIndexes = Record<string, Record<string, number>>;
 
 export interface UseDetailesProps {

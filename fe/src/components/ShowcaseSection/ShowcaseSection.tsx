@@ -59,7 +59,7 @@ export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
         <AccordionButton
           ref={openButtonRef}
           as='button'
-          h={type === 'category' ? '24px' : '32px'}
+          h={type === 'category' ? '24px' : 'fit-content'}
           borderRadius='0 0 8px 8px'
           px={2}
           py={0}
@@ -84,33 +84,42 @@ export const ShowcaseSection: FC<ShowcaseSectionProps> = (props) => {
       </Stack>
 
       <AccordionPanel px={4} pt={4} pb={0}>
-        {type === 'service' && (
-          <Stack w='full' pb={4}>
-            <ServiceAdress serviceId={id} adress={adress} isEditor={isEditor} />
-
-            <ServiceDescription description={description} serviceId={id} isEditor={isEditor} />
-
-            {!!categories.length && (
-              <Heading mt={4} fontSize='xl'>
-                Menu:
-              </Heading>
-            )}
-          </Stack>
-        )}
-
-        <SimpleGrid columns={2} spacing={2}>
-          {categories.map((category) => (
-            <Card key={category.id} {...category} onMenuItemRemove={onMenuItemRemove} />
-          ))}
-
-          {parent && !!onMenuAdd && pathname === '/service' && (
-            <Center>
-              <Button size='lg' variant='solid' w='full' onClick={() => onMenuAdd(id)} rightIcon={<PlusSquareIcon />}>
-                Добавить
-              </Button>
-            </Center>
+        <Stack gap={2}>
+          {type === 'service' && (
+            <>
+              <ServiceAdress serviceId={id} adress={adress} isEditor={isEditor} />
+              <ServiceDescription description={description} serviceId={id} isEditor={isEditor} />
+            </>
           )}
-        </SimpleGrid>
+
+          {!!categories.length && (
+            <>
+              <Heading as='h3' fontSize='md'>
+                Товары:
+              </Heading>
+
+              <SimpleGrid columns={2} spacing={2}>
+                {categories.map((category) => (
+                  <Card key={category.id} {...category} onMenuItemRemove={onMenuItemRemove} />
+                ))}
+
+                {parent && !!onMenuAdd && pathname === '/service' && (
+                  <Center>
+                    <Button
+                      size='lg'
+                      variant='solid'
+                      w='full'
+                      onClick={() => onMenuAdd(id)}
+                      rightIcon={<PlusSquareIcon />}
+                    >
+                      Добавить
+                    </Button>
+                  </Center>
+                )}
+              </SimpleGrid>
+            </>
+          )}
+        </Stack>
       </AccordionPanel>
     </AccordionItem>
   );

@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useReducer } from 'react';
-import { ref, set, child, get } from 'firebase/database';
+import { ref, set, get } from 'firebase/database';
 // import { doc, setDoc } from 'firebase/firestore';
 
 import {
@@ -124,14 +124,36 @@ export const useAuth = () => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!!user) {
-        get(child(ref(rtdb), `users/${user.uid}`))
-          .then((snap) => {
-            if (snap.exists()) setUser(snap.val());
-          })
-          .then(() => setAuthLoading(false));
-      }
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) return;
+
+      get(ref(rtdb, `users/${user.uid}`))
+        .then((snap) => {
+          if (!snap.exists() && user.isAnonymous) {
+            const annonUser: User = {
+              id: user.uid,
+              name: user.displayName || '',
+              avatar: user.photoURL || '',
+              tel: user.phoneNumber || '',
+              email: user.email || '',
+              adress: '',
+              role: 'pixpax',
+              // @ts-expect-error TODO добавить в типы еслу будет нужен этот ключ
+              isAnon: true,
+            };
+
+            set(ref(rtdb, `users/${user.uid}`), annonUser);
+
+            setUser(annonUser);
+
+            return;
+          }
+
+          setUser(snap.val());
+        })
+        .finally(() => {
+          setAuthLoading(false);
+        });
     });
 
     return () => unsubscribe();

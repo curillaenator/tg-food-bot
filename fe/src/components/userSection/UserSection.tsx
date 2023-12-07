@@ -1,6 +1,7 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from 'effector-react';
+import { signInAnonymously } from 'firebase/auth';
 
 import {
   Flex,
@@ -23,7 +24,8 @@ import {
 
 import { HamburgerIcon, ChevronLeftIcon, SmallAddIcon, CopyIcon, CalendarIcon, AttachmentIcon } from '@chakra-ui/icons';
 
-import { $globalStore, setEditor } from '../../store';
+import { auth } from '../../shared/firebase';
+import { $globalStore, setEditor, setTouched } from '../../store';
 import { useAuth } from '../../hooks/useAuth';
 
 import { useOverlaysControl } from './hooks/useOverlaysControl';
@@ -39,7 +41,7 @@ import pixpaxLogo from '../../assets/logo/pixpaxLogo.png';
 import s from './styles.module.scss';
 
 export const UserSection: FC = () => {
-  const { user, basket, isEditor } = useStore($globalStore);
+  const { user, basket, isEditor, touched } = useStore($globalStore);
   useTelegramConnect(user);
 
   const { pathname } = useLocation();
@@ -54,17 +56,20 @@ export const UserSection: FC = () => {
   const isHomePage = pathname === '/';
   const role = user?.role;
 
-  const userTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (!!user?.id) return;
+    if (!!basket.length) setTouched();
+  }, [user, basket]);
 
   useEffect(() => {
-    if (userTimer.current) clearTimeout(userTimer.current);
+    if (!touched) return;
 
-    if (!user) {
-      userTimer.current = setTimeout(() => onAuthOpen(), 10000);
-    }
+    console.log('fires');
 
-    // onAuthOpen не нужен в зависимостях
-  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+    signInAnonymously(auth)
+      .then(() => console.info('App is connected'))
+      .catch((err) => console.table(err));
+  }, [touched]);
 
   return (
     <>
@@ -97,9 +102,27 @@ export const UserSection: FC = () => {
         <Spacer />
 
         {!user?.id ? (
-          <Button h='fit-content' variant='ghost' p={2} onClick={onAuthOpen}>
-            <HamburgerIcon boxSize={8} />
-          </Button>
+          <Flex gap={2}>
+            {!!basket.length && (
+              <Button
+                boxShadow='inset 0 0 0 2px var(--pixpax-colors-telegram-200)'
+                bg='var(--pixpax-colors-whiteAlpha-200)'
+                borderRadius='24px'
+                variant='ghost'
+                h='fit-content'
+                py={2}
+                px={4}
+                onClick={onBasketOpen}
+                leftIcon={<BasketIcon />}
+              >
+                {basket.reduce((cnt, item) => cnt + item.qty, 0)}
+              </Button>
+            )}
+
+            <Button h='fit-content' variant='ghost' p={2} onClick={onAuthOpen}>
+              <HamburgerIcon boxSize={8} />
+            </Button>
+          </Flex>
         ) : (
           <Flex gap={2}>
             {!!basket.length && (
@@ -117,6 +140,7 @@ export const UserSection: FC = () => {
                 {basket.reduce((cnt, item) => cnt + item.qty, 0)}
               </Button>
             )}
+
             <Avatar
               bg='telegram.200'
               color='gray.800'
@@ -141,7 +165,7 @@ export const UserSection: FC = () => {
               <Heading>{!!user?.id ? '' : 'Войти'}</Heading>
 
               {!!user?.id && (
-                <Button color='whiteAlpha.500' size='xs' variant='ghost' onClick={signOut}>
+                <Button color='whiteAlpha.200' size='xs' variant='ghost' onClick={signOut}>
                   Выйти
                 </Button>
               )}

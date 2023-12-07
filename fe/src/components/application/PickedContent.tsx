@@ -133,30 +133,24 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
           Состав заказа:
         </Text>
 
-        {details.map((serviceId) => (
+        {details.map((service) => (
           <Card
-            key={serviceId.id}
+            key={service.id}
             p={2}
             bg='chakra-body-bg'
             borderRadius={8}
             boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-200)'
           >
             <CardBody p={0}>
-              <Text fontWeight='bold'>{serviceId?.title}</Text>
+              <Text fontWeight='bold'>{service?.title}</Text>
 
-              {serviceId?.adress && (
+              {service?.adress && (
                 <Flex gap='8px' w='full' alignItems='center' justifyContent='space-between'>
                   <Text fontSize='sm' fontWeight='bold' color='chakra-subtle-text'>
-                    {serviceId.adress}
+                    {service.adress}
                   </Text>
 
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    colorScheme='orange'
-                    p={0}
-                    onClick={() => onCopy(serviceId.adress)}
-                  >
+                  <Button variant='outline' size='sm' colorScheme='orange' p={0} onClick={() => onCopy(service.adress)}>
                     <CopyIcon boxSize={6} />
                   </Button>
                 </Flex>
@@ -164,7 +158,7 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
 
               <Divider my={2} />
 
-              {serviceId.order.map((item) => (
+              {service.order.map((item) => (
                 <Flex fontSize='sm' key={item.id} w='full' justifyContent='space-between'>
                   <Text flexShrink={0} color='chakra-subtle-text'>
                     {item.title}
@@ -184,7 +178,7 @@ export const PickedContent: FC<PickedContentProps> = (props) => {
               <Divider my={2} />
 
               <Text fontSize='sm' w='full' textAlign='right' fontWeight='bold'>
-                {VNpricer.format(+serviceId.totalServicePrice)}
+                {VNpricer.format(+service.totalServicePrice)}
               </Text>
             </CardBody>
           </Card>

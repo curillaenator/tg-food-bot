@@ -95,7 +95,9 @@ export const ServiceImage: FC<ServiceImage> = (props) => {
           borderRadius='8px 8px 0 0'
           border={`2px solid var(--pixpax-colors-telegram-200)`}
         >
-          <Heading color='white'>{title}</Heading>
+          <Heading color='yellow.100' fontWeight='900' lineHeight={1}>
+            {title}
+          </Heading>
         </Stack>
       )}
     </Stack>
