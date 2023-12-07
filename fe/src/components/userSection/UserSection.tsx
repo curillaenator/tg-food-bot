@@ -10,7 +10,6 @@ import {
   ButtonGroup,
   Button,
   Avatar,
-  Image,
   Progress,
   Drawer,
   DrawerBody,
@@ -34,9 +33,9 @@ import { useTelegramConnect } from './hooks/useTelegramConnect';
 import { Profile } from '../profile';
 import { Basket } from '../basket';
 import { SignForm } from '../signForm';
-import { BasketIcon } from '../../assets/BasketIcon';
 
-import pixpaxLogo from '../../assets/logo/pixpaxLogo.png';
+import { Logo } from '../../assets/Logo';
+import { BasketIcon } from '../../assets/BasketIcon';
 
 import s from './styles.module.scss';
 
@@ -86,7 +85,13 @@ export const UserSection: FC = () => {
         mb={6}
       >
         {isHomePage ? (
-          <Image src={pixpaxLogo} p={2.5} h={12} objectFit='cover' />
+          <Flex alignItems='center' gap={1}>
+            <Logo boxSize={10} />
+
+            <Heading as='h1' fontSize='3xl' fontWeight='1000' color='yellow.300' lineHeight='1'>
+              PixPax
+            </Heading>
+          </Flex>
         ) : (
           <Button
             leftIcon={<ChevronLeftIcon boxSize={8} />}
