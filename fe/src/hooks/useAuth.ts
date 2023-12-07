@@ -154,8 +154,6 @@ export const useAuth = () => {
         .finally(() => {
           setAuthLoading(false);
         });
-
-      console.log('afterReg', user);
     });
 
     return () => unsubscribe();

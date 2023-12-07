@@ -34,8 +34,8 @@ const router = createBrowserRouter(
 const theme = extendTheme(
   {
     fonts: {
-      body: 'Inter, sans-serif',
-      heading: 'Inter, sans-serif',
+      body: 'SanFrancisco, sans-serif',
+      heading: 'SanFrancisco, sans-serif',
       mono: 'Menlo, monospace',
     },
 
