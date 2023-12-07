@@ -22,7 +22,7 @@ import {
   StatHelpText,
 } from '@chakra-ui/react';
 
-import { $globalStore } from '../../store';
+import { $globalStore, setUser } from '../../store';
 import { rtdb } from '../../shared/firebase';
 
 import { BasketCard } from './BasketCard';
@@ -62,11 +62,6 @@ export const Basket: FC<BasketProps> = (props) => {
   const { loading, onPlaceOrder } = useOrder(onBasketClose);
 
   const [locked, setLocked] = useState<boolean>(true);
-
-  // const unLock = useCallback(
-  //   debounced(() => setLocked(false), POST_DELAY),
-  //   [],
-  // );
 
   useEffect(() => {
     const parentsFromBasket: string[] = [];
@@ -160,11 +155,12 @@ export const Basket: FC<BasketProps> = (props) => {
                 size='md'
                 onBlur={(e) => {
                   onAdressEdit(e, user.id, 'name');
+                  setUser({ ...user, name: e.target.value });
                 }}
                 onChange={(e) => {
                   setLocked(true);
                   onAdressEditDebounced(e, user.id, 'name');
-                  // unLock();
+                  setUser({ ...user, name: e.target.value });
                 }}
               />
 
@@ -177,11 +173,12 @@ export const Basket: FC<BasketProps> = (props) => {
                 size='md'
                 onBlur={(e) => {
                   onAdressEdit(e, user.id, 'adress');
+                  setUser({ ...user, adress: e.target.value });
                 }}
                 onChange={(e) => {
                   setLocked(true);
                   onAdressEditDebounced(e, user.id, 'adress');
-                  // unLock();
+                  setUser({ ...user, adress: e.target.value });
                 }}
               />
 
@@ -194,11 +191,12 @@ export const Basket: FC<BasketProps> = (props) => {
                 size='md'
                 onBlur={(e) => {
                   onAdressEdit(e, user.id, 'tel');
+                  setUser({ ...user, tel: e.target.value });
                 }}
                 onChange={(e) => {
                   setLocked(true);
                   onAdressEditDebounced(e, user.id, 'tel');
-                  // unLock();
+                  setUser({ ...user, tel: e.target.value });
                 }}
               />
             </Stack>

@@ -9,6 +9,7 @@ import {
   Heading,
   ButtonGroup,
   Button,
+  Link,
   Avatar,
   Progress,
   Drawer,
@@ -41,7 +42,7 @@ import s from './styles.module.scss';
 
 export const UserSection: FC = () => {
   const { user, basket, isEditor, touched } = useStore($globalStore);
-  useTelegramConnect(user);
+  const { tg } = useTelegramConnect(user);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -88,7 +89,7 @@ export const UserSection: FC = () => {
           <Flex alignItems='center' gap={1}>
             <Logo boxSize={10} />
 
-            <Heading as='h1' fontSize='3xl' fontWeight='1000' color='yellow.300' lineHeight='1'>
+            <Heading as='h1' fontSize='3xl' fontWeight='1000' color='white' lineHeight='1'>
               PixPax
             </Heading>
           </Flex>
@@ -167,7 +168,7 @@ export const UserSection: FC = () => {
 
           <DrawerHeader p={4} bg='blackAlpha.300'>
             <Flex gap={1} alignItems='center' h='48px'>
-              <Heading>{!!user?.id ? '' : 'Войти'}</Heading>
+              <Heading>{!!user?.id ? '' : 'Кабинет'}</Heading>
 
               {!!user?.id && (
                 <Button color='whiteAlpha.200' size='xs' variant='ghost' onClick={signOut}>
@@ -240,7 +241,7 @@ export const UserSection: FC = () => {
               )}
 
               {user?.ownerOf && (
-                <ButtonGroup>
+                <ButtonGroup isAttached w='full'>
                   <Button
                     leftIcon={<AttachmentIcon boxSize={6} />}
                     size='md'
@@ -272,12 +273,24 @@ export const UserSection: FC = () => {
                   size='md'
                   width='100%'
                   variant={!!user?.id ? 'solid' : 'outline'}
-                  colorScheme={!!user?.id ? 'telegram' : undefined}
-                  color={!!user?.id ? undefined : 'chakra-subtle-text'}
                   isDisabled={authLoading}
                   onClick={onAuthClose}
                 >
                   {!!user?.id ? 'Ok' : 'Закрыть'}
+                </Button>
+              </ButtonGroup>
+
+              <ButtonGroup isAttached w='full' variant='outline'>
+                <Button
+                  href={`https://${process.env.SUPPORT_CONTACT}`}
+                  as={Link}
+                  size='md'
+                  w='full'
+                  onClick={() => {
+                    if (!!tg) setTimeout(() => tg.close(), 100);
+                  }}
+                >
+                  Связаться с PixPax
                 </Button>
               </ButtonGroup>
             </Stack>

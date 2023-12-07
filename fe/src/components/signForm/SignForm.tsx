@@ -54,8 +54,16 @@ export const SignForm: FC<SignFormProps> = (props) => {
         Привет!
       </Text>
 
+      <Text fontSize='md' fontWeight='500' color='yellow.200'>
+        Чтобы оформить заказ регистрироваться не нужно! Смело закрывайте кабинет и заказывайте 😉
+      </Text>
+
       <Text fontSize='sm' color='chakra-subtle-text'>
-        {'Пожалуйста, авторизируйся для возможности оформить заказ 😉'}
+        Если Вы наш партнер или хотите им стать, то, пожалуйста, воспользуйтесь своим аккаунтом
+      </Text>
+
+      <Text fontSize='sm' color='chakra-subtle-text'>
+        Укажите свой email:
       </Text>
 
       <InputGroup>
@@ -75,7 +83,7 @@ export const SignForm: FC<SignFormProps> = (props) => {
       </InputGroup>
 
       <Text fontSize='sm' color='chakra-subtle-text'>
-        {'Придумай хороший пароль! Если забудешь, можно будет легко восстановить по указанному email выше 😎'}
+        Введите пароль:
       </Text>
 
       <InputGroup>
@@ -110,7 +118,7 @@ export const SignForm: FC<SignFormProps> = (props) => {
             justifyContent='space-between'
             borderBottom='1px solid var(--pixpax-colors-whiteAlpha-200)'
           >
-            <Text fontSize='sm' color='whiteAlpha.200' textAlign='left'>
+            <Text fontSize='sm' color='whiteAlpha.400' textAlign='left'>
               Упс, я забыл пароль, что делать?
             </Text>
             <AccordionIcon color='whiteAlpha.200' />
@@ -128,7 +136,7 @@ export const SignForm: FC<SignFormProps> = (props) => {
 
       <Stack gap={0}>
         <Text fontSize='sm' color='chakra-subtle-text'>
-          {'👇 Если впервые на Pixpax, то'}
+          {'👇 Если впервые регистрируетесь, то'}
         </Text>
         <Checkbox
           isDisabled={authLoading}

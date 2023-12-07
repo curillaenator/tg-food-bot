@@ -7,6 +7,7 @@ import { rtdb } from '../shared/firebase';
 
 export const useProfile = () => {
   const { user } = useStore($globalStore);
+
   const { id, name, tel, adress } = useDeferredValue(user);
 
   useEffect(() => {

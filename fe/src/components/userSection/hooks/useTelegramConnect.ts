@@ -7,7 +7,7 @@ import { useTelegram } from '../../../hooks/useTelegram';
 import type { User } from '../../../shared/interfaces';
 
 export const useTelegramConnect = (user: User) => {
-  const { tgUser } = useTelegram();
+  const { tg, tgUser } = useTelegram();
 
   useEffect(() => {
     if (!!user?.id && !!tgUser && !tgUser?.is_bot) {
@@ -21,4 +21,8 @@ export const useTelegramConnect = (user: User) => {
       }
     }
   }, [tgUser, user]);
+
+  return {
+    tg,
+  };
 };
