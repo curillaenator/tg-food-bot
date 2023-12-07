@@ -129,20 +129,6 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
       boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-400)'
       transition='background-color 80ms ease'
       _active={!type && { backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
-      // onClick={() => {
-      //   if (!user?.id || type !== 'item' || isEditor) return;
-
-      //   setBasket({
-      //     id,
-      //     parent,
-      //     title,
-      //     description,
-      //     type,
-      //     price,
-      //     qty: qty === undefined ? 1 : qty,
-      //     imgPath,
-      //   });
-      // }}
     >
       {loading && <Progress isIndeterminate size='xs' mb={2} />}
 

@@ -2,10 +2,7 @@
   font-family: 'SanFrancisco';
   src: url('/fonts/SFNSRounded.woff2') format('woff2');
   font-style: normal;
-  font-variation-settings:
-    'GRAD' 40,
-    'opsz' 80;
-  font-weight: 200 700;
-  font-stretch: normal;
+  font-optical-sizing: auto;
+  font-weight: 100 900;
   font-variant: normal;
 }
