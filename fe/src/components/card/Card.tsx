@@ -34,7 +34,7 @@ import { IMAGE_META } from '../../shared/constants';
 import type { CardProps } from './interfaces';
 // import s from './styles.module.scss';
 
-// import { AddIcon } from '../../assets/AddIcon';
+import { BasketIcon } from '../../assets/BasketIcon';
 import { ThumbUpIcon } from '../../assets/ThumbUpIcon';
 import noImage from './assets/no-image.jpg';
 
@@ -135,6 +135,8 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
       .finally(() => setLoading(false));
   }, [imgPath]);
 
+  const cardQty = basket.find((el) => el.id === id)?.qty;
+
   return (
     <UICard
       id={id}
@@ -218,7 +220,7 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
             <Button
               size='md'
               flexGrow={2}
-              // rightIcon={<AddIcon boxSize={6} />}
+              rightIcon={cardQty > 0 ? <BasketIcon boxSize={6} /> : undefined}
               onClick={() => {
                 setBasket({
                   id,
@@ -232,7 +234,7 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
                 });
               }}
             >
-              {basket.find((el) => el.id === id)?.qty || 'Купить'}
+              {cardQty || 'Купить'}
             </Button>
 
             <Button flexShrink={0} minWidth='56px' p={0} size='md' variant='ghost' onClick={onLike}>

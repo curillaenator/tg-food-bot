@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Icon, type IconProps } from '@chakra-ui/react';
 
 export const BasketIcon: FC<IconProps> = (props) => (
-  <Icon width='24' height='24' viewBox='0 0 24 24' {...props}>
+  <Icon width='24' height='24' viewBox='0 0 24 24' fill='none' {...props}>
     <path
       d='M3.5 4.5H5.05848C5.7542 4.5 6.10206 4.5 6.36395 4.68876C6.62584 4.87752 6.73584 5.20753 6.95585 5.86754L7.5 7.5'
       stroke='currentColor'
