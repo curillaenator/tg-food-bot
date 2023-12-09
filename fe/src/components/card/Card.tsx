@@ -34,8 +34,8 @@ import { IMAGE_META } from '../../shared/constants';
 import type { CardProps } from './interfaces';
 // import s from './styles.module.scss';
 
-import { LikeIcon } from './assets/LikeIcon';
-import { AddIcon } from './assets/AddIcon';
+import { AddIcon } from '../../assets/AddIcon';
+import { ThumbUpIcon } from '../../assets/ThumbUpIcon';
 import noImage from './assets/no-image.jpg';
 
 const onEditValue = (
@@ -232,7 +232,7 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
                 });
               }}
             >
-              {basket.find((el) => el.id === id)?.qty || ''}
+              {basket.find((el) => el.id === id)?.qty || 'Купить'}
             </Button>
 
             <Button flexShrink={0} minWidth='56px' py={0} px={2} size='md' variant='ghost' onClick={onLike}>
@@ -242,7 +242,7 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
                 </Text>
               )}
 
-              <LikeIcon boxSize={6} color='red.400' />
+              <ThumbUpIcon boxSize={8} color='telegram.500' />
             </Button>
           </Flex>
         )}

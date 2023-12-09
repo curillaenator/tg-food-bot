@@ -38,6 +38,7 @@ import { SignForm } from '../signForm';
 
 import { Logo } from '../../assets/Logo';
 import { BasketIcon } from '../../assets/BasketIcon';
+import { MessageIcon } from '../../assets/MessageIcon';
 
 import s from './styles.module.scss';
 
@@ -127,7 +128,7 @@ export const UserSection: FC = () => {
                 py={2}
                 px={4}
                 onClick={onBasketOpen}
-                leftIcon={<BasketIcon />}
+                leftIcon={<BasketIcon boxSize={8} />}
               >
                 {basket.reduce((cnt, item) => cnt + item.qty, 0)}
               </Button>
@@ -149,7 +150,7 @@ export const UserSection: FC = () => {
                 py={2}
                 px={4}
                 onClick={onBasketOpen}
-                leftIcon={<BasketIcon />}
+                rightIcon={<BasketIcon boxSize={8} />}
               >
                 {basket.reduce((cnt, item) => cnt + item.qty, 0)}
               </Button>
@@ -218,7 +219,7 @@ export const UserSection: FC = () => {
 
                   <ButtonGroup orientation='vertical' variant='outline' isAttached w='full'>
                     <Button
-                      leftIcon={<CopyIcon boxSize={6} />}
+                      leftIcon={<CopyIcon boxSize={4} />}
                       size='md'
                       w='full'
                       onClick={() => {
@@ -230,7 +231,7 @@ export const UserSection: FC = () => {
                     </Button>
 
                     <Button
-                      leftIcon={<SmallAddIcon boxSize={8} />}
+                      leftIcon={<SmallAddIcon boxSize={6} />}
                       size='md'
                       w='full'
                       onClick={() => {
@@ -242,7 +243,7 @@ export const UserSection: FC = () => {
                     </Button>
 
                     <Button
-                      leftIcon={<CalendarIcon boxSize={6} />}
+                      leftIcon={<CalendarIcon boxSize={4} />}
                       size='md'
                       w='full'
                       onClick={() => {
@@ -302,6 +303,7 @@ export const UserSection: FC = () => {
                   as={Link}
                   size='md'
                   w='full'
+                  leftIcon={<MessageIcon boxSize={6} />}
                   onClick={() => {
                     if (!!tg) setTimeout(() => tg.close(), 100);
                   }}

@@ -27,6 +27,7 @@ import { rtdb } from '../../shared/firebase';
 
 import { BasketCard } from './BasketCard';
 import { BasketIcon } from '../../assets/BasketIcon';
+import { SendIcon } from '../../assets/SendIcon';
 
 import { useOrder } from './hooks/useOrder';
 import { VNpricer, debounced } from '../../utils';
@@ -102,8 +103,8 @@ export const Basket: FC<BasketProps> = (props) => {
 
         <DrawerHeader p={4} bg='blackAlpha.300'>
           <Flex alignItems='center' gap={1}>
-            <Box p={2}>
-              <BasketIcon fill='var(--pixpax-colors-chakra-body-text)' />
+            <Box p={0}>
+              <BasketIcon boxSize={10} color='chakra-body-text' />
             </Box>
 
             <Heading fontSize='2xl' lineHeight='48px' color='yellow.400'>
@@ -207,14 +208,13 @@ export const Basket: FC<BasketProps> = (props) => {
             loadingText='Секундочку...'
             isDisabled={locked || !calcedTotalPrice || !user?.id}
             ref={initialFocusRef}
-            size='lg'
-            p={2}
-            h='fit-content'
-            variant='solid'
+            size='md'
             onClick={onPlaceOrder}
-            fontSize='3xl'
             mt={8}
-            w='100%'
+            w='full'
+            fontSize='xl'
+            fontWeight='800'
+            leftIcon={<SendIcon boxSize={8} />}
           >
             Отправить
           </Button>
