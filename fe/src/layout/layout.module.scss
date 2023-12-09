@@ -27,5 +27,6 @@ $backgrounds: (
   background: var(--layout-bg-tint), var(--layout-bg-darken), var(--layout-bg-base);
   background-attachment: fixed;
   background-position: top;
-  background-size: cover;
+  background-size: contain;
+  background-repeat: repeat-y;
 }

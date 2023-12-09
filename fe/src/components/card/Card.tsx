@@ -34,7 +34,7 @@ import { IMAGE_META } from '../../shared/constants';
 import type { CardProps } from './interfaces';
 // import s from './styles.module.scss';
 
-import { AddIcon } from '../../assets/AddIcon';
+// import { AddIcon } from '../../assets/AddIcon';
 import { ThumbUpIcon } from '../../assets/ThumbUpIcon';
 import noImage from './assets/no-image.jpg';
 
@@ -218,7 +218,7 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
             <Button
               size='md'
               flexGrow={2}
-              rightIcon={<AddIcon boxSize={6} />}
+              // rightIcon={<AddIcon boxSize={6} />}
               onClick={() => {
                 setBasket({
                   id,
@@ -235,14 +235,14 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
               {basket.find((el) => el.id === id)?.qty || 'Купить'}
             </Button>
 
-            <Button flexShrink={0} minWidth='56px' py={0} px={2} size='md' variant='ghost' onClick={onLike}>
+            <Button flexShrink={0} minWidth='56px' p={0} size='md' variant='ghost' onClick={onLike}>
               {likes > 0 && (
                 <Text fontSize='sm' mr={2}>
                   {likes}
                 </Text>
               )}
 
-              <ThumbUpIcon boxSize={8} color='telegram.500' />
+              <ThumbUpIcon boxSize={6} color='telegram.500' />
             </Button>
           </Flex>
         )}
