@@ -27,6 +27,8 @@ export type User = {
   pickedApplications?: Application[];
   ownerOf?: Record<string, boolean>;
   tme?: string;
+  basket?: Item[];
+  isAnon?: boolean;
 };
 
 export interface Category<T = string> {

@@ -99,9 +99,11 @@ export const useOrder = (onBasketClose: () => void) => {
       })
       .finally(() => {
         if (!tgQueryId) {
-          setLoading(false);
+          set(ref(rtdb, `users/${user.id}/basket`), null);
           resetBasket();
           onBasketClose();
+
+          setLoading(false);
         }
       });
 
@@ -131,9 +133,11 @@ export const useOrder = (onBasketClose: () => void) => {
           });
         })
         .finally(() => {
-          setLoading(false);
+          set(ref(rtdb, `users/${user.id}/basket`), null);
           resetBasket();
           onBasketClose();
+
+          setLoading(false);
         });
     }
   };

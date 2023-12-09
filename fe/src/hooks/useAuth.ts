@@ -10,7 +10,7 @@ import {
   sendPasswordResetEmail,
 } from 'firebase/auth';
 
-import { setUser } from '../store';
+import { setUser, setBasket } from '../store';
 
 import { rtdb, auth } from '../shared/firebase';
 import type { User } from '../shared/interfaces';
@@ -138,7 +138,6 @@ export const useAuth = () => {
               email: user.email || '',
               adress: '',
               role: 'pixpax',
-              // @ts-expect-error TODO добавить в типы еслу будет нужен этот ключ
               isAnon: true,
             };
 
@@ -149,7 +148,11 @@ export const useAuth = () => {
             return;
           }
 
-          setUser(snap.val());
+          const { basket, ...restUser } = snap.val() as User;
+
+          setUser(restUser);
+
+          if (basket?.length) basket.forEach((el) => setBasket(el));
         })
         .finally(() => {
           setAuthLoading(false);

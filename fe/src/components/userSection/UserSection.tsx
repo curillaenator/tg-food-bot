@@ -1,6 +1,7 @@
 import React, { FC, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from 'effector-react';
+import { ref, set } from 'firebase/database';
 import { signInAnonymously } from 'firebase/auth';
 
 import {
@@ -24,7 +25,7 @@ import {
 
 import { HamburgerIcon, ChevronLeftIcon, SmallAddIcon, CopyIcon, CalendarIcon, AttachmentIcon } from '@chakra-ui/icons';
 
-import { auth } from '../../shared/firebase';
+import { auth, rtdb } from '../../shared/firebase';
 import { $globalStore, setEditor, setTouched } from '../../store';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -42,6 +43,7 @@ import s from './styles.module.scss';
 
 export const UserSection: FC = () => {
   const { user, basket, isEditor, touched } = useStore($globalStore);
+
   const { tg } = useTelegramConnect(user);
 
   const { pathname } = useLocation();
@@ -56,6 +58,7 @@ export const UserSection: FC = () => {
   const isHomePage = pathname === '/';
   const role = user?.role;
 
+  // silent auth start
   useEffect(() => {
     if (!!user?.id) return;
     if (!!basket.length) setTouched();
@@ -64,12 +67,17 @@ export const UserSection: FC = () => {
   useEffect(() => {
     if (!touched) return;
 
-    console.log('fires');
-
     signInAnonymously(auth)
       .then(() => console.info('App is connected'))
       .catch((err) => console.table(err));
   }, [touched]);
+  // silent auth end
+
+  // store basket start
+  useEffect(() => {
+    if (user?.id) set(ref(rtdb, `users/${user.id}/basket`), basket);
+  }, [user, basket]);
+  // store basket start
 
   return (
     <>
