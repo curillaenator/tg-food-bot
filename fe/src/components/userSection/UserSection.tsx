@@ -241,7 +241,15 @@ export const UserSection: FC = () => {
                       Добавить
                     </Button>
 
-                    <Button leftIcon={<CalendarIcon boxSize={6} />} size='md' w='full'>
+                    <Button
+                      leftIcon={<CalendarIcon boxSize={6} />}
+                      size='md'
+                      w='full'
+                      onClick={() => {
+                        navigate('/reports');
+                        onAuthClose();
+                      }}
+                    >
                       Отчеты
                     </Button>
                   </ButtonGroup>

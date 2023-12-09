@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, ChangeEvent } from 'react';
+import React, { FC, useState, useEffect, ChangeEvent, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useStore } from 'effector-react';
 import parse from 'html-react-parser';
@@ -99,6 +99,22 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
     onMenuItemRemove(serviceId, itemId);
   };
 
+  const onLike = useCallback(
+    async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.stopPropagation();
+      e.preventDefault();
+
+      if (!user?.id) return;
+
+      const userLike = await get(ref(rtdb, `likes/${id}/${user.id}`)).then((s) =>
+        s.exists() ? (s.val() as boolean) : false,
+      );
+
+      set(ref(rtdb, `likes/${id}/${user.id}`), !userLike);
+    },
+    [id, user],
+  );
+
   useEffect(() => {
     const unsubLikes = onValue(ref(rtdb, `likes/${id}`), (snap) => {
       if (!snap.exists()) return;
@@ -181,7 +197,7 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
           </Center>
 
           <Stack direction='column' spacing={6} h='100%' justifyContent='space-between'>
-            {(!isEditor || type !== 'item') && (
+            {!isEditor && (
               <Stack spacing={2} justifyContent='space-between' h='100%'>
                 <Stack spacing={2}>
                   <Heading size='sm' textTransform='uppercase' color='telegram.200'>
@@ -196,14 +212,11 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
                 </Stack>
 
                 {type === 'item' && (
-                  <Flex w='full' justifyContent='space-between' gap={2}>
+                  <Flex w='full' justifyContent='space-between' gap={2} zIndex={10}>
                     <Button
                       size='md'
                       w='112px'
                       onClick={() => {
-                        // if (!user?.id || type !== 'item' || isEditor) return;
-                        if (type !== 'item' || isEditor) return;
-
                         setBasket({
                           id,
                           parent,
@@ -220,25 +233,7 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
                       <AddIcon boxSize={6} />
                     </Button>
 
-                    <Button
-                      py={0}
-                      px={2}
-                      size='md'
-                      variant='ghost'
-                      flexShrink={0}
-                      onClick={async (e) => {
-                        if (!user?.id) return;
-
-                        e.stopPropagation();
-                        e.preventDefault();
-
-                        const userLike = await get(ref(rtdb, `likes/${id}/${user.id}`)).then((s) =>
-                          s.exists() ? (s.val() as boolean) : false,
-                        );
-
-                        set(ref(rtdb, `likes/${id}/${user.id}`), !userLike);
-                      }}
-                    >
+                    <Button py={0} px={2} size='md' variant='ghost' flexShrink={0} onClick={onLike}>
                       {likes > 0 && (
                         <Text fontSize='sm' mr={2}>
                           {likes}

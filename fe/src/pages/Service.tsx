@@ -7,7 +7,7 @@ import { ref, get, child, push, update } from 'firebase/database';
 import { Box, Progress, Accordion, useToast } from '@chakra-ui/react';
 
 import { rtdb } from '../shared/firebase';
-import { debounced } from '../utils';
+import { debounced, isManager, isServiceOwner } from '../utils';
 import { $globalStore, setEditor } from '../store';
 
 import { ShowcaseSection } from '../components/ShowcaseSection';
@@ -25,10 +25,7 @@ export const ServicePage: FC = () => {
 
   // lets user visit page
   useEffect(() => {
-    const isManager = currentUser?.role === 'admin' || currentUser?.role === 'manager';
-    const isServiceOwner = !!Object.keys(currentUser?.ownerOf || {}).length;
-
-    const pageIsAvalable = isManager || isServiceOwner;
+    const pageIsAvalable = isManager(currentUser?.role) || isServiceOwner(currentUser?.ownerOf);
     if (pageIsAvalable) return;
 
     navigate('/');

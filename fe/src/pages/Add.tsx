@@ -5,6 +5,7 @@ import { useStore } from 'effector-react';
 import { Box, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 
 import { $globalStore } from '../store';
+import { isManager } from '../utils';
 
 import { ServiceForm } from '../components/serviceForm';
 import { ItemForm } from '../components/itemForm';
@@ -15,7 +16,7 @@ export const Add: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const pageIsAvalable = !!user?.id && (user?.role === 'admin' || user?.role === 'manager');
+    const pageIsAvalable = isManager(user?.role);
     if (pageIsAvalable) return;
 
     navigate('/');
