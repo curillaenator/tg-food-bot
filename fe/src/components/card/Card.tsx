@@ -138,179 +138,176 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
   return (
     <UICard
       id={id}
-      // h='full'
+      h={!type ? 'full' : undefined}
       p={2}
       bg='var(--color-bg-cutom)'
       borderRadius={12}
       boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-400)'
       transition='background-color 80ms ease'
-      // _active={!type && { backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
+      _active={!type ? { backgroundColor: 'var(--pixpax-colors-telegram-900)' } : undefined}
     >
       {loading && <Progress isIndeterminate size='xs' mb={2} />}
 
-      <CardBody p={0}>
-        <Stack direction='column' spacing={4}>
-          <Stack w='full' spacing={4}>
-            <Center
-              position='relative'
-              flexShrink={0}
-              aspectRatio='1 / 1'
-              w='100%'
-              onClick={(e) => {
-                if (type === 'item' && isEditor) {
-                  (e.currentTarget.firstChild as HTMLInputElement).click();
-                }
-              }}
-            >
-              {isEditor && type === 'item' && (
-                <>
-                  <input
-                    id={`card-image-picker-${id}`}
-                    data-itemid={id}
-                    style={{ position: 'absolute', top: 0, left: 0, zIndex: '-100', opacity: 0 }}
-                    type='file'
-                    multiple={false}
-                    onChange={(e) => {
-                      setLoading(true);
+      <CardBody p={0} w='100%' display='flex' flexDirection='column' gap={4}>
+        <Stack w='full' spacing={4} flexGrow={2}>
+          <Center
+            position='relative'
+            flexShrink={0}
+            aspectRatio='1 / 1'
+            w='100%'
+            onClick={(e) => {
+              if (type === 'item' && isEditor) {
+                (e.currentTarget.firstChild as HTMLInputElement).click();
+              }
+            }}
+          >
+            {isEditor && type === 'item' && (
+              <>
+                <input
+                  id={`card-image-picker-${id}`}
+                  data-itemid={id}
+                  style={{ position: 'absolute', top: 0, left: 0, zIndex: '-100', opacity: 0 }}
+                  type='file'
+                  multiple={false}
+                  onChange={(e) => {
+                    setLoading(true);
 
-                      onImageChange(e).then(() =>
-                        getDownloadURL(storageRef(strg, imgPath))
-                          .then((url) => setImageURL(url))
-                          .finally(() => setLoading(false)),
-                      );
-                    }}
-                  />
-
-                  <EditIcon boxSize={6} color='orange.400' position='absolute' top={2} right={2} zIndex={1} />
-                </>
-              )}
-
-              <Image
-                src={imageURL || noImage}
-                alt={title}
-                borderRadius={8}
-                objectFit='cover'
-                w='100%'
-                aspectRatio='1 / 1'
-                fallback={<Text>No image</Text>}
-                loading='lazy'
-              />
-            </Center>
-
-            {!isEditor && (
-              <Stack spacing={4} justifyContent='space-between'>
-                <Stack spacing={2}>
-                  <Heading size='sm' textTransform='uppercase' color='telegram.200'>
-                    {title}
-                  </Heading>
-
-                  {!!price && <Text fontSize='xs'>{VNpricer.format(+price)}</Text>}
-
-                  <Text fontSize='xs' color='chakra-subtle-text'>
-                    {parse(description)}
-                  </Text>
-                </Stack>
-              </Stack>
-            )}
-          </Stack>
-
-          {!isEditor && type === 'item' && (
-            <Flex w='full' justifyContent='space-between' gap={2} zIndex={10}>
-              <Button
-                size='md'
-                width='96px'
-                onClick={() => {
-                  setBasket({
-                    id,
-                    parent,
-                    title,
-                    description,
-                    type,
-                    price,
-                    qty: qty === undefined ? 1 : qty,
-                    imgPath,
-                  });
-                }}
-              >
-                <Text mr={2}>{basket.find((el) => el.id === id)?.qty || ''}</Text>
-
-                <AddIcon boxSize={6} />
-              </Button>
-
-              <Button width='56px' py={0} px={2} size='md' variant='ghost' onClick={onLike}>
-                {likes > 0 && (
-                  <Text fontSize='sm' mr={2}>
-                    {likes}
-                  </Text>
-                )}
-
-                <LikeIcon boxSize={6} color='red.400' />
-              </Button>
-            </Flex>
-          )}
-
-          {isEditor && type === 'item' && (
-            <>
-              <InputGroup size='sm' flexDirection='column' gap='4px'>
-                <Input
-                  placeholder='Title'
-                  type='text'
-                  defaultValue={title}
-                  onChange={(e) => onEditValueDebounced(e, 'title', id)}
-                />
-
-                <Input
-                  placeholder='Price'
-                  type='number'
-                  defaultValue={price}
-                  onChange={(e) => onEditValueDebounced(e, 'price', id)}
-                />
-
-                <Textarea
-                  placeholder='Description'
-                  defaultValue={description.replace(/<br \/>/g, '\n')}
-                  onChange={(e) => onEditValueDebounced(e, 'description', id)}
-                  resize='none'
-                  rows={12}
-                />
-
-                {pathname === '/service' && (
-                  <Checkbox
-                    size='lg'
-                    defaultChecked={isActive}
-                    onChange={(e) => {
-                      set(ref(rtdb, `services/${parent}/categories/${id}`), e.target.checked).catch((err) =>
-                        console.table(err),
-                      );
-                    }}
-                  >
-                    Активно
-                  </Checkbox>
-                )}
-              </InputGroup>
-
-              <Stack>
-                <Button
-                  leftIcon={<DeleteIcon boxSize={4} />}
-                  colorScheme='red'
-                  size='sm'
-                  p={2}
-                  variant='outline'
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-
-                    if (confirm('Точно удалить товар из базы?')) {
-                      removeCard(parent, id);
-                    }
+                    onImageChange(e).then(() =>
+                      getDownloadURL(storageRef(strg, imgPath))
+                        .then((url) => setImageURL(url))
+                        .finally(() => setLoading(false)),
+                    );
                   }}
-                >
-                  Удалить
-                </Button>
+                />
+
+                <EditIcon boxSize={6} color='orange.400' position='absolute' top={2} right={2} zIndex={1} />
+              </>
+            )}
+
+            <Image
+              src={imageURL || noImage}
+              alt={title}
+              borderRadius={8}
+              objectFit='cover'
+              w='100%'
+              aspectRatio='1 / 1'
+              fallback={<Text>No image</Text>}
+              loading='lazy'
+            />
+          </Center>
+
+          {!isEditor && (
+            <Stack spacing={4} justifyContent='space-between'>
+              <Stack spacing={2}>
+                <Heading size='sm' textTransform='uppercase' color='telegram.200'>
+                  {title}
+                </Heading>
+
+                {!!price && <Text fontSize='xs'>{VNpricer.format(+price)}</Text>}
+
+                <Text fontSize='xs' color='chakra-subtle-text'>
+                  {parse(description)}
+                </Text>
               </Stack>
-            </>
+            </Stack>
           )}
         </Stack>
+
+        {!isEditor && type === 'item' && (
+          <Flex w='full' justifyContent='space-between' gap={2} flexShrink={0}>
+            <Button
+              size='md'
+              flexGrow={2}
+              rightIcon={<AddIcon boxSize={6} />}
+              onClick={() => {
+                setBasket({
+                  id,
+                  parent,
+                  title,
+                  description,
+                  type,
+                  price,
+                  qty: qty === undefined ? 1 : qty,
+                  imgPath,
+                });
+              }}
+            >
+              {basket.find((el) => el.id === id)?.qty || ''}
+            </Button>
+
+            <Button flexShrink={0} minWidth='56px' py={0} px={2} size='md' variant='ghost' onClick={onLike}>
+              {likes > 0 && (
+                <Text fontSize='sm' mr={2}>
+                  {likes}
+                </Text>
+              )}
+
+              <LikeIcon boxSize={6} color='red.400' />
+            </Button>
+          </Flex>
+        )}
+
+        {isEditor && type === 'item' && (
+          <>
+            <InputGroup size='sm' flexDirection='column' gap='4px'>
+              <Input
+                placeholder='Title'
+                type='text'
+                defaultValue={title}
+                onChange={(e) => onEditValueDebounced(e, 'title', id)}
+              />
+
+              <Input
+                placeholder='Price'
+                type='number'
+                defaultValue={price}
+                onChange={(e) => onEditValueDebounced(e, 'price', id)}
+              />
+
+              <Textarea
+                placeholder='Description'
+                defaultValue={description.replace(/<br \/>/g, '\n')}
+                onChange={(e) => onEditValueDebounced(e, 'description', id)}
+                resize='none'
+                rows={12}
+              />
+
+              {pathname === '/service' && (
+                <Checkbox
+                  size='lg'
+                  defaultChecked={isActive}
+                  onChange={(e) => {
+                    set(ref(rtdb, `services/${parent}/categories/${id}`), e.target.checked).catch((err) =>
+                      console.table(err),
+                    );
+                  }}
+                >
+                  Активно
+                </Checkbox>
+              )}
+            </InputGroup>
+
+            <Stack>
+              <Button
+                leftIcon={<DeleteIcon boxSize={4} />}
+                colorScheme='red'
+                size='sm'
+                p={2}
+                variant='outline'
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+
+                  if (confirm('Точно удалить товар из базы?')) {
+                    removeCard(parent, id);
+                  }
+                }}
+              >
+                Удалить
+              </Button>
+            </Stack>
+          </>
+        )}
       </CardBody>
     </UICard>
   );
