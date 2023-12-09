@@ -138,18 +138,18 @@ const CardComponent: FC<CardProps & { isActive?: boolean }> = (props) => {
   return (
     <UICard
       id={id}
-      h='full'
+      // h='full'
       p={2}
       bg='var(--color-bg-cutom)'
       borderRadius={12}
       boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-400)'
       transition='background-color 80ms ease'
-      _active={!type && { backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
+      // _active={!type && { backgroundColor: 'var(--pixpax-colors-telegram-900)' }}
     >
       {loading && <Progress isIndeterminate size='xs' mb={2} />}
 
-      <CardBody p={0} h='full'>
-        <Stack direction='column' h='full' spacing={4} justifyContent='space-between'>
+      <CardBody p={0}>
+        <Stack direction='column' spacing={4}>
           <Stack w='full' spacing={4}>
             <Center
               position='relative'
