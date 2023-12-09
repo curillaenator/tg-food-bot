@@ -13,7 +13,10 @@ export const Dashboard: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!currentUser?.id) navigate('/');
+    const pageIsAvalable = !!currentUser?.id && (currentUser?.role === 'admin' || currentUser?.role === 'manager');
+    if (pageIsAvalable) return;
+
+    navigate('/');
   }, [currentUser, navigate]);
 
   const [dash, setDash] = useState<string>('all');

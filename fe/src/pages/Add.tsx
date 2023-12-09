@@ -15,7 +15,7 @@ export const Add: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const pageIsAvalable = !!user?.id && (user.role === 'admin' || user.role === 'manager');
+    const pageIsAvalable = !!user?.id && (user?.role === 'admin' || user?.role === 'manager');
     if (pageIsAvalable) return;
 
     navigate('/');

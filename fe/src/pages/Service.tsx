@@ -19,14 +19,20 @@ export const ServicePage: FC = () => {
   const { user: currentUser } = useStore($globalStore);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!!currentUser?.id) return;
-    navigate('/');
-  }, [currentUser, navigate]);
-
   const [services, setServices] = useState<Service[]>([]);
   const [servicesFull, setServicesFull] = useState<Service[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+
+  // lets user visit page
+  useEffect(() => {
+    const isManager = currentUser?.role === 'admin' || currentUser?.role === 'manager';
+    const isServiceOwner = !!Object.keys(currentUser?.ownerOf || {}).length;
+
+    const pageIsAvalable = isManager || isServiceOwner;
+    if (pageIsAvalable) return;
+
+    navigate('/');
+  }, [services, currentUser, navigate]);
 
   const onMenuAddItem = useCallback(
     async (serviceId: string) => {
