@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from 'effector-react';
 import { ref, set } from 'firebase/database';
 import { signInAnonymously } from 'firebase/auth';
+import axios from 'axios';
 
 import {
   Flex,
@@ -23,7 +24,15 @@ import {
   Checkbox,
 } from '@chakra-ui/react';
 
-import { HamburgerIcon, ChevronLeftIcon, SmallAddIcon, CopyIcon, CalendarIcon, AttachmentIcon } from '@chakra-ui/icons';
+import {
+  HamburgerIcon,
+  ChevronLeftIcon,
+  SmallAddIcon,
+  CopyIcon,
+  CalendarIcon,
+  AttachmentIcon,
+  QuestionOutlineIcon,
+} from '@chakra-ui/icons';
 
 import { auth, rtdb } from '../../shared/firebase';
 import { $globalStore, setEditor, setTouched } from '../../store';
@@ -45,7 +54,7 @@ import s from './styles.module.scss';
 export const UserSection: FC = () => {
   const { user, basket, isEditor, touched } = useStore($globalStore);
 
-  const { tg } = useTelegramConnect(user);
+  const { tg, tgQueryId } = useTelegramConnect(user);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -55,6 +64,25 @@ export const UserSection: FC = () => {
   const finalFocusRef = React.useRef<HTMLButtonElement>(null);
 
   const { authLoading, firstTime, creds, onCredsChange, signOut, authAction, setFirstTime, resetPassword } = useAuth();
+
+  const tgPostMyId = () => {
+    if (!!tgQueryId && user?.id) {
+      axios.post(
+        process.env.TG_BOT_API,
+        {
+          queryId: tgQueryId,
+          orderId: '-----------',
+          title: 'Сервисное сообщение',
+          clientSupport: `\nВаш ID:\n${user.id}`,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+    }
+  };
 
   const isHomePage = pathname === '/';
   const role = user?.role;
@@ -258,7 +286,7 @@ export const UserSection: FC = () => {
               )}
 
               {user?.ownerOf && (
-                <ButtonGroup isAttached w='full'>
+                <ButtonGroup isAttached w='full' orientation='vertical'>
                   <Button
                     leftIcon={<AttachmentIcon boxSize={6} />}
                     size='md'
@@ -269,6 +297,16 @@ export const UserSection: FC = () => {
                     }}
                   >
                     Мои сервисы
+                  </Button>
+
+                  <Button
+                    variant='outline'
+                    leftIcon={<QuestionOutlineIcon boxSize={6} />}
+                    size='md'
+                    w='full'
+                    onClick={tgPostMyId}
+                  >
+                    Получить мой ID
                   </Button>
                 </ButtonGroup>
               )}
