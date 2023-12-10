@@ -1,5 +1,5 @@
 import { createEvent, createStore } from 'effector';
-import type { User, Item } from '../shared/interfaces';
+import type { User, Item, SidebarItem } from '../shared/interfaces';
 
 export type Order = {
   id: string;
@@ -15,7 +15,11 @@ export interface GlobalStore {
   basket: Item[];
   isEditor: boolean;
   touched: boolean;
+
+  sidebar: Record<string, SidebarItem[]>;
 }
+
+export const setSidebar = createEvent<Record<string, SidebarItem[]>>();
 
 export const setTouched = createEvent();
 
@@ -37,9 +41,15 @@ export const $globalStore = createStore<GlobalStore>({
   user: null,
   basket: [],
   isEditor: false,
+
+  sidebar: {},
 });
 
 $globalStore
+  .on(setSidebar, (state, sidebar) => ({
+    ...state,
+    sidebar,
+  }))
   .on(setTouched, (state) => ({
     ...state,
     touched: true,

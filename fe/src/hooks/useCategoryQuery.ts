@@ -3,7 +3,9 @@ import { ref, onValue } from 'firebase/database';
 
 import { rtdb } from '../shared/firebase';
 
-import type { Category, CategoryDbName } from '../shared/interfaces';
+import { setSidebar } from '../store';
+
+import type { Category, CategoryDbName, SidebarItem } from '../shared/interfaces';
 
 const CATEGORY_ORDER: Record<CategoryDbName, number> = {
   food: 1,
@@ -36,12 +38,21 @@ export const useCategoryQuery = () => {
               id: subKey,
               ...categories,
               to: `category/${mainKey.trim()}-${subKey}?services=${JSON.stringify(serviceIds)}`,
-            };
+            } as Category;
           })
           .filter(({ categories }) => !!categories);
 
-        return [mainKey, subCategories];
+        return [mainKey, subCategories] as [string, Category[]];
       });
+
+      const sidebar: Record<string, SidebarItem[]> = Object.fromEntries(
+        mainCategories.map(([catKey, catContent]) =>
+          // @ts-expect-error to is not in types
+          [catKey, catContent.map(({ id, title, to }) => ({ id, title, to }))],
+        ),
+      );
+
+      setSidebar(sidebar);
 
       setCategories(Object.fromEntries(mainCategories));
       setLoading(false);

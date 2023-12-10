@@ -41,6 +41,8 @@ import { useAuth } from '../../hooks/useAuth';
 import { useOverlaysControl } from './hooks/useOverlaysControl';
 import { useTelegramConnect } from './hooks/useTelegramConnect';
 
+import { Sidebar } from '../sidebar';
+
 import { Profile } from '../profile';
 import { Basket } from '../basket';
 import { SignForm } from '../signForm';
@@ -59,7 +61,17 @@ export const UserSection: FC = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const { isAuthOpen, isBasketOpen, onAuthOpen, onBasketOpen, onAuthClose, onBasketClose } = useOverlaysControl();
+  const {
+    isAuthOpen,
+    isBasketOpen,
+    isMenuOpen,
+    onAuthOpen,
+    onBasketOpen,
+    onAuthClose,
+    onBasketClose,
+    onMenuClose,
+    onMenuOpen,
+  } = useOverlaysControl();
 
   const finalFocusRef = React.useRef<HTMLButtonElement>(null);
 
@@ -85,6 +97,7 @@ export const UserSection: FC = () => {
   };
 
   const isHomePage = pathname === '/';
+  const isCategoryPage = !!pathname.match(/\/category.*/);
   const role = user?.role;
 
   // silent auth start
@@ -132,13 +145,21 @@ export const UserSection: FC = () => {
           </Flex>
         ) : (
           <Button
-            leftIcon={<ChevronLeftIcon boxSize={8} />}
-            h='fit-content'
+            leftIcon={isCategoryPage ? undefined : <ChevronLeftIcon boxSize={8} />}
+            // h='fit-content'
+            h='48px'
             variant='ghost'
+            size='md'
             p={2}
-            onClick={() => navigate('/')}
+            onClick={() => {
+              if (isCategoryPage) {
+                onMenuOpen();
+              } else {
+                navigate('/');
+              }
+            }}
           >
-            Главная
+            {isCategoryPage ? 'Меню' : 'Главная'}
           </Button>
         )}
 
@@ -357,6 +378,8 @@ export const UserSection: FC = () => {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
+
+      <Sidebar isOpen={isMenuOpen} onClose={onMenuClose} />
 
       <Basket isBasketOpen={isBasketOpen} onBasketClose={onBasketClose} />
     </>

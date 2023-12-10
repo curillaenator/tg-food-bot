@@ -52,3 +52,9 @@ export interface Item extends Omit<Category<string>, 'categories' | 'adress' | '
   price: string | number;
   qty?: number;
 }
+
+export interface SidebarItem {
+  id: string;
+  title: string;
+  to: string;
+}
