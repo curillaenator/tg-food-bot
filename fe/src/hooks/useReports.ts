@@ -2,14 +2,11 @@ import { useState, useCallback, useEffect, type FormEvent } from 'react';
 import { useStore } from 'effector-react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { ref, get } from 'firebase/database';
-import { useToast } from '@chakra-ui/react';
 
 import { firedb, rtdb } from '../shared/firebase';
 import { $globalStore } from '../store';
 
-// import { MOCK } from './mock';
-
-import { MONTH_LABELS, TOAST_DURATION } from '../shared/constants';
+import { MONTH_LABELS } from '../shared/constants';
 import type { Service, Item, User } from '../shared/interfaces';
 
 interface SelectOptions {
@@ -39,8 +36,6 @@ const filterDetailes = (details: Record<string, Service & { order: Item[] }>, se
 
 export const useReports = () => {
   const { user } = useStore($globalStore);
-
-  const toast = useToast();
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -82,48 +77,33 @@ export const useReports = () => {
 
     if (!selectedService?.length) return;
 
-    const selectedIds = selectedService.map((selected) => String(selected.value));
-
     setLoading(true);
 
-    try {
-      const fireQuery = query(
-        collection(firedb, 'orders', `${year}`, `${month.value}`),
-        where('status', '==', 'confirmed'),
-      );
+    const selectedIds = selectedService.map((selected) => String(selected.value));
 
-      const monthApplications = await getDocs(fireQuery).then((snap) => snap.docs.map((doc) => doc.data()));
+    const fireQuery = query(
+      collection(firedb, 'orders', `${year}`, `${month.value}`),
+      where('status', '==', 'confirmed'),
+    );
 
-      if (!monthApplications.length) {
-        setTableData([]);
-        setLoading(false);
-        return;
-      }
+    const monthApplications = await getDocs(fireQuery).then((snap) => snap.docs.map((doc) => doc.data()));
 
-      const filteredByServiceId = monthApplications
-        .map((order) => ({ ...order, details: filterDetailes(order.details, selectedIds) }))
-        .filter((order) => !!Object.keys(order.details).length);
-
-      setTableData(filteredByServiceId as TableItem[]);
-
+    if (!monthApplications.length) {
+      setTableData([]);
       setLoading(false);
-    } catch (err) {
-      console.table(err);
-
-      toast({
-        title: 'Ошибка',
-        description: 'Попрбуйте позже',
-        status: 'error',
-        duration: TOAST_DURATION,
-        isClosable: true,
-      });
-
-      setLoading(false);
+      return;
     }
+
+    const filteredByServiceId = monthApplications
+      .map((order) => ({ ...order, details: filterDetailes(order.details, selectedIds) }))
+      .filter((order) => !!Object.keys(order.details).length);
+
+    setTableData(filteredByServiceId as TableItem[]);
+
+    setLoading(false);
   };
 
   return {
-    // tableData: MOCK,
     tableData,
     loading,
     month,
