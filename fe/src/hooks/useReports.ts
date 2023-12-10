@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, type FormEvent } from 'react';
 import { useStore } from 'effector-react';
-import { collection, getDocs, query } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { ref, get } from 'firebase/database';
 import { useToast } from '@chakra-ui/react';
 
@@ -87,15 +87,24 @@ export const useReports = () => {
     setLoading(true);
 
     try {
-      const monthApplications = await getDocs(query(collection(firedb, 'orders', `${year}`, `${month.value}`))).then(
-        (snap) => snap.docs.map((doc) => doc.data()).filter((order) => order?.status !== 'canceled'),
+      const fireQuery = query(
+        collection(firedb, 'orders', `${year}`, `${month.value}`),
+        where('status', '==', 'confirmed'),
       );
 
-      if (!monthApplications.length) return;
+      const monthApplications = await getDocs(fireQuery).then((snap) => snap.docs.map((doc) => doc.data()));
+
+      if (!monthApplications.length) {
+        setTableData([]);
+        setLoading(false);
+        return;
+      }
 
       const filteredByServiceId = monthApplications
         .map((order) => ({ ...order, details: filterDetailes(order.details, selectedIds) }))
         .filter((order) => !!Object.keys(order.details).length);
+
+      console.log(filteredByServiceId);
 
       setTableData(filteredByServiceId as TableItem[]);
 
