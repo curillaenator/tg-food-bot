@@ -10,7 +10,7 @@ export const Category: FC = () => {
     <Box as='main'>
       {loading && <Progress isIndeterminate size='xs' />}
 
-      <Accordion allowMultiple>
+      <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4]}>
         {services.map(([serviceId, content]) => (
           <ShowcaseSection
             {...content}
