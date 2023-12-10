@@ -104,8 +104,6 @@ export const useReports = () => {
         .map((order) => ({ ...order, details: filterDetailes(order.details, selectedIds) }))
         .filter((order) => !!Object.keys(order.details).length);
 
-      console.log(filteredByServiceId);
-
       setTableData(filteredByServiceId as TableItem[]);
 
       setLoading(false);
