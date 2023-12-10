@@ -1,7 +1,7 @@
 import React, { FC, useState, useCallback } from 'react';
 import { collection, doc, setDoc } from 'firebase/firestore';
 
-import { Flex, Stack, Input, FormControl, FormLabel, Button, Heading, useToast } from '@chakra-ui/react';
+import { Stack, Input, FormControl, FormLabel, Button, Heading, useToast } from '@chakra-ui/react';
 
 import { firedb } from '../../shared/firebase';
 import { TOAST_DURATION } from '../../shared/constants';
@@ -12,29 +12,43 @@ export const PartnerForm: FC = () => {
   const [partnerId, setPartnerId] = useState<string>('');
   const [partnerEmail, setPartnerEmail] = useState<string>('');
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   const toast = useToast();
 
   const verifyPartner = useCallback(() => {
     if (!confirm('Все верно указано?')) return;
 
-    setDoc(doc(collection(firedb, 'serviceOwners'), partnerId), { email: partnerEmail }).then(() => {
-      toast({
-        title: 'Готово',
-        description:
-          'Партнер верифицирован. Нужно обновить Pixpax, после чего партнер появиться в списке добавления владельцев',
-        status: 'success',
-        duration: TOAST_DURATION,
-        isClosable: true,
+    setLoading(true);
+
+    setDoc(doc(collection(firedb, 'serviceOwners'), partnerId), { email: partnerEmail })
+      .then(() => {
+        toast({
+          title: 'Готово',
+          description:
+            'Партнер верифицирован. Нужно обновить Pixpax, после чего партнер появиться в списке добавления владельцев',
+          status: 'success',
+          duration: TOAST_DURATION,
+          isClosable: true,
+        });
+      })
+      .catch(() => {
+        toast({
+          title: 'Ошибка',
+          description: 'Перезагрузи и попробуй еще раз',
+          status: 'error',
+          duration: TOAST_DURATION,
+          isClosable: true,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
       });
-    });
   }, [partnerId, partnerEmail, toast]);
 
   return (
     <form className={s.form}>
-      <Flex gap={2} justifyContent='space-between' alignItems='center'>
-        <Heading fontSize='xl'>Добавить партнера</Heading>
-        {/* {loading && <Spinner />} */}
-      </Flex>
+      <Heading fontSize='xl'>Добавить партнера</Heading>
 
       <Stack gap={2}>
         <FormControl isRequired>
@@ -67,7 +81,13 @@ export const PartnerForm: FC = () => {
           />
         </FormControl>
 
-        <Button isDisabled={!partnerId || !partnerEmail} size='md' onClick={verifyPartner} type='button'>
+        <Button
+          isLoading={loading}
+          isDisabled={!partnerId || !partnerEmail}
+          size='md'
+          onClick={verifyPartner}
+          type='button'
+        >
           Верифицировать
         </Button>
       </Stack>

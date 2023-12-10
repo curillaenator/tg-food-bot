@@ -340,7 +340,7 @@ export const UserSection: FC = () => {
                 </Button>
               </ButtonGroup>
 
-              {!!tgQueryId && user?.id && !user.isAnon && (
+              {!!tgQueryId && !!user?.email && (
                 <ButtonGroup>
                   <Button
                     variant='outline'
