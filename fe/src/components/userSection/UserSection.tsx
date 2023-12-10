@@ -224,7 +224,12 @@ export const UserSection: FC = () => {
         <DrawerContent className={s.authBg}>
           <DrawerCloseButton size='lg' h='fit-content' px={2} py={4} color='white' top={4} right={4} />
 
-          <DrawerHeader p={4} bg='blackAlpha.300'>
+          <DrawerHeader
+            p={4}
+            bg='var(--color-bg-cutom)'
+            borderRadius='0 0 0 16px'
+            borderBottom='1px solid var(--pixpax-colors-whiteAlpha-400)'
+          >
             <Flex gap={1} alignItems='center' h='48px'>
               <Heading>{!!user?.id ? '' : 'Кабинет'}</Heading>
 

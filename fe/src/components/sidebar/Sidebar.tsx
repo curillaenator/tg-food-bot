@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Link as ReactRouterLink } from 'react-router-dom';
+import { NavLink as ReactRouterLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from 'effector-react';
 
@@ -17,8 +17,6 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
-  ListItem,
-  UnorderedList,
   Button,
 } from '@chakra-ui/react';
 
@@ -47,7 +45,12 @@ export const Sidebar: FC<SidebarProps> = (props) => {
       <DrawerContent className={s.authBg}>
         <DrawerCloseButton size='lg' h='fit-content' px={2} py={4} color='white' top={4} right={4} />
 
-        <DrawerHeader p={4} bg='blackAlpha.300'>
+        <DrawerHeader
+          p={4}
+          bg='var(--color-bg-cutom)'
+          borderRadius='0 0 16px 0'
+          borderBottom='1px solid var(--pixpax-colors-whiteAlpha-400)'
+        >
           <Button
             leftIcon={<ChevronLeftIcon boxSize={8} />}
             variant='ghost'
@@ -63,7 +66,7 @@ export const Sidebar: FC<SidebarProps> = (props) => {
           </Button>
         </DrawerHeader>
 
-        <DrawerBody p={4}>
+        <DrawerBody p={4} as='nav'>
           <Accordion allowMultiple defaultIndex={[0, 1, 2, 3, 4, 5, 6, 7]}>
             {Object.keys(sidebar).map((categoryName) => (
               <AccordionItem key={categoryName}>
@@ -74,26 +77,26 @@ export const Sidebar: FC<SidebarProps> = (props) => {
                   <AccordionIcon />
                 </AccordionButton>
 
-                <AccordionPanel>
-                  <UnorderedList>
-                    {sidebar[categoryName].map(({ id, to, title }) => (
-                      <ListItem key={id}>
-                        <ChakraLink
-                          id={id}
-                          h='32'
-                          color='telegram.200'
-                          size='sm'
-                          variant='ghost'
-                          as={ReactRouterLink}
-                          to={to}
-                          justifyContent='flex-start'
-                          onClick={onClose}
-                        >
-                          {title}
-                        </ChakraLink>
-                      </ListItem>
-                    ))}
-                  </UnorderedList>
+                <AccordionPanel p={2} className={s.link} m={0}>
+                  {sidebar[categoryName].map(({ id, to, title }) => (
+                    <ChakraLink
+                      key={id}
+                      display='block'
+                      id={id}
+                      lineHeight='32px'
+                      color='telegram.200'
+                      size='sm'
+                      variant='ghost'
+                      as={ReactRouterLink}
+                      to={to}
+                      justifyContent='flex-start'
+                      onClick={onClose}
+                      px={2}
+                      borderRadius='8px'
+                    >
+                      {title}
+                    </ChakraLink>
+                  ))}
                 </AccordionPanel>
               </AccordionItem>
             ))}

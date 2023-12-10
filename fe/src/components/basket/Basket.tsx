@@ -101,7 +101,12 @@ export const Basket: FC<BasketProps> = (props) => {
       <DrawerContent className={s.basketBg}>
         <DrawerCloseButton size='lg' h='fit-content' px={2} py={4} color='whiteAlpha.400' top={4} right={4} />
 
-        <DrawerHeader p={4} bg='blackAlpha.300'>
+        <DrawerHeader
+          p={4}
+          bg='var(--color-bg-cutom)'
+          borderRadius='0 0 0 16px'
+          borderBottom='1px solid var(--pixpax-colors-whiteAlpha-400)'
+        >
           <Flex alignItems='center' gap={1}>
             <Box p={0}>
               <BasketIcon boxSize={10} color='chakra-body-text' />

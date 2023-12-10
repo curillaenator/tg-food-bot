@@ -22,7 +22,12 @@ export const BasketCard: FC<BasketCardProps> = (props) => {
   const { imageUrl, qty, incr, decr } = useBasketCard(props);
 
   return (
-    <Card w='100%' bg='chakra-body-bg' borderRadius={8} boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-200)'>
+    <Card
+      w='100%'
+      bg='var(--color-bg-cutom)'
+      borderRadius={8}
+      boxShadow='inset 0 0 0 1px var(--pixpax-colors-whiteAlpha-200)'
+    >
       <CardBody p={2} w='100%'>
         <Flex w='100%' alignItems='flex-start' justifyContent='space-between' gap={2}>
           <Box w='25%' aspectRatio='1 / 1' flexShrink={0}>
