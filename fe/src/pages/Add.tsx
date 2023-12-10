@@ -10,6 +10,7 @@ import { isManager } from '../utils';
 import { ServiceForm } from '../components/serviceForm';
 import { ItemForm } from '../components/itemForm';
 import { OwnerForm } from '../components/ownerForm';
+import { PartnerForm } from '../components/parnterForm';
 
 export const Add: FC = () => {
   const { user } = useStore($globalStore);
@@ -24,11 +25,12 @@ export const Add: FC = () => {
 
   return (
     <Box as='main' h='full'>
-      <Tabs isFitted variant='enclosed' defaultIndex={2}>
+      <Tabs isFitted variant='enclosed' defaultIndex={3}>
         <TabList mb='1em'>
           <Tab>Сервис</Tab>
           <Tab>Товар</Tab>
           <Tab>Владелец</Tab>
+          <Tab>Партнер</Tab>
         </TabList>
 
         <TabPanels>
@@ -42,6 +44,10 @@ export const Add: FC = () => {
 
           <TabPanel>
             <OwnerForm />
+          </TabPanel>
+
+          <TabPanel>
+            <PartnerForm />
           </TabPanel>
         </TabPanels>
       </Tabs>

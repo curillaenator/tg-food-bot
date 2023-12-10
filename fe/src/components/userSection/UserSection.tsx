@@ -298,16 +298,6 @@ export const UserSection: FC = () => {
                   >
                     Мои сервисы
                   </Button>
-
-                  <Button
-                    variant='outline'
-                    leftIcon={<QuestionOutlineIcon boxSize={6} />}
-                    size='md'
-                    w='full'
-                    onClick={tgPostMyId}
-                  >
-                    Получить мой ID
-                  </Button>
                 </ButtonGroup>
               )}
 
@@ -335,7 +325,7 @@ export const UserSection: FC = () => {
                 </Button>
               </ButtonGroup>
 
-              <ButtonGroup isAttached w='full' variant='outline'>
+              <ButtonGroup isAttached w='full' orientation='vertical' variant='outline'>
                 <Button
                   href={`https://${process.env.SUPPORT_CONTACT}`}
                   as={Link}
@@ -349,6 +339,20 @@ export const UserSection: FC = () => {
                   Связаться с PixPax
                 </Button>
               </ButtonGroup>
+
+              {!!tgQueryId && user?.id && !user.isAnon && (
+                <ButtonGroup>
+                  <Button
+                    variant='outline'
+                    leftIcon={<QuestionOutlineIcon boxSize={6} />}
+                    size='md'
+                    w='full'
+                    onClick={tgPostMyId}
+                  >
+                    Получить мой ID
+                  </Button>
+                </ButtonGroup>
+              )}
             </Stack>
           </DrawerBody>
         </DrawerContent>
