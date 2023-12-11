@@ -197,7 +197,8 @@ export const UserSection: FC = () => {
                 variant='ghost'
                 h='fit-content'
                 py={2}
-                px={4}
+                pl={4}
+                pr={3}
                 onClick={onBasketOpen}
                 rightIcon={<BasketIcon boxSize={8} />}
               >

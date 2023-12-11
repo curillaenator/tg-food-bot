@@ -11,6 +11,8 @@ import type { Item } from '../../shared/interfaces';
 
 const ICONS_BOX_SIZE = 3;
 
+const IMG_SIZE = '80px';
+
 export interface BasketCardProps extends Partial<Item> {
   imgPath: string;
   isDisabled?: boolean;
@@ -30,7 +32,7 @@ export const BasketCard: FC<BasketCardProps> = (props) => {
     >
       <CardBody p={2} w='100%'>
         <Flex w='100%' alignItems='flex-start' justifyContent='space-between' gap={2}>
-          <Box w='25%' aspectRatio='1 / 1' flexShrink={0}>
+          <Box w={IMG_SIZE} aspectRatio='1 / 1' flexShrink={0}>
             <Image
               borderRadius={6}
               w='full'
@@ -42,8 +44,8 @@ export const BasketCard: FC<BasketCardProps> = (props) => {
             />
           </Box>
 
-          <Stack w='calc(75% - 8px)' gap={0} flexShrink={1}>
-            <Flex gap={2} w='100%' justifyContent='space-between'>
+          <Stack w={`calc(100% - ${IMG_SIZE} - 8px)`} gap={4} flexShrink={1}>
+            <Flex gap={2} w='100%' alignItems='center' justifyContent='space-between'>
               <Text
                 display='block'
                 w='calc(100% - 32px - 16px)'
@@ -53,7 +55,6 @@ export const BasketCard: FC<BasketCardProps> = (props) => {
                 whiteSpace='nowrap'
                 textOverflow='ellipsis'
                 color='telegram.200'
-                mb={2}
               >
                 {title}
               </Text>
@@ -61,7 +62,6 @@ export const BasketCard: FC<BasketCardProps> = (props) => {
               <Button
                 isDisabled={isDisabled}
                 w='32px'
-                // colorScheme='red'
                 color='red.700'
                 opacity={0.6}
                 variant='outline'
@@ -72,13 +72,12 @@ export const BasketCard: FC<BasketCardProps> = (props) => {
               </Button>
             </Flex>
 
-            <Text size='sm' color='chakra-subtle-text'>
-              Количество:
-            </Text>
+            {/* <Divider my={2} /> */}
 
-            <Flex w='full' h='32px' justifyContent='space-between'>
+            <Flex w='full' justifyContent='space-between'>
               <Button
-                w='64px'
+                w='48px'
+                h='32px'
                 flexShrink={0}
                 isDisabled={qty === 0 || isDisabled}
                 variant='outline'
@@ -88,11 +87,19 @@ export const BasketCard: FC<BasketCardProps> = (props) => {
                 <MinusIcon boxSize={ICONS_BOX_SIZE} />
               </Button>
 
-              <Text flexShrink={1} w='full' fontSize='md' fontWeight='bold' textAlign='center'>
+              <Text flexShrink={1} w='full' lineHeight='32px' fontSize='xl' fontWeight={800} textAlign='center'>
                 {qty}
               </Text>
 
-              <Button w='64px' isDisabled={isDisabled} flexShrink={0} variant='outline' size='sm' onClick={incr}>
+              <Button
+                w='48px'
+                h='32px'
+                isDisabled={isDisabled}
+                flexShrink={0}
+                variant='outline'
+                size='sm'
+                onClick={incr}
+              >
                 <AddIcon boxSize={ICONS_BOX_SIZE} />
               </Button>
             </Flex>
@@ -101,7 +108,7 @@ export const BasketCard: FC<BasketCardProps> = (props) => {
 
         {qty > 0 && (
           <CardFooter display='flex' flexDirection='column' p={0} mt={2}>
-            <Divider mt={2} />
+            <Divider />
 
             <Flex w='100%' justifyContent='space-between' fontSize='sm'>
               <Text color='chakra-subtle-text'>{`Цена: ${VNpricer.format(+price)}`}</Text>
