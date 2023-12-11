@@ -24,7 +24,7 @@ export const Couriers: FC = () => {
     navigate('/');
   }, [user, navigate]);
 
-  const { courierList, courierId, setCourierId, addCourier, fireCourier } = useCouriers();
+  const { loading, courierList, courierId, setCourierId, addCourier, fireCourier } = useCouriers();
 
   return (
     <Stack as='main' h='full' px={4} pb={4} gap={2}>
@@ -41,7 +41,7 @@ export const Couriers: FC = () => {
           />
         </FormControl>
 
-        <Button size='md' w='full' type='submit'>
+        <Button size='md' w='full' type='submit' isLoading={loading} isDisabled={loading}>
           Добавить курьера
         </Button>
       </form>
@@ -67,7 +67,15 @@ export const Couriers: FC = () => {
                 {tme}
               </Text>
 
-              <Button size='md' w='full' variant='outline' color='red.400' onClick={() => fireCourier(id)}>
+              <Button
+                size='md'
+                w='full'
+                variant='outline'
+                color='red.400'
+                onClick={() => fireCourier(id)}
+                isDisabled={loading}
+                isLoading={loading}
+              >
                 Уволить
               </Button>
             </CardBody>

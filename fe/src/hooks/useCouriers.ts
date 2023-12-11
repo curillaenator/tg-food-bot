@@ -15,11 +15,15 @@ export const useCouriers = () => {
   const [courierList, setCourierList] = useState<FireDBCourier[]>([]);
   const [courierId, setCourierId] = useState<string>('');
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   const toast = useToast();
 
   const addCourier = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+
+      setLoading(true);
 
       get(ref(rtdb, `users/${courierId}`)).then(async (snap) => {
         if (!snap.exists() || !!snap.val()?.isAnon) {
@@ -30,6 +34,8 @@ export const useCouriers = () => {
             duration: TOAST_DURATION,
             isClosable: true,
           });
+
+          setLoading(false);
 
           return;
         }
@@ -45,6 +51,8 @@ export const useCouriers = () => {
           tme: tme || '',
           tel: tel || '',
         });
+
+        setLoading(false);
 
         toast({
           title: 'Готово',
@@ -62,9 +70,13 @@ export const useCouriers = () => {
     async (courierId: string) => {
       if (!confirm('Точно?')) return;
 
+      setLoading(true);
+
       await set(ref(rtdb, `users/${courierId}/role`), 'pixpax');
 
       await deleteDoc(doc(firedb, 'couriers', courierId));
+
+      setLoading(false);
 
       toast({
         title: 'Готово',
@@ -90,6 +102,7 @@ export const useCouriers = () => {
   }, []);
 
   return {
+    loading,
     courierId,
     courierList,
     fireCourier,
