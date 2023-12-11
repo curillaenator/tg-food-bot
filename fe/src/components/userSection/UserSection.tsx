@@ -32,6 +32,7 @@ import {
   CalendarIcon,
   AttachmentIcon,
   QuestionOutlineIcon,
+  TimeIcon,
 } from '@chakra-ui/icons';
 
 import { auth, rtdb } from '../../shared/firebase';
@@ -259,6 +260,22 @@ export const UserSection: FC = () => {
                 />
               )}
 
+              {user?.id && role === 'employee' && (
+                <ButtonGroup orientation='vertical' variant='outline' isAttached w='full'>
+                  <Button
+                    leftIcon={<CopyIcon boxSize={4} />}
+                    size='md'
+                    w='full'
+                    onClick={() => {
+                      navigate('/orders');
+                      onAuthClose();
+                    }}
+                  >
+                    Заявки
+                  </Button>
+                </ButtonGroup>
+              )}
+
               {user?.id && (role === 'manager' || role === 'admin') && (
                 <Stack w='full' gap={4}>
                   <Stack w='full' gap={2}>
@@ -295,6 +312,18 @@ export const UserSection: FC = () => {
                       }}
                     >
                       Добавить
+                    </Button>
+
+                    <Button
+                      leftIcon={<TimeIcon boxSize={4} />}
+                      size='md'
+                      w='full'
+                      onClick={() => {
+                        navigate('/couriers');
+                        onAuthClose();
+                      }}
+                    >
+                      Курьеры
                     </Button>
 
                     <Button

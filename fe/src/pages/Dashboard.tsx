@@ -6,6 +6,8 @@ import { Application } from '../components/application';
 
 import { useDashboard } from '../hooks/useDashboard';
 
+import { isManager, isEmployee } from '../utils';
+
 import type { Application as ApplicationType } from '../shared/interfaces';
 
 export const Dashboard: FC = () => {
@@ -13,7 +15,7 @@ export const Dashboard: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const pageIsAvalable = !!currentUser?.id && (currentUser?.role === 'admin' || currentUser?.role === 'manager');
+    const pageIsAvalable = !!currentUser?.id && (isManager(currentUser?.role) || isEmployee(currentUser?.role));
     if (pageIsAvalable) return;
 
     navigate('/');

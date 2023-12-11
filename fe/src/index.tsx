@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 
 import { Layout } from './layout';
-import { Main, Add, Category, Dashboard, ServicePage, Reports } from './pages';
+import { Main, Add, Category, Dashboard, ServicePage, Reports, Couriers } from './pages';
 
 import './index.scss';
 
@@ -26,6 +26,7 @@ const router = createBrowserRouter(
       <Route path='add' element={<Add />} />
       <Route path='service' element={<ServicePage />} />
       <Route path='reports' element={<Reports />} />
+      <Route path='couriers' element={<Couriers />} />
 
       <Route path='*' element={<Main />} />
     </Route>,

@@ -76,7 +76,7 @@ export const Reports: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const pageIsAvalable = isManager(user?.role);
+    const pageIsAvalable = user?.id && isManager(user?.role);
 
     if (pageIsAvalable) return;
 
