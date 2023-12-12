@@ -25,7 +25,6 @@ import {
 } from '@chakra-ui/react';
 
 import {
-  HamburgerIcon,
   ChevronLeftIcon,
   SmallAddIcon,
   CopyIcon,
@@ -51,6 +50,8 @@ import { SignForm } from '../signForm';
 import { Logo } from '../../assets/Logo';
 import { BasketIcon } from '../../assets/BasketIcon';
 import { MessageIcon } from '../../assets/MessageIcon';
+import { MenuIcon } from '../../assets/MenuIcon';
+import { MeatballsIcon } from '../../assets/MeatballsIcon';
 
 import s from './styles.module.scss';
 
@@ -146,8 +147,7 @@ export const UserSection: FC = () => {
           </Flex>
         ) : (
           <Button
-            leftIcon={isCategoryPage ? undefined : <ChevronLeftIcon boxSize={8} />}
-            // h='fit-content'
+            leftIcon={isCategoryPage ? <MenuIcon boxSize={8} /> : <ChevronLeftIcon boxSize={8} />}
             h='48px'
             variant='ghost'
             size='md'
@@ -185,7 +185,7 @@ export const UserSection: FC = () => {
             )}
 
             <Button h='fit-content' variant='ghost' p={2} onClick={onAuthOpen}>
-              <HamburgerIcon boxSize={8} />
+              <MeatballsIcon boxSize={8} />
             </Button>
           </Flex>
         ) : (
