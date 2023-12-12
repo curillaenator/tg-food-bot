@@ -91,6 +91,8 @@ export const useDashboard = () => {
         });
 
         setOrders(orders);
+      } else {
+        setOrders([]);
       }
     });
 

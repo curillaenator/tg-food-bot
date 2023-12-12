@@ -119,7 +119,7 @@ export const Basket: FC<BasketProps> = (props) => {
         </DrawerHeader>
 
         <DrawerBody p={4}>
-          <Stack gap={4}>
+          <Stack gap={2}>
             {basket.map((basketItem) => (
               <BasketCard key={basketItem.id} imgPath='' {...basketItem} isDisabled={loading} />
             ))}
