@@ -1,6 +1,6 @@
-import React, { FC, useState, useEffect, type ChangeEvent } from 'react';
+import React, { FC, useState, useEffect, useRef, type ChangeEvent } from 'react';
 import { useStore } from 'effector-react';
-import { ref, set, onValue } from 'firebase/database';
+import { ref, set } from 'firebase/database';
 
 import {
   Box,
@@ -32,7 +32,7 @@ import { SendIcon } from '../../assets/SendIcon';
 import { useOrder } from './hooks/useOrder';
 import { VNpricer, debounced } from '../../utils';
 import { DELIVERY_PRICE } from '../../shared/constants';
-import type { User } from '../../shared/interfaces';
+// import type { User } from '../../shared/interfaces';
 
 import s from './styles.module.scss';
 
@@ -62,8 +62,6 @@ export const Basket: FC<BasketProps> = (props) => {
 
   const { loading, onPlaceOrder } = useOrder(onBasketClose);
 
-  const [locked, setLocked] = useState<boolean>(true);
-
   useEffect(() => {
     const parentsFromBasket: string[] = [];
 
@@ -79,17 +77,22 @@ export const Basket: FC<BasketProps> = (props) => {
     setTotalPriceAcc(effectiveTotal);
   }, [basket]);
 
+  const [locked, setLocked] = useState<boolean>(true);
+
+  const timer = useRef<ReturnType<typeof setTimeout>>(null);
+
   useEffect(() => {
     if (!user?.id) return;
+    if (!!timer.current) clearTimeout(timer.current);
 
-    const unsub = onValue(ref(rtdb, `users/${user.id}`), (s) => {
-      if (!s.exists()) return;
+    const isContacts = !!user?.name.trim().length && !!user?.adress.trim().length && !!user?.tel.trim().length;
 
-      const { adress, name, tel } = s.val() as User;
-      setLocked(!adress.length || !name.length || !tel.length);
-    });
+    if (!isContacts) {
+      setLocked(true);
+      return;
+    }
 
-    return () => unsub();
+    timer.current = setTimeout(() => setLocked(false), POST_DELAY * 1.5);
   }, [user]);
 
   const deliveryPrice = DELIVERY_PRICE * parents.length;
@@ -160,13 +163,12 @@ export const Basket: FC<BasketProps> = (props) => {
                 placeholder='коротко и ясно!'
                 size='md'
                 onBlur={(e) => {
-                  onAdressEdit(e, user.id, 'name');
                   setUser({ ...user, name: e.target.value });
+                  onAdressEdit(e, user.id, 'name');
                 }}
                 onChange={(e) => {
-                  setLocked(true);
-                  onAdressEditDebounced(e, user.id, 'name');
                   setUser({ ...user, name: e.target.value });
+                  onAdressEditDebounced(e, user.id, 'name');
                 }}
               />
 
@@ -178,13 +180,12 @@ export const Basket: FC<BasketProps> = (props) => {
                 placeholder='чем точнее тем лучше ;-)'
                 size='md'
                 onBlur={(e) => {
-                  onAdressEdit(e, user.id, 'adress');
                   setUser({ ...user, adress: e.target.value });
+                  onAdressEdit(e, user.id, 'adress');
                 }}
                 onChange={(e) => {
-                  setLocked(true);
-                  onAdressEditDebounced(e, user.id, 'adress');
                   setUser({ ...user, adress: e.target.value });
+                  onAdressEditDebounced(e, user.id, 'adress');
                 }}
               />
 
@@ -196,13 +197,12 @@ export const Basket: FC<BasketProps> = (props) => {
                 placeholder='телефон или t.me/вашИмяПользователя'
                 size='md'
                 onBlur={(e) => {
-                  onAdressEdit(e, user.id, 'tel');
                   setUser({ ...user, tel: e.target.value });
+                  onAdressEdit(e, user.id, 'tel');
                 }}
                 onChange={(e) => {
-                  setLocked(true);
-                  onAdressEditDebounced(e, user.id, 'tel');
                   setUser({ ...user, tel: e.target.value });
+                  onAdressEditDebounced(e, user.id, 'tel');
                 }}
               />
             </Stack>
