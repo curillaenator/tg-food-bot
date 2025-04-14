@@ -1,6 +1,7 @@
 # Telegram Food Bot
 
 React SPA для рендера полноценного UI телеграм бота по доставке еды
+
 Бот закрыт, но UI доступен [для просмотра как WEB приложение](https://tg-food-delivery-bot.web.app/)
 
 ```bash
