@@ -1,10 +1,8 @@
 # Telegram Food Bot
 
-This repo contains code for failed start-up food delivery bot project
-I participated as the only full-stack developer 
+React SPA для рендера полноценного UI телеграм бота по доставке еды
+Бот закрыт, но UI доступен [для просмотра как WEB приложение](https://tg-food-delivery-bot.web.app/)
 
-Frontend is mobile only as it considered to run inside Telegram's bot window.
-
-Project is closed, but I saved frontend app with last state of project so you can
-
-[Watch app](https://tg-food-delivery-bot.web.app/)
+```bash
+ввиду того что это TG-bot, при просмотре в браузере лучше перейти в "мобильный" режим отображения. декстоп в браузерах будет рендерить мобильный UI 
+```
